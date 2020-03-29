@@ -1,0 +1,40 @@
+{
+  "name": "alkito-js-mmorpg",
+  "version": "0.0.1",
+  "description": "A 2D web based MMORPG",
+  "main": "src/app.ts",
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development nollup -c --hot --content-base public",
+    "build": "rimraf dist && cross-env NODE_ENV=production rollup -c",
+    "start": "serve dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Colmea/alkito-js-mmorpg.git"
+  },
+  "author": "Arthur Schwaiger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Colmea/alkito-js-mmorpg/issues"
+  },
+  "homepage": "https://github.com/Colmea/alkito-js-mmorpg#readme",
+  "dependencies": {
+    "phaser": "^3.22.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^3.0.1",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@rollup/plugin-replace": "^2.3.0",
+    "cross-env": "^7.0.2",
+    "nollup": "^0.10.7",
+    "phaser": "^3.22.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^1.29.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-static-files": "^0.0.1",
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-typescript2": "^0.26.0",
+    "serve": "^11.3.0",
+    "typescript": "3.8.3"
+  }
+}
