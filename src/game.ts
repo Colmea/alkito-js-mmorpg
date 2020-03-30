@@ -9,7 +9,7 @@ new Phaser.Game(
   Object.assign(config, {
     scene: [
         BootScene,
-        GameScene
-    ]
+        GameScene,
+    ],
   })
 );

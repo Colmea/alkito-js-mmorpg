@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/Colmea/alkito-js-mmorpg#readme",
   "dependencies": {
-    "phaser": "^3.22.0"
+    "phaser": "^3.22.0",
+    "phaser-navmesh": "2.0.5"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.0.1",

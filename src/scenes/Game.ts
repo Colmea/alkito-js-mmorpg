@@ -1,9 +1,13 @@
 import 'phaser';
+import PhaserNavMeshPlugin from "phaser-navmesh";
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 
 export default class Game extends Phaser.Scene {
+  navMeshPlugin: any;
+
   map: any;
+  mapLayers = {};
   player: any;
   cursors: any;
 
@@ -17,12 +21,13 @@ export default class Game extends Phaser.Scene {
 
   create() {
     this.map = this.make.tilemap({ key: 'map' });
-
+  
     const tiles = this.map.addTilesetImage('tileset', 'tiles');
         
-    const grass = this.map.createStaticLayer('Grass', tiles, 0, 0);
-    const obstacles = this.map.createStaticLayer('Objects', tiles, 0, 0);
-    obstacles.setCollisionByExclusion([-1]);
+    this.mapLayers['grass'] = this.map.createStaticLayer('Grass', tiles, 0, 0);
+    this.mapLayers['objects'] = this.map.createStaticLayer('Objects', tiles, 0, 0);
+    this.mapLayers['objects'].setCollisionByExclusion([-1]);
+    this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', tiles, 0, 0);
 
     // Player
     this.player = this.physics.add.sprite(50, 100, 'player', 1);
@@ -30,7 +35,17 @@ export default class Game extends Phaser.Scene {
     this.physics.world.bounds.width = this.map.widthInPixels;
     this.physics.world.bounds.height = this.map.heightInPixels;
     this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, obstacles);
+    this.physics.add.collider(this.player, this.mapLayers['objects']);
+
+    console.log('plugin', this);
+    // const navMesh = this.navMeshPlugin.buildMeshFromTiled(
+    //   "mesh",
+    //   this.mapLayers['objects'],
+    //   12.5
+    // );
+
+    // const path = navMesh.findPath({ x: 0, y: 0 }, { x: 300, y: 400 });
+    //   console.log(path);
 
     // Player animation
     this.anims.create({
@@ -66,7 +81,13 @@ export default class Game extends Phaser.Scene {
 
     // Inputs
     this.cursors = this.input.keyboard.createCursorKeys();
-
+  
+    this.input.on('pointerdown', () => {
+      const x = this.input.mousePointer.x;
+      const y = this.input.mousePointer.y;
+      this.physics.moveTo(this.player, x, y);
+    });
+    
     // Camera follow player
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.cameras.main.startFollow(this.player);
