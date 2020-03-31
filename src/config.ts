@@ -1,7 +1,5 @@
 import 'phaser';
-import PhaserNavMeshPlugin from "phaser-navmesh";
-
-console.log('plugiiin', PhaserNavMeshPlugin);
+import * as PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
 
 export default {
   type: Phaser.AUTO,
