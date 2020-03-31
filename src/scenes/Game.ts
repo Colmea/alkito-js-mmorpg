@@ -1,10 +1,11 @@
 import 'phaser';
-import PhaserNavMeshPlugin from "phaser-navmesh";
+import FollowerSprite from '../utils/FollowerSprite';
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 
 export default class Game extends Phaser.Scene {
   navMeshPlugin: any;
+  navMesh: any;
 
   map: any;
   mapLayers = {};
@@ -16,7 +17,6 @@ export default class Game extends Phaser.Scene {
   }
 
   preload() {
-
   }
 
   create() {
@@ -29,25 +29,43 @@ export default class Game extends Phaser.Scene {
     this.mapLayers['objects'].setCollisionByExclusion([-1]);
     this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', tiles, 0, 0);
 
+    const obstaclesLayer =  this.map.getObjectLayer("Obstacles");
+    this.navMesh = this.navMeshPlugin.buildMeshFromTiled(
+      "mesh",
+      obstaclesLayer,
+    );
+    // navMesh.enableDebug();
+    // navMesh.debugDrawMesh({
+    //   drawCentroid: true,
+    //   drawBounds: false,
+    //   drawNeighbors: true,
+    //   drawPortals: true
+    // });
+
     // Player
-    this.player = this.physics.add.sprite(50, 100, 'player', 1);
+    this.player = new FollowerSprite(this, 50, 100, this.navMesh);
+    // this.player = this.physics.add.sprite(50, 100, 'player', 1);
 
     this.physics.world.bounds.width = this.map.widthInPixels;
     this.physics.world.bounds.height = this.map.heightInPixels;
-    this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, this.mapLayers['objects']);
+    // this.player.setCollideWorldBounds(true);
+    //this.physics.add.collider(this.player, this.mapLayers['objects']);
 
-    console.log('plugin', this);
-    // const navMesh = this.navMeshPlugin.buildMeshFromTiled(
-    //   "mesh",
-    //   this.mapLayers['objects'],
-    //   12.5
-    // );
+    
+    // Trigger on click on map
+    this.input.on("pointerdown", pointer => {
+      const end = new Phaser.Math.Vector2(pointer.x, pointer.y);
+      // Find corresponding tile from click
+      const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
+      // Get center of the tile
+      const tilePosition = new Phaser.Math.Vector2(tile.pixelX + 16, tile.pixelY + 16);
+      // Move Player to this position
+      // Player will automatically find its path to the point an dupdate its position accordingly
+      this.player.goTo(tilePosition);
+    });
 
-    // const path = navMesh.findPath({ x: 0, y: 0 }, { x: 300, y: 400 });
-    //   console.log(path);
-
-    // Player animation
+    // Player animation (used mainly in the Player class when moving)
+    // Need refactoring
     this.anims.create({
       key: 'left',
       frames: this.anims.generateFrameNumbers('player', { frames: [4, 3, 4, 5]}),
@@ -77,56 +95,15 @@ export default class Game extends Phaser.Scene {
     const enemy001 = this.physics.add.sprite(120, 150, 'enemy-1', 1);
     
     // Check collision with enemy
-    this.physics.add.overlap(this.player, enemy001, this.onMeetEnemy);
+    //this.physics.add.overlap(this.player, enemy001, this.onMeetEnemy);
 
     // Inputs
     this.cursors = this.input.keyboard.createCursorKeys();
-  
-    this.input.on('pointerdown', () => {
-      const x = this.input.mousePointer.x;
-      const y = this.input.mousePointer.y;
-      this.physics.moveTo(this.player, x, y);
-    });
     
     // Camera follow player
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.cameras.main.startFollow(this.player);
     this.cameras.main.roundPixels = true;
-  }
-
-  update() {
-    this.player.body.setVelocity(0);
- 
-    // Update position
-    if (this.cursors.left.isDown) {
-      this.player.body.setVelocityX(-80);
-    }
-    else if (this.cursors.right.isDown) {
-      this.player.body.setVelocityX(80);
-    }
-    if (this.cursors.up.isDown) {
-      this.player.body.setVelocityY(-80);
-    }
-    else if (this.cursors.down.isDown) {
-      this.player.body.setVelocityY(80);
-    }
-
-    // Udate player animation
-    if (this.cursors.left.isDown) {
-      this.player.anims.play('left', true);
-    }
-    else if (this.cursors.right.isDown) {
-      this.player.anims.play('right', true);
-    }
-    else if (this.cursors.up.isDown) {
-      this.player.anims.play('up', true);
-    }
-    else if (this.cursors.down.isDown) {
-      this.player.anims.play('down', true);
-    }
-    else {
-      this.player.anims.stop();
-    }
   }
 
   onMeetEnemy = (player: ArcadeSprite, enemy: ArcadeSprite) => {
