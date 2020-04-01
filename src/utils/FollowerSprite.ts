@@ -1,20 +1,12 @@
 class FollowerSprite extends Phaser.GameObjects.Sprite {
-    navMesh: any;
-    path: any;
-    currentTarget: any;
-    body: any;
-
     MAX_SPEED: number = 120;
 
-    /**
-     * @param {Phaser.Scene} scene
-     * @param {*} x
-     * @param {*} y
-     * @param {*} navMesh
-     * @param {*} wallLayer
-     * @memberof FollowerSprite
-     */
-    constructor(scene, x, y, navMesh) {
+    navMesh: any;
+    path: Phaser.Geom.Point[];
+    currentTarget: Phaser.Geom.Point;
+    body: Phaser.Physics.Arcade.Body;
+
+    constructor(scene: Phaser.Scene, x: number, y: number, navMesh: any) {
       super(scene, x, y, "player", 1);
   
       this.navMesh = navMesh;
@@ -39,32 +31,43 @@ class FollowerSprite extends Phaser.GameObjects.Sprite {
       else this.currentTarget = null;
     }
   
-    update(time, deltaTime) {
-        // Bugfix: Phaser's event emitter caches listeners, so it's possible to get updated once after
-        // being destroyed
+    update(time: number, deltaTime: number) {
         if (!this.body) return;
         
-        // Stop any previosus movement
+        // Stop any previous movement
         this.body.velocity.set(0);
 
-
         if (this.currentTarget) {
-            // Check if we have reached the current target (within a fudge factor)
             const { x, y } = this.currentTarget;
             const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
 
-            if (distance < 5) {
-            // If there is path left, grab the next point. Otherwise, null the target.
-            if (this.path.length > 0) this.currentTarget = this.path.shift();
-            else this.currentTarget = null;
+            // If we approach current target
+            if (distance < 4) {
+                // Move to next path checkpoint (if one available)
+                if (this.path.length > 0) {
+                    this.currentTarget = this.path.shift();
+                }
+                // Otherwise => End of move
+                // => Clear target, and stop body
+                else {
+                    this.currentTarget = null;
+                    this.body.stop();
+        
+                    // This is a workaround to reset position *after* next thick
+                    // because body still has velocity and will move a little after this tick.
+                    // @TODO check if prettier solution available.
+                    setTimeout(() => {
+                        this.setPosition(x, y);
+                    });
+                }
             }
 
-            // Still got a valid target?
+            // If target, move towards
             if (this.currentTarget) this.moveTowards(this.currentTarget, this.MAX_SPEED, deltaTime / 1000);
         }
 
-        const velocity = this.body.velocity;
         // Animate player following current velocity
+        const velocity = this.body.velocity;
         if (velocity.y > 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
             this.anims.play('down', true);
         }
@@ -82,8 +85,9 @@ class FollowerSprite extends Phaser.GameObjects.Sprite {
         }
     }
   
-    moveTowards(targetPosition, maxSpeed = 200, elapsedSeconds) {
+    moveTowards(targetPosition, maxSpeed = 200, elapsedSeconds) {      
         const { x, y } = targetPosition;
+
         const angle = Phaser.Math.Angle.Between(this.x, this.y, x, y);
         const distance = Phaser.Math.Distance.Between(this.x, this.y, x, y);
         const targetSpeed = distance / elapsedSeconds;
