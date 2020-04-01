@@ -6,7 +6,7 @@ type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 export default class Game extends Phaser.Scene {
   navMeshPlugin: any;
   navMesh: any;
-
+  marker: Phaser.GameObjects.Graphics;
   map: any;
   mapLayers = {};
   player: any;
@@ -28,6 +28,7 @@ export default class Game extends Phaser.Scene {
     this.mapLayers['objects'] = this.map.createStaticLayer('Objects', tiles, 0, 0);
     this.mapLayers['objects'].setCollisionByExclusion([-1]);
     this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', tiles, 0, 0);
+    this.mapLayers['ui'] = this.map.createBlankDynamicLayer('UI', tiles);
 
     const obstaclesLayer =  this.map.getObjectLayer("Obstacles");
     this.navMesh = this.navMeshPlugin.buildMeshFromTiled(
@@ -51,7 +52,6 @@ export default class Game extends Phaser.Scene {
     // this.player.setCollideWorldBounds(true);
     //this.physics.add.collider(this.player, this.mapLayers['objects']);
 
-    
     // Trigger on click on map
     this.input.on("pointerdown", pointer => {
       const end = new Phaser.Math.Vector2(pointer.x, pointer.y);
@@ -104,6 +104,27 @@ export default class Game extends Phaser.Scene {
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.cameras.main.startFollow(this.player);
     this.cameras.main.roundPixels = true;
+
+    // Tile marker
+    // Create a simple graphic that can be used to show which tile the mouse is over
+    const markerWidth = 4;
+    this.marker = this.add.graphics();
+    this.marker.lineStyle(markerWidth, 0xffffff, .5);
+    this.marker.strokeRect(-markerWidth, -markerWidth, this.map.tileWidth + markerWidth, this.map.tileHeight + markerWidth);
+  }
+
+  update() {
+    this.updateMapMarker();
+  }
+
+  private updateMapMarker() {
+    // Convert the mouse position to world position within the camera
+    const worldPoint: any = this.input.activePointer.positionToCamera(this.cameras.main);
+
+    // Move map marker over pointed tile
+    const pointerTileXY = this.mapLayers['ui'] .worldToTileXY(worldPoint.x, worldPoint.y);
+    const snappedWorldPoint = this.mapLayers['ui'] .tileToWorldXY(pointerTileXY.x, pointerTileXY.y);
+    this.marker.setPosition(snappedWorldPoint.x, snappedWorldPoint.y);
   }
 
   onMeetEnemy = (player: ArcadeSprite, enemy: ArcadeSprite) => {
