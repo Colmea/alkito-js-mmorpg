@@ -1,9 +1,11 @@
 import 'phaser';
-import FollowerSprite from '../utils/FollowerSprite';
+import Player from '../models/Player';
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 
-export default class Game extends Phaser.Scene {
+export default class WorldScene extends Phaser.Scene {
+  TILE_SIZE: number = 32;
+
   navMeshPlugin: any;
   navMesh: any;
   marker: Phaser.GameObjects.Graphics;
@@ -13,10 +15,7 @@ export default class Game extends Phaser.Scene {
   cursors: any;
 
   constructor() {
-    super('GameScene');
-  }
-
-  preload() {
+    super('WorldScene');
   }
 
   create() {
@@ -35,8 +34,9 @@ export default class Game extends Phaser.Scene {
       "mesh",
       obstaclesLayer,
     );
-    // navMesh.enableDebug();
-    // navMesh.debugDrawMesh({
+
+    // this.navMesh.enableDebug();
+    // this.navMesh.debugDrawMesh({
     //   drawCentroid: true,
     //   drawBounds: false,
     //   drawNeighbors: true,
@@ -44,13 +44,11 @@ export default class Game extends Phaser.Scene {
     // });
 
     // Player
-    this.player = new FollowerSprite(this, 50, 100, this.navMesh);
-    // this.player = this.physics.add.sprite(50, 100, 'player', 1);
+    const playerPos = this.getTilePosition(11, 8);
+    this.player = new Player(this, playerPos.x, playerPos.y, this.navMesh);
 
     this.physics.world.bounds.width = this.map.widthInPixels;
     this.physics.world.bounds.height = this.map.heightInPixels;
-    // this.player.setCollideWorldBounds(true);
-    //this.physics.add.collider(this.player, this.mapLayers['objects']);
 
     // Trigger on click on map
     this.input.on("pointerdown", pointer => {
@@ -58,7 +56,7 @@ export default class Game extends Phaser.Scene {
       // Find corresponding tile from click
       const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
       // Get center of the tile
-      const tilePosition = new Phaser.Math.Vector2(tile.pixelX + 16, tile.pixelY + 16);
+      const tilePosition = new Phaser.Math.Vector2(tile.pixelX + this.TILE_SIZE/2, tile.pixelY + this.TILE_SIZE/2);
       // Move Player to this position
       // Player will automatically find its path to the point an dupdate its position accordingly
       this.player.goTo(tilePosition);
@@ -94,12 +92,6 @@ export default class Game extends Phaser.Scene {
     // Enemies
     const enemy001 = this.physics.add.sprite(120, 150, 'enemy-1', 1);
     
-    // Check collision with enemy
-    //this.physics.add.overlap(this.player, enemy001, this.onMeetEnemy);
-
-    // Inputs
-    this.cursors = this.input.keyboard.createCursorKeys();
-    
     // Camera follow player
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
     this.cameras.main.startFollow(this.player);
@@ -109,8 +101,8 @@ export default class Game extends Phaser.Scene {
     // Create a simple graphic that can be used to show which tile the mouse is over
     const markerWidth = 4;
     this.marker = this.add.graphics();
-    this.marker.lineStyle(markerWidth, 0xffffff, .5);
-    this.marker.strokeRect(-markerWidth, -markerWidth, this.map.tileWidth + markerWidth, this.map.tileHeight + markerWidth);
+    this.marker.lineStyle(markerWidth, 0xffffff, .3);
+    this.marker.strokeRect(-markerWidth/2, -markerWidth/2, this.map.tileWidth + markerWidth, this.map.tileHeight + markerWidth);
   }
 
   update() {
@@ -122,8 +114,8 @@ export default class Game extends Phaser.Scene {
     const worldPoint: any = this.input.activePointer.positionToCamera(this.cameras.main);
 
     // Move map marker over pointed tile
-    const pointerTileXY = this.mapLayers['ui'] .worldToTileXY(worldPoint.x, worldPoint.y);
-    const snappedWorldPoint = this.mapLayers['ui'] .tileToWorldXY(pointerTileXY.x, pointerTileXY.y);
+    const pointerTileXY = this.mapLayers['ui'].worldToTileXY(worldPoint.x, worldPoint.y);
+    const snappedWorldPoint = this.mapLayers['ui'].tileToWorldXY(pointerTileXY.x, pointerTileXY.y);
     this.marker.setPosition(snappedWorldPoint.x, snappedWorldPoint.y);
   }
 
@@ -133,5 +125,12 @@ export default class Game extends Phaser.Scene {
 
     // shake the world
     this.cameras.main.fade(1000);
+  }
+
+  getTilePosition(xIndex: number, yIndex: number) {
+    return {
+      x: xIndex * this.TILE_SIZE + this.TILE_SIZE/2,
+      y: yIndex * this.TILE_SIZE + this.TILE_SIZE/2,
+    };
   }
 }

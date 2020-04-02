@@ -1,6 +1,6 @@
 import 'phaser';
 
-export default class Boot extends Phaser.Scene {
+export default class BootScene extends Phaser.Scene {
   constructor() {
     super('BootScene');
   }
@@ -16,6 +16,6 @@ export default class Boot extends Phaser.Scene {
   }
 
   create() {
-    this.scene.start('GameScene');
+    this.scene.start('WorldScene');
   }
 }
