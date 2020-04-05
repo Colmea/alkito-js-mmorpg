@@ -9,14 +9,16 @@ export enum UnitType {
 
 
 export default class Unit extends Phaser.GameObjects.Container {
+    // Info
     unitType: UnitType;
+    private unitName: string;
+    hp: number = 100;
+    damage: number = 10;
+    // Systems
     follower: Mover;
     body: Phaser.Physics.Arcade.Body;
     unitSprite: Phaser.GameObjects.Sprite;
-
-    name: string;
-    hp: number = 100;
-    damage: number = 10;
+    nameText: Phaser.GameObjects.Text;
 
     constructor(
         scene: Phaser.Scene,
@@ -42,6 +44,13 @@ export default class Unit extends Phaser.GameObjects.Container {
         scene.events.on("update", this.update, this);
     }
 
+    set name(name: string) {
+        this.unitName = name;
+
+        if (this.nameText)
+            this.nameText.setText(this.unitName);
+    }
+
     private _createUnitSprite(navMesh: any, texture: string, frame: number) {
         this.unitSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, texture, frame);
         this.scene.add.existing(this.unitSprite);
@@ -53,13 +62,13 @@ export default class Unit extends Phaser.GameObjects.Container {
     }
 
     private _createName() {
-        const nameText = new Phaser.GameObjects.Text(this.scene, 0, 0, "Player", {
+        this.nameText = new Phaser.GameObjects.Text(this.scene, 0, 0, this.unitName, {
             fontSize: '8',
         });
-        nameText.setOrigin(0.5, 2.4);
+        this.nameText.setOrigin(0.5, 2.4);
 
-        this.scene.add.existing(nameText);
-        this.add(nameText);
+        this.scene.add.existing(this.nameText);
+        this.add(this.nameText);
     }
 
     public goTo(destination: Phaser.Math.Vector2) {
