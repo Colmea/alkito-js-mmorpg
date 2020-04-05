@@ -1,5 +1,6 @@
 import 'phaser';
 import Player from '../models/Player';
+import Item from '../models/Item';
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -44,8 +45,8 @@ export default class WorldScene extends Phaser.Scene {
     // });
 
     // Player
-    const playerPos = this.getTilePosition(11, 8);
-    this.player = new Player(this, playerPos.x, playerPos.y, this.navMesh);
+ 
+    this.player = new Player(this, 11, 8, this.navMesh);
 
     this.physics.world.bounds.width = this.map.widthInPixels;
     this.physics.world.bounds.height = this.map.heightInPixels;
@@ -89,6 +90,9 @@ export default class WorldScene extends Phaser.Scene {
       repeat: -1
     });
 
+    // Objects
+    const object001 = new Item(this, 12, 10, this.navMesh);
+
     // Enemies
     const enemy001 = this.physics.add.sprite(120, 150, 'enemy-1', 1);
 
@@ -125,12 +129,5 @@ export default class WorldScene extends Phaser.Scene {
 
     // shake the world
     this.cameras.main.fade(1000);
-  }
-
-  getTilePosition(xIndex: number, yIndex: number) {
-    return {
-      x: xIndex * this.TILE_SIZE + this.TILE_SIZE / 2,
-      y: yIndex * this.TILE_SIZE + this.TILE_SIZE / 2,
-    };
   }
 }

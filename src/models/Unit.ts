@@ -1,12 +1,14 @@
 import 'phaser';
+import CONFIG from '../gameConfig';
+import { getTilePosition } from '../utils/tileUtils';
 import Mover from '../systems/Mover';
 
 export enum UnitType {
     PLAYER,
     PNJ,
     ENEMY,
+    OBJECT,
 };
-
 
 export default class Unit extends Phaser.GameObjects.Container {
     // Info
@@ -14,6 +16,8 @@ export default class Unit extends Phaser.GameObjects.Container {
     private unitName: string;
     hp: number = 100;
     damage: number = 10;
+    isMoving: boolean = true;
+
     // Systems
     follower: Mover;
     body: Phaser.Physics.Arcade.Body;
@@ -22,15 +26,15 @@ export default class Unit extends Phaser.GameObjects.Container {
 
     constructor(
         scene: Phaser.Scene,
-        x: number,
-        y: number,
+        xTile: number,
+        yTile: number,
         navMesh: any,
         texture: string,
         frame: number = 1,
     ) {
-        super(scene, x, y);
+        super(scene, getTilePosition(xTile, yTile).x, getTilePosition(xTile, yTile).y);
 
-        this.setSize(32, 32);
+        this.setSize(CONFIG.TILE_SIZE, CONFIG.TILE_SIZE);
         this.scene.physics.world.enable(this);
         
         scene.add.existing(this);
@@ -54,8 +58,22 @@ export default class Unit extends Phaser.GameObjects.Container {
     private _createUnitSprite(navMesh: any, texture: string, frame: number) {
         this.unitSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, texture, frame);
         this.scene.add.existing(this.unitSprite);
-
         this.add(this.unitSprite);
+        this.unitSprite.setInteractive();
+
+        this.unitSprite.on('pointerover', () => {
+            this.unitSprite.setTint(0xFFFF000);
+        });
+    
+        this.unitSprite.on('pointerout', () => {
+            this.unitSprite.clearTint();
+        });
+
+        this.unitSprite.on('pointerdown', (pointer, x, y, e) => {
+            // stop propagation (void detect click on map)
+            e.stopPropagation();
+            console.log('Element clicked:', this.unitName, );
+        });
 
         // Register "follower" behavior
         this.follower = new Mover(this.scene, navMesh, this.body);
@@ -86,6 +104,8 @@ export default class Unit extends Phaser.GameObjects.Container {
     }
 
     update() {
+        if (!this.isMoving) return;
+
         // Animate player following current velocity
         const velocity = this.body.velocity;
         if (velocity.y > 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
