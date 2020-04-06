@@ -3,6 +3,7 @@ import CONFIG from '../gameConfig';
 import { getTilePosition } from '../utils/tileUtils';
 import Mover from '../systems/Mover';
 import WorldScene from '../scenes/WorldScene';
+import EventDispatcher from '../EventDispatcher';
 
 export enum UnitType {
     PLAYER,
@@ -14,13 +15,14 @@ export enum UnitType {
 export default class Unit extends Phaser.GameObjects.Container {
     // Info
     unitType: UnitType;
-    private unitName: string;
+    unitName: string;
     hp: number = 100;
     damage: number = 10;
     isMoving: boolean = true;
 
     // Systems
     scene: WorldScene;
+    emitter: EventDispatcher;
     follower: Mover;
     body: Phaser.Physics.Arcade.Body;
     unitSprite: Phaser.GameObjects.Sprite;
@@ -36,6 +38,8 @@ export default class Unit extends Phaser.GameObjects.Container {
     ) {
         super(scene, getTilePosition(xTile, yTile).x, getTilePosition(xTile, yTile).y);
 
+        this.emitter = EventDispatcher.getInstance();
+
         this.setSize(CONFIG.TILE_SIZE, CONFIG.TILE_SIZE);
         this.scene.physics.world.enable(this);
         
@@ -47,7 +51,7 @@ export default class Unit extends Phaser.GameObjects.Container {
         this._createName();
 
         // Register update loop
-        scene.events.on("update", this.update, this);
+        scene.events.on('update', this.update, this);
     }
 
     set name(name: string) {
@@ -76,7 +80,7 @@ export default class Unit extends Phaser.GameObjects.Container {
             e.stopPropagation();
             // Find tile next to object and move player
             const tileNextToObject = this.getTile('next');
-            this.scene.player.goTo(tileNextToObject);
+            this.emitter.emit('unit.goTo', this.scene.player, tileNextToObject);
         });
 
         // Register "follower" behavior

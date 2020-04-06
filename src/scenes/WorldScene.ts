@@ -1,6 +1,8 @@
 import 'phaser';
 import Player from '../models/Player';
 import Item from '../models/Item';
+import Unit from '../models/Unit';
+import EventDispatcher from '../EventDispatcher';
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -8,6 +10,7 @@ type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTile
 export default class WorldScene extends Phaser.Scene {
   TILE_SIZE: number = 32;
 
+  emitter: EventDispatcher;
   navMeshPlugin: any;
   navMesh: any;
   marker: Phaser.GameObjects.Graphics;
@@ -17,9 +20,28 @@ export default class WorldScene extends Phaser.Scene {
 
   constructor() {
     super('WorldScene');
+
+    this.emitter = EventDispatcher.getInstance();
   }
 
   create() {
+    this._createMap();
+    this._createAnims();
+
+    // Player
+    this.player = new Player(this, 11, 8, this.navMesh);
+    // Objects
+    const object001 = new Item(this, 12, 10, this.navMesh);
+
+    // Camera follow player
+    this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+    this.cameras.main.startFollow(this.player);
+    this.cameras.main.roundPixels = true;
+
+    this._createEvents();
+  }
+
+  private _createMap() {
     this.map = this.make.tilemap({ key: 'map' });
 
     const tiles = this.map.addTilesetImage('tileset', 'tiles');
@@ -36,6 +58,18 @@ export default class WorldScene extends Phaser.Scene {
       obstaclesLayer,
     );
 
+    this.physics.world.bounds.width = this.map.widthInPixels;
+    this.physics.world.bounds.height = this.map.heightInPixels;
+
+    // Tile marker
+    // Create a simple graphic that can be used to show which tile the mouse is over
+    const markerWidth = 4;
+    this.marker = this.add.graphics();
+    this.marker.lineStyle(markerWidth, 0xffffff, .3);
+    this.marker.strokeRect(-markerWidth / 2, -markerWidth / 2, this.map.tileWidth + markerWidth, this.map.tileHeight + markerWidth);
+
+    // DEBUG NAVMESH
+    //
     // this.navMesh.enableDebug();
     // this.navMesh.debugDrawMesh({
     //   drawCentroid: true,
@@ -43,25 +77,9 @@ export default class WorldScene extends Phaser.Scene {
     //   drawNeighbors: true,
     //   drawPortals: true
     // });
+  }
 
-    // Player
- 
-    this.player = new Player(this, 11, 8, this.navMesh);
-
-    this.physics.world.bounds.width = this.map.widthInPixels;
-    this.physics.world.bounds.height = this.map.heightInPixels;
-
-    // Trigger on click on map
-    this.input.on("pointerdown", pointer => {
-      const end = new Phaser.Math.Vector2(pointer.x, pointer.y);
-      // Find corresponding tile from click
-      const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
-      
-      // Move Player to this position
-      // Player will automatically find its path to the point an dupdate its position accordingly
-      this.player.goTo(tile);
-    });
-
+  private _createAnims() {
     // Player animation (used mainly in the Player class when moving)
     // Need refactoring
     this.anims.create({
@@ -88,24 +106,25 @@ export default class WorldScene extends Phaser.Scene {
       frameRate: 10,
       repeat: -1
     });
+  }
 
-    // Objects
-    const object001 = new Item(this, 12, 10, this.navMesh);
+  private _createEvents() {
+    // On map click
+    this.input.on('pointerdown', this.onMapClick);
+    // On unit.created event
+    this.emitter.on('unit.goTo', (unit: Unit, tile: Phaser.Tilemaps.Tile) => {
+      unit.goTo(tile);
+    });
+  }
 
-    // Enemies
-    const enemy001 = this.physics.add.sprite(120, 150, 'enemy-1', 1);
-
-    // Camera follow player
-    this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-    this.cameras.main.startFollow(this.player);
-    this.cameras.main.roundPixels = true;
-
-    // Tile marker
-    // Create a simple graphic that can be used to show which tile the mouse is over
-    const markerWidth = 4;
-    this.marker = this.add.graphics();
-    this.marker.lineStyle(markerWidth, 0xffffff, .3);
-    this.marker.strokeRect(-markerWidth / 2, -markerWidth / 2, this.map.tileWidth + markerWidth, this.map.tileHeight + markerWidth);
+  onMapClick = (pointer: Phaser.Input.Pointer) => {
+    const end = new Phaser.Math.Vector2(pointer.x, pointer.y);
+      // Find corresponding tile from click
+      const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
+      
+      // Move Player to this position
+      // Player will automatically find its path to the point and update its position accordingly
+      this.emitter.emit('unit.goTo', this.player, tile);
   }
 
   update() {
