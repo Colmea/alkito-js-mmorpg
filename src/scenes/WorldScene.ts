@@ -56,11 +56,10 @@ export default class WorldScene extends Phaser.Scene {
       const end = new Phaser.Math.Vector2(pointer.x, pointer.y);
       // Find corresponding tile from click
       const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
-      // Get center of the tile
-      const tilePosition = new Phaser.Math.Vector2(tile.pixelX + this.TILE_SIZE / 2, tile.pixelY + this.TILE_SIZE / 2);
+      
       // Move Player to this position
       // Player will automatically find its path to the point an dupdate its position accordingly
-      this.player.goTo(tilePosition);
+      this.player.goTo(tile);
     });
 
     // Player animation (used mainly in the Player class when moving)

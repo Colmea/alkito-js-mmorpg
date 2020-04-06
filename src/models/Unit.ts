@@ -2,6 +2,7 @@ import 'phaser';
 import CONFIG from '../gameConfig';
 import { getTilePosition } from '../utils/tileUtils';
 import Mover from '../systems/Mover';
+import WorldScene from '../scenes/WorldScene';
 
 export enum UnitType {
     PLAYER,
@@ -19,13 +20,14 @@ export default class Unit extends Phaser.GameObjects.Container {
     isMoving: boolean = true;
 
     // Systems
+    scene: WorldScene;
     follower: Mover;
     body: Phaser.Physics.Arcade.Body;
     unitSprite: Phaser.GameObjects.Sprite;
     nameText: Phaser.GameObjects.Text;
 
     constructor(
-        scene: Phaser.Scene,
+        scene: WorldScene,
         xTile: number,
         yTile: number,
         navMesh: any,
@@ -72,7 +74,9 @@ export default class Unit extends Phaser.GameObjects.Container {
         this.unitSprite.on('pointerdown', (pointer, x, y, e) => {
             // stop propagation (void detect click on map)
             e.stopPropagation();
-            console.log('Element clicked:', this.unitName, );
+            // Find tile next to object and move player
+            const tileNextToObject = this.getTile('next');
+            this.scene.player.goTo(tileNextToObject);
         });
 
         // Register "follower" behavior
@@ -89,9 +93,9 @@ export default class Unit extends Phaser.GameObjects.Container {
         this.add(this.nameText);
     }
 
-    public goTo(destination: Phaser.Math.Vector2) {
+    public goTo(tileDestination: Phaser.Tilemaps.Tile) {
         if (this.follower) {
-            this.follower.goTo(destination);
+            this.follower.goTo(tileDestination);
         }
     }
 
@@ -101,6 +105,17 @@ export default class Unit extends Phaser.GameObjects.Container {
 
     public takeDamage (damage: number) {
         this.hp -= damage;        
+    }
+
+    public getTile(position?: 'next') {
+        let x = this.x;
+        let y = this.y;
+
+        if (position === 'next') {
+            x += CONFIG.TILE_SIZE;
+        }
+
+        return this.scene.map.getTileAtWorldXY(x, y, false, this.scene.cameras.main, this.scene.mapLayers['grass']);
     }
 
     update() {

@@ -1,3 +1,5 @@
+import CONFIG from '../gameConfig';
+
 export default class Mover {
     MAX_SPEED: number = 120;
 
@@ -18,7 +20,8 @@ export default class Mover {
       scene.events.once("shutdown", this.destroy, this);
     }
   
-    goTo(targetPoint: Phaser.Math.Vector2) {
+    goTo(tile: Phaser.Tilemaps.Tile) {
+      const targetPoint = new Phaser.Math.Vector2(tile.pixelX + CONFIG.TILE_SIZE / 2, tile.pixelY + CONFIG.TILE_SIZE / 2);
       // Find a path to the target
       this.path = this.navMesh.findPath(new Phaser.Math.Vector2(this.body.x + this.body.width/2, this.body.y + this.body.height/2), targetPoint);
 
