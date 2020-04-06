@@ -16,7 +16,9 @@ export default class WorldScene extends Phaser.Scene {
   marker: Phaser.GameObjects.Graphics;
   map: Phaser.Tilemaps.Tilemap;
   mapLayers: { [key: string]: MapLayer } = {};
+
   player: Player;
+  currentSelection: Unit | null;
 
   constructor() {
     super('WorldScene');
@@ -115,6 +117,18 @@ export default class WorldScene extends Phaser.Scene {
     this.emitter.on('unit.goTo', (unit: Unit, tile: Phaser.Tilemaps.Tile) => {
       unit.goTo(tile);
     });
+    this.emitter.on('unit.select', (unit: Unit, flag: boolean = true) => {
+      if (this.currentSelection) {
+        this.currentSelection.select(false);
+      }
+
+      if (flag) 
+        this.currentSelection = unit;
+      else
+        this.currentSelection = null;
+
+      unit.select(flag);
+    });
   }
 
   onMapClick = (pointer: Phaser.Input.Pointer) => {
@@ -128,7 +142,8 @@ export default class WorldScene extends Phaser.Scene {
   }
 
   update() {
-    this.updateMapMarker();
+    if (!this.currentSelection)
+      this.updateMapMarker();
   }
 
   private updateMapMarker() {

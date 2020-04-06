@@ -20,6 +20,9 @@ export default class Unit extends Phaser.GameObjects.Container {
     damage: number = 10;
     isMoving: boolean = true;
 
+    // States
+    isSelected: boolean = false;
+
     // Systems
     scene: WorldScene;
     emitter: EventDispatcher;
@@ -27,6 +30,7 @@ export default class Unit extends Phaser.GameObjects.Container {
     body: Phaser.Physics.Arcade.Body;
     unitSprite: Phaser.GameObjects.Sprite;
     nameText: Phaser.GameObjects.Text;
+    actionIcon: Phaser.GameObjects.Sprite;
 
     constructor(
         scene: WorldScene,
@@ -49,6 +53,7 @@ export default class Unit extends Phaser.GameObjects.Container {
         this._createUnitSprite(navMesh, texture, frame);
         // Create name info
         this._createName();
+        this._createAction();
 
         // Register update loop
         scene.events.on('update', this.update, this);
@@ -80,11 +85,29 @@ export default class Unit extends Phaser.GameObjects.Container {
             e.stopPropagation();
             // Find tile next to object and move player
             const tileNextToObject = this.getTile('next');
-            this.emitter.emit('unit.goTo', this.scene.player, tileNextToObject);
+            this.emitter.emit('unit.select', this);
         });
 
         // Register "follower" behavior
         this.follower = new Mover(this.scene, navMesh, this.body);
+    }
+
+    private _createAction() {
+        this.actionIcon = new Phaser.GameObjects.Sprite(this.scene, -10, -50, 'icons', 5);
+        this.actionIcon.setScale(.8);
+        this.actionIcon.setVisible(false);
+        this.scene.add.existing(this.actionIcon);
+        this.add(this.actionIcon);
+        this.actionIcon.setInteractive();
+
+        this.actionIcon.on('pointerdown', (pointer, x, y, e) => {
+            // stop propagation (void detect click on map)
+            e.stopPropagation();
+            // Find tile next to object and move player
+            const tileNextToObject = this.getTile('next');
+            this.emitter.emit('unit.select', this, false);
+            this.emitter.emit('unit.goTo', this.scene.player, tileNextToObject);
+        });
     }
 
     private _createName() {
@@ -107,8 +130,13 @@ export default class Unit extends Phaser.GameObjects.Container {
         target.takeDamage(this.damage);      
     }
 
-    public takeDamage (damage: number) {
+    public takeDamage(damage: number) {
         this.hp -= damage;        
+    }
+
+    public select(flag: boolean) {
+        this.isSelected = flag;
+        this.actionIcon.setVisible(flag);
     }
 
     public getTile(position?: 'next') {

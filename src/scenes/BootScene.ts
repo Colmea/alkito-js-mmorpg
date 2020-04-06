@@ -13,7 +13,7 @@ export default class BootScene extends Phaser.Scene {
     // player
     this.load.spritesheet('tileset', 'assets/map/tileset.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('player', 'assets/player-sprite.png', { frameWidth: 32, frameHeight: 32 });
-    this.load.spritesheet('enemy-1', 'assets/pnj/ennemies/enemy-001.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('icons', 'assets/icons.png', { frameWidth: 64, frameHeight: 64 });
   }
 
   create() {
