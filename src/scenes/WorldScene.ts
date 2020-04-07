@@ -132,13 +132,19 @@ export default class WorldScene extends Phaser.Scene {
   }
 
   onMapClick = (pointer: Phaser.Input.Pointer) => {
+    // If something is selected, unselected
+    if (this.currentSelection) {
+      this.emitter.emit('unit.select', null);
+      return;
+    }
+
     const end = new Phaser.Math.Vector2(pointer.x, pointer.y);
-      // Find corresponding tile from click
-      const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
+    // Find corresponding tile from click
+    const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
       
-      // Move Player to this position
-      // Player will automatically find its path to the point and update its position accordingly
-      this.emitter.emit('unit.goTo', this.player, tile);
+    // Move Player to this position
+    // Player will automatically find its path to the point and update its position accordingly
+    this.emitter.emit('unit.goTo', this.player, tile);
   }
 
   update() {

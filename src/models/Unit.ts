@@ -4,6 +4,8 @@ import { getTilePosition } from '../utils/tileUtils';
 import Mover from '../systems/Mover';
 import WorldScene from '../scenes/WorldScene';
 import EventDispatcher from '../EventDispatcher';
+import UIActions from './ui/UIActions';
+import { ActionType } from '../types/Actions';
 
 export enum UnitType {
     PLAYER,
@@ -30,7 +32,7 @@ export default class Unit extends Phaser.GameObjects.Container {
     body: Phaser.Physics.Arcade.Body;
     unitSprite: Phaser.GameObjects.Sprite;
     nameText: Phaser.GameObjects.Text;
-    actionIcon: Phaser.GameObjects.Sprite;
+    actionIcon: UIActions;
 
     constructor(
         scene: WorldScene,
@@ -68,9 +70,10 @@ export default class Unit extends Phaser.GameObjects.Container {
 
     private _createUnitSprite(navMesh: any, texture: string, frame: number) {
         this.unitSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, texture, frame);
+        this.unitSprite.setInteractive({ useHandCursor: true });
+
         this.scene.add.existing(this.unitSprite);
         this.add(this.unitSprite);
-        this.unitSprite.setInteractive();
 
         this.unitSprite.on('pointerover', () => {
             this.unitSprite.setTint(0xFFFF000);
@@ -93,16 +96,10 @@ export default class Unit extends Phaser.GameObjects.Container {
     }
 
     private _createAction() {
-        this.actionIcon = new Phaser.GameObjects.Sprite(this.scene, -10, -50, 'icons', 5);
-        this.actionIcon.setScale(.8);
-        this.actionIcon.setVisible(false);
-        this.scene.add.existing(this.actionIcon);
+        this.actionIcon = new UIActions(this.scene, -10, -50, ActionType.TAKE);
         this.add(this.actionIcon);
-        this.actionIcon.setInteractive();
 
-        this.actionIcon.on('pointerdown', (pointer, x, y, e) => {
-            // stop propagation (void detect click on map)
-            e.stopPropagation();
+        this.actionIcon.onClick(() => {
             // Find tile next to object and move player
             const tileNextToObject = this.getTile('next');
             this.emitter.emit('unit.select', this, false);
