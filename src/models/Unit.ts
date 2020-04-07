@@ -96,9 +96,9 @@ export default class Unit extends Phaser.GameObjects.Container {
     }
 
     private _createAction() {
-        this.actionIcon = new UIActions(this.scene, -10, -50, ActionType.TAKE);
+        this.actionIcon = new UIActions(this.scene, 0, -50, ActionType.TAKE);
         this.add(this.actionIcon);
-
+    
         this.actionIcon.onClick(() => {
             // Find tile next to object and move player
             const tileNextToObject = this.getTile('next');

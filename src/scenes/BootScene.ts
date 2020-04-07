@@ -8,6 +8,8 @@ export default class BootScene extends Phaser.Scene {
   preload() {
     // map tiles
     this.load.image('tiles', 'assets/map/tileset.png');
+    this.load.image('ui.slot', 'assets/ui/slot.png');
+    this.load.image('ui.slot-round', 'assets/ui/slot-round.png');
     // map in json format
     this.load.tilemapTiledJSON('map', 'assets/map/world.json');
     // player
