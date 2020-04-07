@@ -41,8 +41,10 @@ export default class UIActions extends Phaser.GameObjects.Container {
   }
 
   public setVisible(newVisible: boolean): this {
+       if (this.visible === newVisible) return this;;
+
     if (newVisible) super.setVisible(newVisible);
-    
+ 
     const animScale = newVisible ? { from: .1, to: 1 } : { from: 1, to: .1 };
     const animY = newVisible ? { from: 0, to: -50 } : { from: -50, to: 0 };
 

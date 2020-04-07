@@ -76,11 +76,12 @@ export default class Unit extends Phaser.GameObjects.Container {
         this.add(this.unitSprite);
 
         this.unitSprite.on('pointerover', () => {
-            this.unitSprite.setTint(0xFFFF000);
+            this.unitSprite.setTint(0x999999);
         });
     
         this.unitSprite.on('pointerout', () => {
-            this.unitSprite.clearTint();
+            if (!this.isSelected)
+                this.unitSprite.clearTint();
         });
 
         this.unitSprite.on('pointerdown', (pointer, x, y, e) => {
@@ -131,9 +132,12 @@ export default class Unit extends Phaser.GameObjects.Container {
         this.hp -= damage;        
     }
 
-    public select(flag: boolean) {
-        this.isSelected = flag;
-        this.actionIcon.setVisible(flag);
+    public select(isSelected: boolean) {
+        this.isSelected = isSelected;
+        this.actionIcon.setVisible(isSelected);
+
+        if (isSelected) this.unitSprite.setTint(0x999999);
+        else this.unitSprite.clearTint();
     }
 
     public getTile(position?: 'next') {
