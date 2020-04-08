@@ -3,12 +3,15 @@ import * as PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
 
 export default {
   type: Phaser.AUTO,
-  parent: 'game',
+  parent: window.document,
   backgroundColor: '#33A5E7',
-  width: 1400,
-  height: 800,
+  width: '70%',
+  height: '80%',
+  scale: {
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+  },
   zoom: 1,
-  pixelArt: true,
+  // pixelArt: true,
   physics: {
     default: 'arcade',
     arcade: {
