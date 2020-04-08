@@ -41,6 +41,8 @@ export default class WorldScene extends Phaser.Scene {
     this.cameras.main.roundPixels = true;
 
     this._createEvents();
+
+    this.scene.launch('UIScene');
   }
 
   private _createMap() {
