@@ -107,9 +107,17 @@ export default class Entity extends Phaser.GameObjects.Container {
             const tileNextToObject = this.getTile('next');
             this.emitter.emit('unit.select', this, false);
 
-            this.actions.enqueue(this.scene.player, { type: 'go-to', args: [tileNextToObject] });
+            this.actions.enqueue(this.scene.player, {
+                type: 'go-to',
+                args: [tileNextToObject],
+                isCompleted: (player: Entity) => {
+                    const playerTile = player.getTile();
+
+                    // Move is completed when player's tile = tile next to object
+                    return (player.getTile() === tileNextToObject);
+                }
+            });
             this.actions.enqueue(this.scene.player, { type: 'take', args: [this] });
-            // this.emitter.emit('unit.goTo', this.scene.player, tileNextToObject);
         });
     }
 
@@ -162,7 +170,6 @@ export default class Entity extends Phaser.GameObjects.Container {
         // Animate player following current velocity
         const velocity = this.body.velocity;
         if (velocity.y > 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
-            console.log('down');
             this.unitSprite.play('down', true);
         }
         else if (this.body.velocity.y < 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {

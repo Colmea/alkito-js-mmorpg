@@ -1,12 +1,21 @@
 import EventDispatcher from './EventDispatcher';
 import Entity from '../models/Entity';
+import { ActionType } from '../types/Actions';
+
+enum ActionStatus {
+    PENDING,
+    RUNNING,
+    COMPLETED,
+}
 
 interface EntityAction {
+    status: ActionStatus;
     type: string;
     args?: any;
     isCompleted?: (entity: Entity) => boolean;
 }
 
+export type PendingEntityAction = Pick<EntityAction, 'type' | 'args' | 'isCompleted'>;
 
 let instance: EntityActionManager;
 export default class EntityActionManager {
@@ -37,21 +46,21 @@ export default class EntityActionManager {
         // scene.events.once("shutdown", this.destroy, this);
     }
 
-    processNow(entity: Entity, action: EntityAction) {
+    processNow(entity: Entity, action: PendingEntityAction) {
         // Register entity
         this.entities[entity.id] = entity;
 
         // Clear queue and add actoin
-        this.actionsQueue[entity.id] = [action];
+        this.actionsQueue[entity.id] = [this._createAction(action)];
     }
 
-    enqueue(entity: Entity, action: EntityAction) {
+    enqueue(entity: Entity, action: PendingEntityAction) {
         // Register entity
         this.entities[entity.id] = entity;
         // Create empty queue for this entity if needed
         if (!this.actionsQueue[entity.id]) this.actionsQueue[entity.id] = [];
 
-        this.actionsQueue[entity.id].push(action);
+        this.actionsQueue[entity.id].push(this._createAction(action));
     }
 
     update = () => {
@@ -64,17 +73,37 @@ export default class EntityActionManager {
                 continue;
             }
 
-            // Process first action in the queue
-            this.processAction(this.entities[entityId], entityActions[0]);
-            // Remove this action from the queue
-            entityActions.shift();
+            const nextAction = entityActions[0];
+
+            // Wait until current action is completed
+            if (nextAction.status === ActionStatus.RUNNING) {
+                if (nextAction.isCompleted(this.entities[entityId])) {
+                    entityActions.shift();
+                }
+
+                continue;
+            }
+            
+
+            // If no action running, process first action in the queue
+            this._processAction(this.entities[entityId], entityActions[0]);
         }
 
         setTimeout(this.update, this.THICK_TIMER);
     }
 
-    private processAction(entity: Entity, action: EntityAction) {
+    private _processAction(entity: Entity, action: EntityAction) {
+        action.status = ActionStatus.RUNNING;
         this.emitter.emit('action.' + action.type, entity, ...action.args);
+    }
+
+    private _createAction(action: PendingEntityAction): EntityAction {
+        const newAction = { ...action } as EntityAction;
+
+        newAction.status = ActionStatus.PENDING;
+        newAction.isCompleted = newAction.isCompleted ? newAction.isCompleted : () => (true);
+
+        return newAction;
     }
 
     destroy() {
