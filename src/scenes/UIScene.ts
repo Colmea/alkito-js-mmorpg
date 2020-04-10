@@ -1,5 +1,5 @@
 import 'phaser';
-import EventDispatcher from '../EventDispatcher';
+import EventDispatcher from '../managers/EventDispatcher';
 
 export default class UIScene extends Phaser.Scene {
   NB_INVENTORY_SLOT: number = 8;

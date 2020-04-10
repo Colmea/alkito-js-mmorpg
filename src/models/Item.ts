@@ -1,11 +1,7 @@
-import 'phaser';
-import Unit, { UnitType} from './Unit';
+import { v4 as uuid } from 'uuid';
 
-export default class Player extends Unit {
-    unitType = UnitType.OBJECT;
-    name = 'Plante';
-
-    constructor(scene, x, y, navMesh) {
-        super(scene, x, y, navMesh, 'tileset', 10);
-    }
+export default class Item {
+    id: string = uuid();
+    name: string;
+    price: number = 0;
 }

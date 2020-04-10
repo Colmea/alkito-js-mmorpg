@@ -1,22 +1,25 @@
 import 'phaser';
+import { v4 as uuid } from 'uuid';
 import CONFIG from '../gameConfig';
 import { getTilePosition } from '../utils/tileUtils';
 import Mover from '../systems/Mover';
 import WorldScene from '../scenes/WorldScene';
-import EventDispatcher from '../EventDispatcher';
+import EventDispatcher from '../managers/EventDispatcher';
+import EntityActionManager from '../managers/EntityActionManager';
 import UIActions from './ui/UIActions';
 import { ActionType } from '../types/Actions';
 
-export enum UnitType {
+export enum EntityType {
     PLAYER,
     PNJ,
     ENEMY,
     OBJECT,
 };
 
-export default class Unit extends Phaser.GameObjects.Container {
+export default class Entity extends Phaser.GameObjects.Container {
     // Info
-    unitType: UnitType;
+    id: string = uuid();
+    unitType: EntityType;
     unitName: string;
     hp: number = 100;
     damage: number = 10;
@@ -27,7 +30,8 @@ export default class Unit extends Phaser.GameObjects.Container {
 
     // Systems
     scene: WorldScene;
-    emitter: EventDispatcher;
+    emitter: EventDispatcher = EventDispatcher.getInstance();;
+    actions: EntityActionManager = EntityActionManager.getInstance();
     follower: Mover;
     body: Phaser.Physics.Arcade.Body;
     unitSprite: Phaser.GameObjects.Sprite;
@@ -43,8 +47,6 @@ export default class Unit extends Phaser.GameObjects.Container {
         frame: number = 1,
     ) {
         super(scene, getTilePosition(xTile, yTile).x, getTilePosition(xTile, yTile).y);
-
-        this.emitter = EventDispatcher.getInstance();
 
         this.setSize(CONFIG.TILE_SIZE, CONFIG.TILE_SIZE);
         this.scene.physics.world.enable(this);
@@ -104,7 +106,10 @@ export default class Unit extends Phaser.GameObjects.Container {
             // Find tile next to object and move player
             const tileNextToObject = this.getTile('next');
             this.emitter.emit('unit.select', this, false);
-            this.emitter.emit('unit.goTo', this.scene.player, tileNextToObject);
+
+            this.actions.enqueue(this.scene.player, { type: 'go-to', args: [tileNextToObject] });
+            this.actions.enqueue(this.scene.player, { type: 'take', args: [this] });
+            // this.emitter.emit('unit.goTo', this.scene.player, tileNextToObject);
         });
     }
 
@@ -124,7 +129,7 @@ export default class Unit extends Phaser.GameObjects.Container {
         }
     }
 
-    public attack(target: Unit) {
+    public attack(target: Entity) {
         target.takeDamage(this.damage);      
     }
 

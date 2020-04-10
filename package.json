@@ -20,7 +20,8 @@
   "dependencies": {
     "lodash": "^4.17.15",
     "phaser": "^3.22.0",
-    "phaser-navmesh": "2.0.5"
+    "phaser-navmesh": "2.0.5",
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "acorn": "^6.4.1",

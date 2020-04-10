@@ -1,8 +1,9 @@
 import 'phaser';
 import Player from '../models/Player';
-import Item from '../models/Item';
-import Unit from '../models/Unit';
-import EventDispatcher from '../EventDispatcher';
+import Item from '../models/Resource';
+import Entity from '../models/Entity';
+import EventDispatcher from '../managers/EventDispatcher';
+import EntityActionManager from '../managers/EntityActionManager';
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -10,7 +11,8 @@ type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTile
 export default class WorldScene extends Phaser.Scene {
   TILE_SIZE: number = 32;
 
-  emitter: EventDispatcher;
+  emitter: EventDispatcher = EventDispatcher.getInstance();;
+  entityActions: EntityActionManager;
   navMeshPlugin: any;
   navMesh: any;
   marker: Phaser.GameObjects.Graphics;
@@ -18,15 +20,15 @@ export default class WorldScene extends Phaser.Scene {
   mapLayers: { [key: string]: MapLayer } = {};
 
   player: Player;
-  currentSelection: Unit | null;
+  currentSelection: Entity | null;
 
   constructor() {
     super('WorldScene');
-
-    this.emitter = EventDispatcher.getInstance();
   }
 
   create() {
+    this.entityActions = EntityActionManager.init(this);
+
     this._createMap();
     this._createAnims();
 
@@ -116,10 +118,10 @@ export default class WorldScene extends Phaser.Scene {
     // On map click
     this.input.on('pointerdown', this.onMapClick);
     // On unit.created event
-    this.emitter.on('unit.goTo', (unit: Unit, tile: Phaser.Tilemaps.Tile) => {
+    this.emitter.on('action.go-to', (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
       unit.goTo(tile);
     });
-    this.emitter.on('unit.select', (unit: Unit, flag: boolean = true) => {
+    this.emitter.on('unit.select', (unit: Entity, flag: boolean = true) => {
       if (this.currentSelection) {
         this.currentSelection.select(false);
       }
@@ -146,7 +148,7 @@ export default class WorldScene extends Phaser.Scene {
       
     // Move Player to this position
     // Player will automatically find its path to the point and update its position accordingly
-    this.emitter.emit('unit.goTo', this.player, tile);
+    this.entityActions.processNow(this.player, { type: 'go-to', args: [tile] });
   }
 
   update() {

@@ -1,6 +1,6 @@
 import 'phaser';
-import Unit, { UnitType} from './Unit';
+import Entity, { EntityType} from './Entity';
 
-export default class Enemy extends Unit {
-    unitType: UnitType.ENEMY;
+export default class Enemy extends Entity {
+    unitType: EntityType.ENEMY;
 }
