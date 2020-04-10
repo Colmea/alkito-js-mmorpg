@@ -148,7 +148,7 @@ export default class WorldScene extends Phaser.Scene {
       return;
     }
 
-    const end = new Phaser.Math.Vector2(pointer.x, pointer.y);
+    const end = new Phaser.Math.Vector2(pointer.worldX, pointer.worldY);
     // Find corresponding tile from click
     const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
       
@@ -170,13 +170,5 @@ export default class WorldScene extends Phaser.Scene {
     const pointerTileXY = this.mapLayers['ui'].worldToTileXY(worldPoint.x, worldPoint.y);
     const snappedWorldPoint = this.mapLayers['ui'].tileToWorldXY(pointerTileXY.x, pointerTileXY.y);
     this.marker.setPosition(snappedWorldPoint.x, snappedWorldPoint.y);
-  }
-
-  onMeetEnemy = (player: ArcadeSprite, enemy: ArcadeSprite) => {
-    enemy.x = Phaser.Math.RND.between(0, 300);
-    enemy.z = Phaser.Math.RND.between(0, 300);
-
-    // shake the world
-    this.cameras.main.fade(1000);
   }
 }

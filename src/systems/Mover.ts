@@ -25,6 +25,9 @@ export default class Mover {
       // Find a path to the target
       this.path = this.navMesh.findPath(new Phaser.Math.Vector2(this.body.x + this.body.width/2, this.body.y + this.body.height/2), targetPoint);
 
+      // DEBUG PATH
+    //   this.navMesh.debugDrawPath(this.path, 0xffd900);
+
       // If there is a valid path, grab the first point from the path and set it as the target
       if (this.path && this.path.length > 0) this.currentTarget = this.path.shift();
       else this.currentTarget = null;

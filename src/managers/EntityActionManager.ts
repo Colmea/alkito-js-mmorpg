@@ -19,7 +19,7 @@ export type PendingEntityAction = Pick<EntityAction, 'type' | 'args' | 'isComple
 
 let instance: EntityActionManager;
 export default class EntityActionManager {
-    THICK_TIMER = 200;
+    THICK_TIMER = 100;
 
     emitter: EventDispatcher = EventDispatcher.getInstance();
     scene: Phaser.Scene;
