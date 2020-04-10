@@ -4,6 +4,7 @@ import Item from '../models/Resource';
 import Entity from '../models/Entity';
 import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
+import EntityActionProcessor from '../managers/EntityActionProcessor';
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -13,6 +14,7 @@ export default class WorldScene extends Phaser.Scene {
 
   emitter: EventDispatcher = EventDispatcher.getInstance();;
   entityActions: EntityActionManager;
+
   navMeshPlugin: any;
   navMesh: any;
   marker: Phaser.GameObjects.Graphics;
@@ -36,6 +38,9 @@ export default class WorldScene extends Phaser.Scene {
     this.player = new Player(this, 11, 8, this.navMesh);
     // Objects
     const object001 = new Item(this, 12, 10, this.navMesh);
+    const object002 = new Item(this, 6, 9, this.navMesh);
+    const object003 = new Item(this, 9, 11, this.navMesh);
+    const object004 = new Item(this, 10, 7, this.navMesh);
 
     // Camera follow player
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -44,7 +49,7 @@ export default class WorldScene extends Phaser.Scene {
 
     this._createEvents();
 
-    this.scene.launch('UIScene');
+    this.scene.launch('UIScene', { player: this.player });
   }
 
   private _createMap() {
@@ -115,12 +120,13 @@ export default class WorldScene extends Phaser.Scene {
   }
 
   private _createEvents() {
+    // Process entity related actions
+    const entityActionProcessor = new EntityActionProcessor();
+    entityActionProcessor.listen();
+
     // On map click
     this.input.on('pointerdown', this.onMapClick);
-    // On unit.created event
-    this.emitter.on('action.go-to', (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
-      unit.goTo(tile);
-    });
+   
     this.emitter.on('unit.select', (unit: Entity, flag: boolean = true) => {
       if (this.currentSelection) {
         this.currentSelection.select(false);

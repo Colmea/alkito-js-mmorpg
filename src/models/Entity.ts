@@ -164,25 +164,53 @@ export default class Entity extends Phaser.GameObjects.Container {
         return this.scene.map.getTileAtWorldXY(x, y, false, this.scene.cameras.main, this.scene.mapLayers['grass']);
     }
 
-    update() {
-        if (!this.isMoving) return;
+    /**
+     * Look at a specific entity
+     * @param entity
+     */
+    public lookAt(entity: Entity) {
+      const currentTile = this.getTile();
+      const targetTile = entity.getTile();
+      const distanceY = Math.abs(targetTile.y - currentTile.y);
+      const distanceX = Math.abs(targetTile.x - currentTile.x);
 
-        // Animate player following current velocity
-        const velocity = this.body.velocity;
-        if (velocity.y > 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
-            this.unitSprite.play('down', true);
-        }
-        else if (this.body.velocity.y < 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
-            this.unitSprite.play('up', true);
-        }
-        else if (velocity.x > 0) {
-            this.unitSprite.play('right', true);
-        }
-        else if (this.body.velocity.x < 0) {
-            this.unitSprite.play('left', true);
-        }
-        else {
-           this.unitSprite.anims.stop();
-        }
+      // Start direction animation
+      if (targetTile.y > currentTile.y && distanceY > distanceX) {
+        this.unitSprite.play('down', true);
+      }
+      else if (targetTile.y < currentTile.y && distanceY > distanceX) {
+        this.unitSprite.play('up', true);
+      }
+      else if (targetTile.x > currentTile.x) {
+        this.unitSprite.play('right', true);
+      }
+      else if (targetTile.x < currentTile.x) {
+        this.unitSprite.play('left', true);
+      }
+
+      // And stop it (we just need the entity to look at the target)
+      this.unitSprite.anims.stop();
+    }
+
+    update() {
+      if (!this.isMoving) return;
+
+      // Animate player following current velocity
+      const velocity = this.body.velocity;
+      if (velocity.y > 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
+          this.unitSprite.play('down', true);
+      }
+      else if (this.body.velocity.y < 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
+          this.unitSprite.play('up', true);
+      }
+      else if (velocity.x > 0) {
+          this.unitSprite.play('right', true);
+      }
+      else if (this.body.velocity.x < 0) {
+          this.unitSprite.play('left', true);
+      }
+      else {
+          this.unitSprite.anims.stop();
+      }
     }
 }
