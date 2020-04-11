@@ -41,7 +41,7 @@ export default class UIActions extends Phaser.GameObjects.Container {
   }
 
   public setVisible(newVisible: boolean): this {
-       if (this.visible === newVisible) return this;;
+    if (this.visible === newVisible) return this;
 
     if (newVisible) super.setVisible(newVisible);
  

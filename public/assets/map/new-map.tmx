@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="91">
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="108">
  <editorsettings>
   <export target="world.json" format="json"/>
  </editorsettings>
@@ -73,6 +73,48 @@
    <point/>
   </object>
   <object id="90" type="plant" x="497.845" y="529.053">
+   <point/>
+  </object>
+  <object id="91" type="barrel" x="622.678" y="659.831">
+   <point/>
+  </object>
+  <object id="95" type="barrel" x="525.736" y="657.996">
+   <point/>
+  </object>
+  <object id="96" type="plant" x="526.838" y="435.358">
+   <point/>
+  </object>
+  <object id="97" type="plant" x="462.912" y="428.745">
+   <point/>
+  </object>
+  <object id="98" type="plant" x="402.293" y="498.181">
+   <point/>
+  </object>
+  <object id="99" type="barrel" x="428.745" y="626.033">
+   <point/>
+  </object>
+  <object id="100" type="barrel" x="364.819" y="621.625">
+   <point/>
+  </object>
+  <object id="101" type="barrel" x="464.014" y="695.47">
+   <point/>
+  </object>
+  <object id="102" type="plant" x="589.662" y="525.736">
+   <point/>
+  </object>
+  <object id="103" type="plant" x="526.838" y="492.671">
+   <point/>
+  </object>
+  <object id="104" type="plant" x="817.811" y="498.181">
+   <point/>
+  </object>
+  <object id="105" type="plant" x="563.21" y="373.636">
+   <point/>
+  </object>
+  <object id="106" type="plant" x="395.679" y="448.584">
+   <point/>
+  </object>
+  <object id="107" type="plant" x="531.247" y="564.312">
    <point/>
   </object>
  </objectgroup>

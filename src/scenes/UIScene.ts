@@ -9,6 +9,7 @@ export default class UIScene extends Phaser.Scene {
   emitter: EventDispatcher = EventDispatcher.getInstance();
   player: Player;
   slots: Phaser.GameObjects.Image[] = [];
+  slotsQuantity: Phaser.GameObjects.Text[] = [];
   items: Phaser.GameObjects.Sprite[] = [];
 
   constructor() {
@@ -24,7 +25,10 @@ export default class UIScene extends Phaser.Scene {
     const y = this.scale.height - 30;
 
     for (let i=0; i < this.NB_INVENTORY_SLOT; i++) {
-      const slot = this.add.image(x + (i*40), y, 'ui.slot');
+      const slotX = x + (i*40);
+
+      // Create inventory slot
+      const slot = this.add.image(slotX, y, 'ui.slot');
       slot.setInteractive({ useHandCursor: true });
     
       slot.on('pointerover', () => {
@@ -38,6 +42,11 @@ export default class UIScene extends Phaser.Scene {
       });
 
       this.slots.push(slot);
+
+      // Create slot quantity
+      const slotQuantity = this.add.text(slotX + 3, y + 5, 'x0', { fontSize: '10px' });
+      slotQuantity.setVisible(false);
+      this.slotsQuantity.push(slotQuantity);
     }
 
     // Listen for inventory update and update its render in UI
@@ -53,11 +62,25 @@ export default class UIScene extends Phaser.Scene {
 
     inventory.items.forEach((item: InventoryItem, index: number) => {
       const slotItemSprite = this.items[index];
+      const slotQuantity = this.slotsQuantity[index];
 
-      // Create item
+      // Create item slot
       if (!slotItemSprite) {
         const itemSprite = this.add.sprite(x + (index*40), y, item.entity.unitSprite.texture.key, item.entity.unitSprite.frame.name);
         this.items[index] = itemSprite;
+      }
+      // Update item slot
+      else {
+        slotItemSprite.setTexture(item.entity.unitSprite.texture.key, item.entity.unitSprite.frame.name);
+
+        // Update slot quantity
+        if (item.quantity > 1) {
+          slotQuantity.setText(`x${item.quantity}`);
+          slotQuantity.setDepth(10);
+          slotQuantity.setVisible(true);
+        } else {
+          slotQuantity.setVisible(false);
+        }
       }
     });
   }
