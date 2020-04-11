@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+ <object name="Plante" type="10">
+  <properties>
+   <property name="name" value="Plante"/>
+   <property name="spriteFrame" type="int" value="10"/>
+  </properties>
+  <point/>
+ </object>
+</template>

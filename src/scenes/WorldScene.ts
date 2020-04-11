@@ -5,6 +5,7 @@ import Entity from '../models/Entity';
 import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
 import EntityActionProcessor from '../managers/EntityActionProcessor';
+import { getTilePosition } from '../utils/tileUtils';
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -35,12 +36,7 @@ export default class WorldScene extends Phaser.Scene {
     this._createAnims();
 
     // Player
-    this.player = new Player(this, 11, 8, this.navMesh);
-    // Objects
-    const object001 = new Item(this, 12, 10, this.navMesh);
-    const object002 = new Item(this, 6, 9, this.navMesh);
-    const object003 = new Item(this, 9, 11, this.navMesh);
-    const object004 = new Item(this, 10, 7, this.navMesh);
+    this.player = new Player(this, 21, 16, this.navMesh);
 
     // Camera follow player
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -62,6 +58,14 @@ export default class WorldScene extends Phaser.Scene {
     this.mapLayers['objects'].setCollisionByExclusion([-1]);
     this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', tiles, 0, 0);
     this.mapLayers['ui'] = this.map.createBlankDynamicLayer('UI', tiles);
+
+    // Objects from Map
+    const objects = this.map.getObjectLayer("Items");
+    // Create objects from data map
+    objects.objects.forEach((object: any) => {
+        const tile =  this.map.getTileAtWorldXY(object.x, object.y, false, this.cameras.main, this.mapLayers['grass']);
+        new Item(this, tile.x, tile.y, this.navMesh, object.name, object.type);
+    });
 
     const obstaclesLayer = this.map.getObjectLayer("Obstacles");
     this.navMesh = this.navMeshPlugin.buildMeshFromTiled(
@@ -127,7 +131,7 @@ export default class WorldScene extends Phaser.Scene {
     // On map click
     this.input.on('pointerdown', this.onMapClick);
    
-    this.emitter.on('unit.select', (unit: Entity, flag: boolean = true) => {
+    this.emitter.on('unit.select', (unit: Entity | null, flag: boolean = true) => {
       if (this.currentSelection) {
         this.currentSelection.select(false);
       }
@@ -137,7 +141,8 @@ export default class WorldScene extends Phaser.Scene {
       else
         this.currentSelection = null;
 
-      unit.select(flag);
+      if (unit)
+        unit.select(flag);
     });
   }
 
