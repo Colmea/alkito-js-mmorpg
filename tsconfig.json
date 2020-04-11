@@ -3,7 +3,8 @@
   "compilerOptions": {
     "target": "es5",
     "moduleResolution": "node",
-    "lib": ["esnext", "dom"]
+    "lib": ["esnext", "dom"],
+    "resolveJsonModule": true
   },
   "include": ["./src/**/*"]
 }

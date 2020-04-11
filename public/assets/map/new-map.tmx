@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="85">
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="50" height="50" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="91">
  <editorsettings>
   <export target="world.json" format="json"/>
  </editorsettings>
@@ -57,27 +57,23 @@
   <object id="83" x="736" y="640" width="64" height="32"/>
  </objectgroup>
  <objectgroup id="6" name="Items">
-  <object id="60" template="Plante.tx" name="Plante" type="10" x="366" y="542"/>
-  <object id="62" template="Plante.tx" name="Plante" type="10" x="322" y="644"/>
-  <object id="63" template="Plante.tx" name="Plante" type="10" x="487" y="667"/>
-  <object id="64" template="Plante.tx" name="Plante" type="10" x="630" y="385"/>
-  <object id="65" template="Plante.tx" name="Plante" type="10" x="882" y="292"/>
-  <object id="66" template="Plante.tx" name="Plante" type="10" x="961" y="905"/>
-  <object id="67" template="Plante.tx" name="Plante" type="10" x="901" y="951"/>
-  <object id="68" template="Plante.tx" name="Plante" type="10" x="872" y="984"/>
-  <object id="69" template="Plante.tx" name="Plante" type="10" x="980" y="993"/>
-  <object id="70" template="Plante.tx" name="Plante" type="10" x="218" y="974"/>
-  <object id="71" template="Plante.tx" name="Plante" type="10" x="480" y="815"/>
-  <object id="72" template="Plante.tx" name="Plante" type="10" x="99" y="331"/>
-  <object id="73" template="Plante.tx" name="Plante" type="10" x="943" y="655"/>
-  <object id="74" template="Plante.tx" name="Plante" type="10" x="907" y="664"/>
-  <object id="75" template="Plante.tx" name="Plante" type="10" x="1115" y="409"/>
-  <object id="76" template="Plante.tx" name="Plante" type="10" x="1267" y="231"/>
-  <object id="77" template="Plante.tx" name="Plante" type="10" x="1413" y="503"/>
-  <object id="78" template="Plante.tx" name="Plante" type="10" x="1387" y="724"/>
-  <object id="79" template="Plante.tx" name="Plante" type="10" x="1180" y="815"/>
-  <object id="80" template="Plante.tx" name="Plante" type="10" x="1314" y="942"/>
-  <object id="82" template="Plante.tx" name="Tonneau" type="12" x="753" y="659"/>
-  <object id="84" template="Plante.tx" name="Farine" type="79" x="1073" y="659"/>
+  <object id="85" type="plant" x="624.201" y="592.401">
+   <point/>
+  </object>
+  <object id="86" type="barrel" x="751.969" y="658.344">
+   <point/>
+  </object>
+  <object id="87" type="plant" x="722.247" y="497.845">
+   <point/>
+  </object>
+  <object id="88" type="plant" x="591.47" y="466.637">
+   <point/>
+  </object>
+  <object id="89" type="plant" x="656.858" y="432.457">
+   <point/>
+  </object>
+  <object id="90" type="plant" x="497.845" y="529.053">
+   <point/>
+  </object>
  </objectgroup>
 </map>

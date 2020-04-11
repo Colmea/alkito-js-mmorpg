@@ -1,7 +1,7 @@
 import 'phaser';
 import EventDispatcher from '../managers/EventDispatcher';
 import Player from '../models/Player';
-import Item from '../models/Item';
+import InventoryItem from '../models/InventoryItem';
 
 export default class UIScene extends Phaser.Scene {
   NB_INVENTORY_SLOT: number = 8;
@@ -51,7 +51,7 @@ export default class UIScene extends Phaser.Scene {
     const x = this.scale.width / 2 - (this.NB_INVENTORY_SLOT * 40 / 2);
     const y = this.scale.height - 30;
 
-    inventory.items.forEach((item: Item, index: number) => {
+    inventory.items.forEach((item: InventoryItem, index: number) => {
       const slotItemSprite = this.items[index];
 
       // Create item

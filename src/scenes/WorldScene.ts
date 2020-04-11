@@ -1,6 +1,6 @@
 import 'phaser';
 import Player from '../models/Player';
-import Item from '../models/Resource';
+import ObjectEntity from '../models/ObjectEntity';
 import Entity from '../models/Entity';
 import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
@@ -64,7 +64,7 @@ export default class WorldScene extends Phaser.Scene {
     // Create objects from data map
     objects.objects.forEach((object: any) => {
         const tile =  this.map.getTileAtWorldXY(object.x, object.y, false, this.cameras.main, this.mapLayers['grass']);
-        new Item(this, tile.x, tile.y, this.navMesh, object.name, object.type);
+        new ObjectEntity(this, tile.x, tile.y, this.navMesh, object.type);
     });
 
     const obstaclesLayer = this.map.getObjectLayer("Obstacles");

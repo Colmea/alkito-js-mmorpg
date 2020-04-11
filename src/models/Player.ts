@@ -1,7 +1,7 @@
 import 'phaser';
 import Entity, { EntityType} from './Entity';
 import WorldScene from '../scenes/WorldScene';
-import Inventory, { HasInventory } from '../systems/Inventory';
+import Inventory, { HasInventory } from '../systems/InventorySystem';
 
 export default class Player extends Entity implements HasInventory {
     unitType = EntityType.PLAYER;

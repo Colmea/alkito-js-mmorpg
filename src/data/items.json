@@ -1,0 +1,16 @@
+{
+  "plant": {
+    "id": "plant",
+    "name": "Plante",
+    "price": 2,
+    "texture": "tileset",
+    "frame": 10
+  },
+  "barrel": {
+    "id": "barrel",
+    "name": "Barrel",
+    "price": 2,
+    "texture": "tileset",
+    "frame": 12
+  }
+}
