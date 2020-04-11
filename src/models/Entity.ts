@@ -8,6 +8,8 @@ import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
 import UIActions from './ui/UIActions';
 import { ActionType } from '../types/Actions';
+import { getPositionBetweenPoints } from '../utils/positionUtils';
+import { Position } from '../types/Positions';
 
 export enum EntityType {
     PLAYER,
@@ -89,8 +91,7 @@ export default class Entity extends Phaser.GameObjects.Container {
         this.unitSprite.on('pointerdown', (pointer, x, y, e) => {
             // stop propagation (void detect click on map)
             e.stopPropagation();
-            // Find tile next to object and move player
-            const tileNextToObject = this.getTile('next');
+ 
             this.emitter.emit('unit.select', this);
         });
 
@@ -103,8 +104,10 @@ export default class Entity extends Phaser.GameObjects.Container {
         this.add(this.actionIcon);
     
         this.actionIcon.onClick(() => {
+            const playerPos = new Phaser.Geom.Point(this.scene.player.body.x, this.scene.player.body.y);
+
             // Find tile next to object and move player
-            const tileNextToObject = this.getTile('next');
+            const tileNextToObject = this.getNearestFreeTile(playerPos);
             this.emitter.emit('unit.select', this, false);
 
             this.actions.enqueue(this.scene.player, {
@@ -153,15 +156,48 @@ export default class Entity extends Phaser.GameObjects.Container {
         else this.unitSprite.clearTint();
     }
 
-    public getTile(position?: 'next') {
+    /**
+     * Return entity's current tile.
+     */
+    public getTile() {
         let x = this.x;
         let y = this.y;
 
-        if (position === 'next') {
-            x += CONFIG.TILE_SIZE;
-        }
-
         return this.scene.map.getTileAtWorldXY(x, y, false, this.scene.cameras.main, this.scene.mapLayers['grass']);
+    }
+
+    /**
+     * Find nearest free tile next to entity, from a 'from' point to this entity.
+     * Used mainly to move an entity next to another.
+     * @param from if not provided, engine will always choose tile at the *right*
+     */
+    public getNearestFreeTile(from?: Phaser.Geom.Point) {
+        let nearestTilePoint: Phaser.Geom.Point;
+        let nearestTilePosition: Position = Position.RIGHT;
+        const entityPos = new Phaser.Geom.Point(this.x, this.y);
+
+        // If 'from', find nearest tile position
+        if (from) {
+            nearestTilePosition = getPositionBetweenPoints(entityPos, from);
+        }
+       
+        // Calculate nearest tile following nearestTilePosition
+        switch (nearestTilePosition) {
+            case Position.RIGHT:
+                nearestTilePoint = new Phaser.Geom.Point(entityPos.x + CONFIG.TILE_SIZE, entityPos.y);
+                break;
+            case Position.LEFT:
+                nearestTilePoint = new Phaser.Geom.Point(entityPos.x - CONFIG.TILE_SIZE, entityPos.y);
+                break;
+            case Position.UP:
+                nearestTilePoint = new Phaser.Geom.Point(entityPos.x, entityPos.y - CONFIG.TILE_SIZE);
+                break;
+            case Position.DOWN:
+                nearestTilePoint = new Phaser.Geom.Point(entityPos.x, entityPos.y + CONFIG.TILE_SIZE);
+                break;
+        }
+        
+        return this.scene.map.getTileAtWorldXY(nearestTilePoint.x, nearestTilePoint.y, false, this.scene.cameras.main, this.scene.mapLayers['grass']);
     }
 
     /**
