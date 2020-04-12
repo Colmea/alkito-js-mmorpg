@@ -413,20 +413,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":624.200898272301,
-                 "y":592.400747467462
-                }, 
-                {
-                 "height":0,
-                 "id":86,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":0,
-                 "x":751.969089017684,
-                 "y":658.344479120226
+                 "x":624.201,
+                 "y":592.401
                 }, 
                 {
                  "height":0,
@@ -437,8 +425,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":722.246990637539,
-                 "y":497.845147867439
+                 "x":722.247,
+                 "y":497.845
                 }, 
                 {
                  "height":0,
@@ -449,8 +437,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":591.469757764898,
-                 "y":466.636944568286
+                 "x":591.47,
+                 "y":466.637
                 }, 
                 {
                  "height":0,
@@ -461,8 +449,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":656.858374201219,
-                 "y":432.456531431119
+                 "x":656.858,
+                 "y":432.457
                 }, 
                 {
                  "height":0,
@@ -473,32 +461,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":497.845147867439,
-                 "y":529.053351166592
-                }, 
-                {
-                 "height":0,
-                 "id":91,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":0,
-                 "x":622.677961064051,
-                 "y":659.830584039233
-                }, 
-                {
-                 "height":0,
-                 "id":95,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":0,
-                 "x":525.735699327675,
-                 "y":657.996252617657
+                 "x":497.845,
+                 "y":529.053
                 }, 
                 {
                  "height":0,
@@ -509,8 +473,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":526.837870605092,
-                 "y":435.357654579522
+                 "x":526.838,
+                 "y":435.358
                 }, 
                 {
                  "height":0,
@@ -521,8 +485,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":462.911936514934,
-                 "y":428.744626915023
+                 "x":462.912,
+                 "y":428.745
                 }, 
                 {
                  "height":0,
@@ -533,44 +497,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":402.292516257026,
-                 "y":498.181417392263
-                }, 
-                {
-                 "height":0,
-                 "id":99,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":0,
-                 "x":428.744626915023,
-                 "y":626.033285572578
-                }, 
-                {
-                 "height":0,
-                 "id":100,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":0,
-                 "x":364.818692824865,
-                 "y":621.624600462912
-                }, 
-                {
-                 "height":0,
-                 "id":101,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"barrel",
-                 "visible":true,
-                 "width":0,
-                 "x":464.014107792351,
-                 "y":695.470076049818
+                 "x":402.293,
+                 "y":498.181
                 }, 
                 {
                  "height":0,
@@ -581,8 +509,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":589.661633417833,
-                 "y":525.735699327675
+                 "x":589.662,
+                 "y":525.736
                 }, 
                 {
                  "height":0,
@@ -593,8 +521,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":526.837870605092,
-                 "y":492.67056100518
+                 "x":526.838,
+                 "y":492.671
                 }, 
                 {
                  "height":0,
@@ -605,8 +533,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":817.811087843051,
-                 "y":498.181417392263
+                 "x":817.811,
+                 "y":498.181
                 }, 
                 {
                  "height":0,
@@ -617,8 +545,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":563.209522759837,
-                 "y":373.636063044197
+                 "x":563.21,
+                 "y":373.636
                 }, 
                 {
                  "height":0,
@@ -629,8 +557,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":395.679488592527,
-                 "y":448.58370990852
+                 "x":395.679,
+                 "y":448.584
                 }, 
                 {
                  "height":0,
@@ -641,8 +569,8 @@
                  "type":"plant",
                  "visible":true,
                  "width":0,
-                 "x":531.246555714758,
-                 "y":564.311694037253
+                 "x":531.247,
+                 "y":564.312
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -670,6 +598,19 @@
          "tileheight":32,
          "tilewidth":32,
          "transparentcolor":"#003039"
+        }, 
+        {
+         "columns":9,
+         "firstgid":361,
+         "image":"..\/items\/plants.png",
+         "imageheight":384,
+         "imagewidth":288,
+         "margin":0,
+         "name":"plants",
+         "spacing":0,
+         "tilecount":108,
+         "tileheight":32,
+         "tilewidth":32
         }],
  "tilewidth":32,
  "type":"map",

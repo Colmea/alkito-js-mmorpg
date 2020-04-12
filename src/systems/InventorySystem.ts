@@ -26,7 +26,7 @@ export default class InventorySystem {
 
   private getFirstItemByType(item: InventoryItem): InventoryItem | null {
     const items = this.items.filter((itemInventory: InventoryItem) => {
-      return item.entity.objectType === itemInventory.entity.objectType;
+      return item.item.type === itemInventory.item.type;
     });
 
     return items[0];

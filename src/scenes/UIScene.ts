@@ -60,22 +60,22 @@ export default class UIScene extends Phaser.Scene {
     const x = this.scale.width / 2 - (this.NB_INVENTORY_SLOT * 40 / 2);
     const y = this.scale.height - 30;
 
-    inventory.items.forEach((item: InventoryItem, index: number) => {
+    inventory.items.forEach((inventoryItem: InventoryItem, index: number) => {
       const slotItemSprite = this.items[index];
       const slotQuantity = this.slotsQuantity[index];
 
       // Create item slot
       if (!slotItemSprite) {
-        const itemSprite = this.add.sprite(x + (index*40), y, item.entity.unitSprite.texture.key, item.entity.unitSprite.frame.name);
+        const itemSprite = this.add.sprite(x + (index*40), y, inventoryItem.item.texture, inventoryItem.item.frame);
         this.items[index] = itemSprite;
       }
       // Update item slot
       else {
-        slotItemSprite.setTexture(item.entity.unitSprite.texture.key, item.entity.unitSprite.frame.name);
+        slotItemSprite.setTexture(inventoryItem.item.texture, inventoryItem.item.frame);
 
         // Update slot quantity
-        if (item.quantity > 1) {
-          slotQuantity.setText(`x${item.quantity}`);
+        if (inventoryItem.quantity > 1) {
+          slotQuantity.setText(`x${inventoryItem.quantity}`);
           slotQuantity.setDepth(10);
           slotQuantity.setVisible(true);
         } else {

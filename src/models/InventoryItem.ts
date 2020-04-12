@@ -1,13 +1,14 @@
 import { v4 as uuid } from 'uuid';
-import ObjectEntity from './ObjectEntity';
+import ResourceEntity from './ResourceEntity';
+import Item from './Item';
 
 export default class InventoryItem {
   id: string = uuid();
+  item: Item;
   quantity: number = 1;
-  entity: ObjectEntity;
 
-  constructor(entity: ObjectEntity, quantity: number = 1) {
-    this.entity = entity;
+  constructor(item: Item, quantity: number = 1) {
+    this.item = item;
     this.quantity = quantity;
   }
 }

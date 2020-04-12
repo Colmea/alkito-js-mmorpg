@@ -3,8 +3,8 @@
     "id": "plant",
     "name": "Plante",
     "price": 2,
-    "texture": "tileset",
-    "frame": 10
+    "texture": "items/plants",
+    "frame": 0
   },
   "barrel": {
     "id": "barrel",

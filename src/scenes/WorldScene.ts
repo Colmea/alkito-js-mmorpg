@@ -1,6 +1,6 @@
 import 'phaser';
 import Player from '../models/Player';
-import ObjectEntity from '../models/ObjectEntity';
+import ResourceEntity from '../models/ResourceEntity';
 import Entity from '../models/Entity';
 import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
@@ -59,12 +59,12 @@ export default class WorldScene extends Phaser.Scene {
     this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', tiles, 0, 0);
     this.mapLayers['ui'] = this.map.createBlankDynamicLayer('UI', tiles);
 
-    // Objects from Map
-    const objects = this.map.getObjectLayer("Items");
-    // Create objects from data map
-    objects.objects.forEach((object: any) => {
+    // Resources from Map
+    const resources = this.map.getObjectLayer("Items");
+    // Create Resources from data map
+    resources.objects.forEach((object: any) => {
         const tile =  this.map.getTileAtWorldXY(object.x, object.y, false, this.cameras.main, this.mapLayers['grass']);
-        new ObjectEntity(this, tile.x, tile.y, this.navMesh, object.type);
+        new ResourceEntity(this, tile.x, tile.y, object.type);
     });
 
     const obstaclesLayer = this.map.getObjectLayer("Obstacles");

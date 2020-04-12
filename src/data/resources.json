@@ -1,0 +1,10 @@
+{
+    "plant": {
+      "id": "plant",
+      "name": "Plante",
+      "texture": "plants",
+      "frame": 31,
+      "item": "plant",
+      "itemQuantity": 1
+    }
+  }
