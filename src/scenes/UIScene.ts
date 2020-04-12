@@ -4,7 +4,7 @@ import Player from '../models/Player';
 import InventoryItem from '../models/InventoryItem';
 
 export default class UIScene extends Phaser.Scene {
-  NB_INVENTORY_SLOT: number = 8;
+  NB_INVENTORY_SLOT: number = 7;
 
   emitter: EventDispatcher = EventDispatcher.getInstance();
 
@@ -40,8 +40,12 @@ export default class UIScene extends Phaser.Scene {
     const x = this.scale.width / 2 - (this.NB_INVENTORY_SLOT * 40 / 2);
     const y = this.scale.height - 30;
 
+    // Background
+    this.add.image(x + 130, y, 'ui.inventory');
+
+
     for (let i=0; i < this.NB_INVENTORY_SLOT; i++) {
-      const slotX = x + (i*40);
+      const slotX = x + (i*43.5);
 
       // Create inventory slot
       const slot = this.add.image(slotX, y, 'ui.slot');
