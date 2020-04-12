@@ -7,10 +7,13 @@ export default class UIScene extends Phaser.Scene {
   NB_INVENTORY_SLOT: number = 8;
 
   emitter: EventDispatcher = EventDispatcher.getInstance();
+
   player: Player;
-  slots: Phaser.GameObjects.Image[] = [];
-  slotsQuantity: Phaser.GameObjects.Text[] = [];
-  items: Phaser.GameObjects.Sprite[] = [];
+  hud: Phaser.GameObjects.Image;
+  map: Phaser.GameObjects.Image;
+  inventorySlots: Phaser.GameObjects.Image[] = [];
+  inventorySlotsQuantity: Phaser.GameObjects.Text[] = [];
+  inventoryItems: Phaser.GameObjects.Sprite[] = [];
 
   constructor() {
     super('UIScene');
@@ -21,6 +24,19 @@ export default class UIScene extends Phaser.Scene {
   }
 
   create() {
+    // Create HUD
+    this.hud = this.add.image(110, this.scale.height - 40, 'ui.hud');
+    this.hud.setInteractive({ useHandCursor: true });
+
+    // Create mini Map
+    this.map = this.add.image(this.scale.width - 75, 80, 'ui.map');
+    this.map.setInteractive({ useHandCursor: true });
+
+    // Create Inventory
+    this._createInventory();
+  }
+
+  private _createInventory() {
     const x = this.scale.width / 2 - (this.NB_INVENTORY_SLOT * 40 / 2);
     const y = this.scale.height - 30;
 
@@ -41,12 +57,12 @@ export default class UIScene extends Phaser.Scene {
         this.emitter.emit('ui.slot.select', slot, i);
       });
 
-      this.slots.push(slot);
+      this.inventorySlots.push(slot);
 
       // Create slot quantity
       const slotQuantity = this.add.text(slotX + 3, y + 5, 'x0', { fontSize: '10px' });
       slotQuantity.setVisible(false);
-      this.slotsQuantity.push(slotQuantity);
+      this.inventorySlotsQuantity.push(slotQuantity);
     }
 
     // Listen for inventory update and update its render in UI
@@ -61,13 +77,13 @@ export default class UIScene extends Phaser.Scene {
     const y = this.scale.height - 30;
 
     inventory.items.forEach((inventoryItem: InventoryItem, index: number) => {
-      const slotItemSprite = this.items[index];
-      const slotQuantity = this.slotsQuantity[index];
+      const slotItemSprite = this.inventoryItems[index];
+      const slotQuantity = this.inventorySlotsQuantity[index];
 
       // Create item slot
       if (!slotItemSprite) {
         const itemSprite = this.add.sprite(x + (index*40), y, inventoryItem.item.texture, inventoryItem.item.frame);
-        this.items[index] = itemSprite;
+        this.inventoryItems[index] = itemSprite;
       }
       // Update item slot
       else {

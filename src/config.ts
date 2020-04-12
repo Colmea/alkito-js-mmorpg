@@ -2,16 +2,12 @@ import 'phaser';
 import * as PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
 
 export default {
-  type: Phaser.AUTO,
-  parent: window.document,
+  type: Phaser.Scale.ENVELOP,
   backgroundColor: '#33A5E7',
-  width: '70%',
-  height: '80%',
-  scale: {
-    autoCenter: Phaser.Scale.CENTER_BOTH,
-  },
+  width: window.innerWidth * window.devicePixelRatio,
+  height: window.innerHeight * window.devicePixelRatio,
   zoom: 1,
-  // pixelArt: true,
+  pixelArt: true,
   physics: {
     default: 'arcade',
     arcade: {

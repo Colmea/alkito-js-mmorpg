@@ -28,9 +28,8 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
         title: 'Alkito - Web 2D MMORPG',
-        "files": {
-            "css": [ "main.css" ],
-        }
+        template: 'public/index.html',
+        favicon: 'public/favicon.ico',
     }),
   ],
 };
