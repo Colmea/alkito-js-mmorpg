@@ -7,7 +7,7 @@ export default {
   width: window.innerWidth * window.devicePixelRatio,
   height: window.innerHeight * window.devicePixelRatio,
   zoom: 1,
-  pixelArt: true,
+  // pixelArt: true,
   physics: {
     default: 'arcade',
     arcade: {

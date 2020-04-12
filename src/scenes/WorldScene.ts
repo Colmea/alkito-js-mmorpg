@@ -36,7 +36,7 @@ export default class WorldScene extends Phaser.Scene {
     this._createAnims();
 
     // Player
-    this.player = new Player(this, 21, 16, this.navMesh);
+    this.player = new Player(this, 71, 67, this.navMesh);
 
     // Camera follow player
     this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -54,9 +54,9 @@ export default class WorldScene extends Phaser.Scene {
     const tiles = this.map.addTilesetImage('tileset', 'tiles');
 
     this.mapLayers['grass'] = this.map.createStaticLayer('Grass', tiles, 0, 0);
-    this.mapLayers['objects'] = this.map.createStaticLayer('Objects', tiles, 0, 0);
-    this.mapLayers['objects'].setCollisionByExclusion([-1]);
     this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', tiles, 0, 0);
+    this.mapLayers['objects'] = this.map.createStaticLayer('Objects', tiles, 0, 0);
+    // this.mapLayers['objects'].setCollisionByExclusion([-1]);
     this.mapLayers['ui'] = this.map.createBlankDynamicLayer('UI', tiles);
 
     // Resources from Map
