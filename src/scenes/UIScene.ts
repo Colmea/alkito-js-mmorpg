@@ -43,7 +43,6 @@ export default class UIScene extends Phaser.Scene {
     // Background
     this.add.image(x + 130, y, 'ui.inventory');
 
-
     for (let i=0; i < this.NB_INVENTORY_SLOT; i++) {
       const slotX = x + (i*43.5);
 

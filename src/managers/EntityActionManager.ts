@@ -8,14 +8,16 @@ enum ActionStatus {
     COMPLETED,
 }
 
-interface EntityAction {
+export interface EntityAction {
     status: ActionStatus;
     type: string;
+    startedDate: number;
     args?: any;
-    isCompleted?: (entity: Entity) => boolean;
+    progress?: (action: EntityAction, entity: Entity) => number;
+    isCompleted?: (action: EntityAction, entity: Entity) => boolean;
 }
 
-export type PendingEntityAction = Pick<EntityAction, 'type' | 'args' | 'isCompleted'>;
+export type PendingEntityAction = Pick<EntityAction, 'type' | 'args' | 'isCompleted' | 'progress'>;
 
 let instance: EntityActionManager;
 export default class EntityActionManager {
@@ -77,14 +79,18 @@ export default class EntityActionManager {
 
             // Wait until current action is completed
             if (nextAction.status === ActionStatus.RUNNING) {
-                if (nextAction.isCompleted(this.entities[entityId])) {
+                if (nextAction.progress && typeof nextAction.progress === 'function') {
+                    const progress = nextAction.progress(nextAction, this.entities[entityId]);
+                    this.emitter.emit('action.progress', this.entities[entityId], progress, ...nextAction.args);
+                }
+
+                if (nextAction.isCompleted(nextAction, this.entities[entityId])) {
                     entityActions.shift();
                 }
 
                 continue;
             }
             
-
             // If no action running, process first action in the queue
             this._processAction(this.entities[entityId], entityActions[0]);
         }
@@ -94,6 +100,7 @@ export default class EntityActionManager {
 
     private _processAction(entity: Entity, action: EntityAction) {
         action.status = ActionStatus.RUNNING;
+        action.startedDate = Date.now();
         this.emitter.emit('action.' + action.type, entity, ...action.args);
     }
 
@@ -107,7 +114,7 @@ export default class EntityActionManager {
     }
 
     destroy() {
-        if (this.scene) this.scene.events.off("update", this.update, this);
+        if (this.scene) this.scene.events.off('update', this.update, this);
     }
 
 }

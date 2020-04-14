@@ -5,7 +5,7 @@ import { getTilePosition } from '../utils/tileUtils';
 import Mover from '../systems/Mover';
 import WorldScene from '../scenes/WorldScene';
 import EventDispatcher from '../managers/EventDispatcher';
-import EntityActionManager from '../managers/EntityActionManager';
+import EntityActionManager, { EntityAction } from '../managers/EntityActionManager';
 import UIActions from './ui/UIActions';
 import { ActionType } from '../types/Actions';
 import { getPositionBetweenPoints } from '../utils/positionUtils';
@@ -113,14 +113,30 @@ export default class Entity extends Phaser.GameObjects.Container {
             this.actions.enqueue(this.scene.player, {
                 type: 'go-to',
                 args: [tileNextToObject],
-                isCompleted: (player: Entity) => {
+                isCompleted: (action: EntityAction, player: Entity) => {
                     const playerTile = player.getTile();
 
                     // Move is completed when player's tile = tile next to object
                     return (player.getTile() === tileNextToObject);
                 }
             });
-            this.actions.enqueue(this.scene.player, { type: 'take', args: [this] });
+
+            const timeToCollect = 3000;
+            this.actions.enqueue(this.scene.player, {
+                type: 'collect', args: [this],
+                progress: (action: EntityAction) => {
+                    const elapsedTime = Date.now() - action.startedDate;
+
+                    return Math.floor(elapsedTime / timeToCollect * 100)
+                },
+                isCompleted: (action: EntityAction) => {
+                    const elapsedTime = Date.now() - action.startedDate;
+                    return elapsedTime >= timeToCollect;
+                },
+            });
+            this.actions.enqueue(this.scene.player, {
+                type: 'take', args: [this],
+            });
         });
     }
 
