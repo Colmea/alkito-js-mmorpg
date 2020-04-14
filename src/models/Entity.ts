@@ -10,6 +10,7 @@ import UIActions from './ui/UIActions';
 import { ActionType } from '../types/Actions';
 import { getPositionBetweenPoints } from '../utils/positionUtils';
 import { Position } from '../types/Positions';
+import ProgressBar from './ui/ProgressBar';
 
 export enum EntityType {
     PLAYER,
@@ -38,8 +39,12 @@ export default class Entity extends Phaser.GameObjects.Container {
     body: Phaser.Physics.Arcade.Body;
     unitSprite: Phaser.GameObjects.Sprite;
     nameText: Phaser.GameObjects.Text;
-    actionIcon: UIActions;
 
+    ui: {
+        actionIcon: UIActions;
+        progressBar: ProgressBar;
+    };
+    
     constructor(
         scene: WorldScene,
         xTile: number,
@@ -59,7 +64,7 @@ export default class Entity extends Phaser.GameObjects.Container {
         this._createUnitSprite(navMesh, texture, frame);
         // Create name info
         this._createName();
-        this._createAction();
+        this._createUI();
 
         // Register update loop
         scene.events.on('update', this.update, this);
@@ -99,11 +104,16 @@ export default class Entity extends Phaser.GameObjects.Container {
         this.follower = new Mover(this.scene, navMesh, this.body);
     }
 
-    private _createAction() {
-        this.actionIcon = new UIActions(this.scene, 0, -50, ActionType.TAKE);
-        this.add(this.actionIcon);
+    private _createUI() {
+        this.ui = {
+            actionIcon: new UIActions(this.scene, 0, -50, ActionType.TAKE),
+            progressBar: new ProgressBar(this.scene, 0, -40),
+        };
+
+        this.add(this.ui.actionIcon);
+        this.add(this.ui.progressBar);
     
-        this.actionIcon.onClick(() => {
+        this.ui.actionIcon.onClick(() => {
             const playerPos = new Phaser.Geom.Point(this.scene.player.body.x, this.scene.player.body.y);
 
             // Find tile next to object and move player
@@ -166,7 +176,7 @@ export default class Entity extends Phaser.GameObjects.Container {
 
     public select(isSelected: boolean) {
         this.isSelected = isSelected;
-        this.actionIcon.setVisible(isSelected);
+        this.ui.actionIcon.setVisible(isSelected);
 
         if (isSelected) this.unitSprite.setTint(0x999999);
         else this.unitSprite.clearTint();
@@ -242,6 +252,18 @@ export default class Entity extends Phaser.GameObjects.Container {
 
       // And stop it (we just need the entity to look at the target)
       this.unitSprite.anims.stop();
+    }
+
+    public displayProgress(progress: number) {
+        this.ui.progressBar.setVisible(true);
+        this.ui.progressBar.setProgress(progress);
+
+        // If progress 100%, hide it atfer x seconds
+        if (progress >= 100) {
+            setTimeout(() => {
+                this.ui.progressBar.setVisible(false)
+            }, 50);
+        }
     }
 
     update() {

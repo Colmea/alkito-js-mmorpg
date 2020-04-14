@@ -25,8 +25,10 @@ export default class EntityActionProcessor {
           // Hide object
           object.setVisible(false);
         }
+      });
 
-
+      this.emitter.on('action.progress', (owner: Entity, progress: number, target: Entity) => {
+        target.displayProgress(progress);
       });
     }
 }
