@@ -30,6 +30,7 @@ export default class WorldScene extends Phaser.Scene {
   }
 
   create() {
+    this.input.setDefaultCursor('url(assets/ui/cursor-white.cur), default');
     this.entityActions = EntityActionManager.init(this);
 
     this._createMap();

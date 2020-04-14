@@ -2,6 +2,7 @@ import 'phaser';
 import EventDispatcher from '../managers/EventDispatcher';
 import Player from '../models/Player';
 import InventoryItem from '../models/InventoryItem';
+import { POINTER_CURSOR } from '../utils/cursorUtils';
 
 export default class UIScene extends Phaser.Scene {
   NB_INVENTORY_SLOT: number = 7;
@@ -26,11 +27,11 @@ export default class UIScene extends Phaser.Scene {
   create() {
     // Create HUD
     this.hud = this.add.image(110, this.scale.height - 40, 'ui.hud');
-    this.hud.setInteractive({ useHandCursor: true });
+    this.hud.setInteractive({ cursor: POINTER_CURSOR });
 
     // Create mini Map
     this.map = this.add.image(this.scale.width - 75, 80, 'ui.map');
-    this.map.setInteractive({ useHandCursor: true });
+    this.map.setInteractive({ cursor: POINTER_CURSOR });
 
     // Create Inventory
     this._createInventory();
@@ -48,7 +49,7 @@ export default class UIScene extends Phaser.Scene {
 
       // Create inventory slot
       const slot = this.add.image(slotX, y, 'ui.slot');
-      slot.setInteractive({ useHandCursor: true });
+      slot.setInteractive({ cursor: POINTER_CURSOR });
     
       slot.on('pointerover', () => {
         slot.setTint(0x999999);

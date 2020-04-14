@@ -11,6 +11,7 @@ import { ActionType } from '../types/Actions';
 import { getPositionBetweenPoints } from '../utils/positionUtils';
 import { Position } from '../types/Positions';
 import ProgressBar from './ui/ProgressBar';
+import { POINTER_CURSOR } from '../utils/cursorUtils';
 
 export enum EntityType {
     PLAYER,
@@ -79,18 +80,21 @@ export default class Entity extends Phaser.GameObjects.Container {
 
     private _createUnitSprite(navMesh: any, texture: string, frame: number) {
         this.unitSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, texture, frame);
-        this.unitSprite.setInteractive({ useHandCursor: true });
+        this.unitSprite.setInteractive({ cursor: POINTER_CURSOR });
 
         this.scene.add.existing(this.unitSprite);
         this.add(this.unitSprite);
 
         this.unitSprite.on('pointerover', () => {
             this.unitSprite.setTint(0x999999);
+            this.nameText.setVisible(true);
         });
     
         this.unitSprite.on('pointerout', () => {
-            if (!this.isSelected)
+            if (!this.isSelected) {
                 this.unitSprite.clearTint();
+                this.nameText.setVisible(false);
+            }
         });
 
         this.unitSprite.on('pointerdown', (pointer, x, y, e) => {
@@ -155,6 +159,8 @@ export default class Entity extends Phaser.GameObjects.Container {
             fontSize: '8',
         });
         this.nameText.setOrigin(0.5, 2.4);
+        this.nameText.visible = false;
+
 
         this.scene.add.existing(this.nameText);
         this.add(this.nameText);
@@ -178,8 +184,14 @@ export default class Entity extends Phaser.GameObjects.Container {
         this.isSelected = isSelected;
         this.ui.actionIcon.setVisible(isSelected);
 
-        if (isSelected) this.unitSprite.setTint(0x999999);
-        else this.unitSprite.clearTint();
+        if (isSelected) {
+            this.unitSprite.setTint(0x999999);
+            this.nameText.setVisible(true);
+        }
+        else {
+            this.unitSprite.clearTint();
+            this.nameText.setVisible(false);
+        }
     }
 
     /**

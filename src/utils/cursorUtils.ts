@@ -1,0 +1,1 @@
+export const POINTER_CURSOR = 'url(assets/ui/cursor-brown.cur), pointer';

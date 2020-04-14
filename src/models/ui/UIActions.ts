@@ -1,4 +1,5 @@
 import { ActionType } from '../../types/Actions';
+import { POINTER_CURSOR } from '../../utils/cursorUtils';
 
 type ClickCallback = (pointer?: Phaser.Input.Pointer, x?: number, y?: number, e?: MouseEvent) => void;
 
@@ -15,7 +16,7 @@ export default class UIActions extends Phaser.GameObjects.Container {
     this.background.setScale(1.5);
     this.icon = new Phaser.GameObjects.Sprite(this.scene, -6, 0, 'icons', 5);
     this.icon.setScale(.5);
-    this.icon.setInteractive({ useHandCursor: true });
+    this.icon.setInteractive({ cursor: POINTER_CURSOR });
 
     this.scene.add.existing(this.background);
     this.scene.add.existing(this.icon);
