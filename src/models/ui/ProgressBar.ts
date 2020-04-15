@@ -18,14 +18,14 @@ export default class ProgressBar extends Phaser.GameObjects.Container {
     this.add(this.background);
 
     // add progress bars
-    const leftProgress = -(this.background.width/2) + 9;
+    const leftProgress = -(this.background.width/2) + 10;
     for (let i=0; i < this.NB_BARS; i++) {
-      const image = i === 0 ? 'ui.green-bar-start' : i === this.NB_BARS-1 ? 'ui.green-bar-end' : 'ui.green-bar';
+      const spriteFrame = i === 0 ? 0 : i === this.NB_BARS-1 ? 2 : 1;
 
       let left = leftProgress + i*this.BAR_WIDTH;
       if (i === this.NB_BARS-1) left -= 1;
 
-      const progressBar = new Phaser.GameObjects.Image(this.scene, left, 0, image);
+      const progressBar = new Phaser.GameObjects.Sprite(this.scene, left, 0, 'ui.bars', spriteFrame);
       progressBar.visible = false;
 
       this.scene.add.existing(progressBar);

@@ -21,9 +21,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.image('ui.slot', 'assets/ui/slot.png');
     this.load.image('ui.slot-round', 'assets/ui/slot-round.png');
     this.load.image('ui.progress-bar', 'assets/ui/progress-bar.png');
-    this.load.image('ui.green-bar-start', 'assets/ui/green-bar-start.png');
-    this.load.image('ui.green-bar-end', 'assets/ui/green-bar-end.png');
-    this.load.image('ui.green-bar', 'assets/ui/green-bar.png');
+    this.load.spritesheet('ui.bars', 'assets/ui/bars.png', { frameWidth: 10, frameHeight: 14 });
     this.load.spritesheet('icons', 'assets/icons.png', { frameWidth: 64, frameHeight: 64 });
     // items
     this.load.spritesheet('items/plants', 'assets/items/plants_items.png', { frameWidth: 32, frameHeight: 32 });
