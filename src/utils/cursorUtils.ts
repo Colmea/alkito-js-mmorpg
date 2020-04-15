@@ -1,1 +1,1 @@
-export const POINTER_CURSOR = 'url(assets/ui/cursor-brown.cur), pointer';
+export const POINTER_CURSOR = 'url(assets/ui/cursor-hand1.cur), pointer';
