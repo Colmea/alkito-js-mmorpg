@@ -6,6 +6,8 @@ import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
 import EntityActionProcessor from '../managers/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
+import * as io from 'socket.io-client';
+
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -13,6 +15,7 @@ type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTile
 export default class WorldScene extends Phaser.Scene {
   TILE_SIZE: number = 32;
 
+  server: any;
   emitter: EventDispatcher = EventDispatcher.getInstance();;
   entityActions: EntityActionManager;
 
@@ -23,6 +26,7 @@ export default class WorldScene extends Phaser.Scene {
   mapLayers: { [key: string]: MapLayer } = {};
 
   player: Player;
+  otherPlayers: { [key: string]: Player } = {};
   currentSelection: Entity | null;
 
   constructor() {
@@ -36,17 +40,51 @@ export default class WorldScene extends Phaser.Scene {
     this._createMap();
     this._createAnims();
 
-    // Player
-    this.player = new Player(this, 71, 67, this.navMesh);
+    // Connect to Server World
+    this.server = io('http://localhost:3000');
 
-    // Camera follow player
-    this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
-    this.cameras.main.startFollow(this.player);
-    this.cameras.main.roundPixels = true;
+    // Create player
+    this.server.on('playerCreated', (player: any) => {
+      this.player = new Player(this, player.x, player.y, this.navMesh);
+      this.player.id = player.id;
 
-    this._createEvents();
+      // Camera follow player
+      this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+      this.cameras.main.startFollow(this.player);
+      this.cameras.main.roundPixels = true;
 
-    this.scene.launch('UIScene', { player: this.player });
+      this._createEvents();
+
+      this.scene.launch('UIScene', { player: this.player });
+    });
+
+    // Create other players
+    this.server.on('currentPlayers', (players: any) => {
+      for (const playerId in players) {
+        const otherPlayer = players[playerId];
+
+        if (otherPlayer.id === this.player.id) continue;
+
+        const player = new Player(this, otherPlayer.x, otherPlayer.y, this.navMesh);
+        this.otherPlayers[otherPlayer.id] = player;
+
+      }
+    });
+
+    // New player connected
+    this.server.on('newPlayer', (newPlayer: any) => {
+        const player = new Player(this, newPlayer.x, newPlayer.y, this.navMesh);
+        this.otherPlayers[newPlayer.id] = player;
+    });
+
+    // Other player moved
+    this.server.on('playerMoved', (player: any) => {
+      if (player.id === this.player.id) return;
+
+      const otherPlayer = this.otherPlayers[player.id];
+      const tile = this.map.getTileAt(player.x, player.y, false, this.mapLayers['grass']);
+      this.entityActions.processNow(otherPlayer, { type: 'go-to', args: [tile] });
+    });
   }
 
   private _createMap() {
@@ -154,13 +192,19 @@ export default class WorldScene extends Phaser.Scene {
       return;
     }
 
-    const end = new Phaser.Math.Vector2(pointer.worldX, pointer.worldY);
-    // Find corresponding tile from click
-    const tile = this.map.getTileAtWorldXY(end.x, end.y, false, this.cameras.main, this.mapLayers['grass']);
+    const tileTarget = this._moveEntity(this.player, pointer.worldX, pointer.worldY);
+
+    this.server.emit('playerMove', tileTarget.x, tileTarget.y);
+  }
+
+  private _moveEntity(entity: Entity, x: number, y: number): Phaser.Tilemaps.Tile {
+    const tile = this.map.getTileAtWorldXY(x, y, false, this.cameras.main, this.mapLayers['grass']);
       
     // Move Player to this position
     // Player will automatically find its path to the point and update its position accordingly
-    this.entityActions.processNow(this.player, { type: 'go-to', args: [tile] });
+    this.entityActions.processNow(entity, { type: 'go-to', args: [tile] });
+
+    return tile;
   }
 
   update() {
