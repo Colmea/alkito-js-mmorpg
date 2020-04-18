@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 const server  = require('http').Server(app);
@@ -8,6 +9,10 @@ const players = {};
 server.listen(3000, () => {
     console.log(`Alkito server started on port 3000...`);
 });
+
+const distPath = path.join(__dirname, '../../dist');
+
+app.use(express.static(distPath));
 
 io.on('connection', function (socket) {
     console.log('User connected: ', socket.id);

@@ -5,8 +5,8 @@
   "main": "src/app.ts",
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "start": "webpack-dev-server --open --config webpack.dev.js",
-    "server": "node src/server/index.js"
+    "start": "node src/server/index.js",
+    "dev": "webpack-dev-server --open --config webpack.dev.js"
   },
   "repository": {
     "type": "git",
