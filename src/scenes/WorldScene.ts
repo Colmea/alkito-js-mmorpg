@@ -8,6 +8,8 @@ import EntityActionProcessor from '../managers/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
 import * as io from 'socket.io-client';
 
+const PORT = process.env.PORT || 3000;
+console.log('Alkito Port', PORT);
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -41,7 +43,7 @@ export default class WorldScene extends Phaser.Scene {
     this._createAnims();
 
     // Connect to Server World
-    this.server = io('http://localhost:3000');
+    this.server = io(`http://localhost:${PORT}`);
 
     // Create player
     this.server.on('playerCreated', (player: any) => {
