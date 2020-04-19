@@ -28,9 +28,11 @@ export default class Entity extends Phaser.GameObjects.Container {
     hp: number = 100;
     damage: number = 10;
     isMoving: boolean = true;
+    animationKey: string;
 
     // States
     isSelected: boolean = false;
+    isNameAlwaysVisible: boolean = false;
 
     // Systems
     scene: WorldScene;
@@ -93,7 +95,7 @@ export default class Entity extends Phaser.GameObjects.Container {
         this.unitSprite.on('pointerout', () => {
             if (!this.isSelected) {
                 this.unitSprite.clearTint();
-                this.nameText.setVisible(false);
+                if (!this.isNameAlwaysVisible) this.nameText.setVisible(false);
             }
         });
 
@@ -159,8 +161,7 @@ export default class Entity extends Phaser.GameObjects.Container {
             fontSize: '8',
         });
         this.nameText.setOrigin(0.5, 2.4);
-        this.nameText.visible = false;
-
+        this.nameText.visible = this.isNameAlwaysVisible;
 
         this.scene.add.existing(this.nameText);
         this.add(this.nameText);
@@ -250,16 +251,16 @@ export default class Entity extends Phaser.GameObjects.Container {
 
       // Start direction animation
       if (targetTile.y > currentTile.y && distanceY > distanceX) {
-        this.unitSprite.play('down', true);
+        this.animate(Position.DOWN);
       }
       else if (targetTile.y < currentTile.y && distanceY > distanceX) {
-        this.unitSprite.play('up', true);
+        this.animate(Position.UP);
       }
       else if (targetTile.x > currentTile.x) {
-        this.unitSprite.play('right', true);
+        this.animate(Position.RIGHT);
       }
       else if (targetTile.x < currentTile.x) {
-        this.unitSprite.play('left', true);
+        this.animate(Position.LEFT);
       }
 
       // And stop it (we just need the entity to look at the target)
@@ -284,20 +285,39 @@ export default class Entity extends Phaser.GameObjects.Container {
       // Animate player following current velocity
       const velocity = this.body.velocity;
       if (velocity.y > 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
-          this.unitSprite.play('down', true);
+          this.animate(Position.DOWN);
       }
       else if (this.body.velocity.y < 0 && Math.abs(velocity.y) > Math.abs(velocity.x)) {
-          this.unitSprite.play('up', true);
+            this.animate(Position.UP);
       }
       else if (velocity.x > 0) {
-          this.unitSprite.play('right', true);
+            this.animate(Position.RIGHT);
       }
       else if (this.body.velocity.x < 0) {
-          this.unitSprite.play('left', true);
+            this.animate(Position.LEFT);
       }
       else {
-          this.unitSprite.anims.stop();
+            this.unitSprite.anims.stop();
       }
+    }
+
+    animate(position: Position): void {
+        switch(position) {
+            case Position.UP:
+                this.unitSprite.play(this.animationKey + '-up', true);
+                break;
+            case Position.LEFT:
+                this.unitSprite.play(this.animationKey + '-left', true);
+                break;
+            case Position.RIGHT:
+                this.unitSprite.play(this.animationKey + '-right', true);
+                break;
+            case Position.DOWN:
+            default:
+                this.unitSprite.play(this.animationKey + '-down', true);
+                break;
+
+        }
     }
 
     destroy(fromScene?: boolean) {
