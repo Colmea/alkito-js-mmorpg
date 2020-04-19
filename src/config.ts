@@ -4,8 +4,8 @@ import * as PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
 export default {
   type: Phaser.Scale.ENVELOP,
   backgroundColor: '#33A5E7',
-  width: window.innerWidth * window.devicePixelRatio,
-  height: window.innerHeight * window.devicePixelRatio,
+  width: window.innerWidth,
+  height: window.innerHeight,
   zoom: 1,
   // pixelArt: true,
   physics: {

@@ -6,6 +6,7 @@ declare global {
 
 import 'phaser';
 import Player from '../models/Player';
+import OtherPlayer from '../models/OtherPlayer';
 import ResourceEntity from '../models/ResourceEntity';
 import Entity from '../models/Entity';
 import EventDispatcher from '../managers/EventDispatcher';
@@ -71,14 +72,14 @@ export default class WorldScene extends Phaser.Scene {
 
         if (otherPlayer.id === this.player.id) continue;
 
-        const player = new Player(this, otherPlayer.x, otherPlayer.y, this.navMesh);
+        const player = new OtherPlayer(this, otherPlayer.x, otherPlayer.y, this.navMesh);
         this.otherPlayers[otherPlayer.id] = player;
       }
     });
 
     // New player connected
     this.server.on('newPlayer', (newPlayer: any) => {
-        const player = new Player(this, newPlayer.x, newPlayer.y, this.navMesh);
+        const player = new OtherPlayer(this, newPlayer.x, newPlayer.y, this.navMesh);
         this.otherPlayers[newPlayer.id] = player;
     });
 
@@ -150,26 +151,52 @@ export default class WorldScene extends Phaser.Scene {
     // Player animation (used mainly in the Player class when moving)
     // Need refactoring
     this.anims.create({
-      key: 'left',
+      key: 'player-left',
       frames: this.anims.generateFrameNumbers('player', { frames: [4, 3, 4, 5] }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: 'right',
+      key: 'player-right',
       frames: this.anims.generateFrameNumbers('player', { frames: [7, 6, 7, 8] }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: 'up',
+      key: 'player-up',
       frames: this.anims.generateFrameNumbers('player', { frames: [10, 9, 10, 11] }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: 'down',
+      key: 'player-down',
       frames: this.anims.generateFrameNumbers('player', { frames: [1, 0, 1, 2] }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    // Other Players animation
+    this.anims.create({
+      key: 'other-player-left',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [4, 3, 4, 5] }),
+      frameRate: 10,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'other-player-right',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [7, 6, 7, 8] }),
+      frameRate: 10,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'other-player-up',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [10, 9, 10, 11] }),
+      frameRate: 10,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'other-player-down',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [1, 0, 1, 2] }),
       frameRate: 10,
       repeat: -1
     });
