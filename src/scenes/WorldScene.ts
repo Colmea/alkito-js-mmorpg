@@ -1,3 +1,9 @@
+declare global {
+  interface Window {
+    io: any;
+  }
+}
+
 import 'phaser';
 import Player from '../models/Player';
 import ResourceEntity from '../models/ResourceEntity';
@@ -6,10 +12,8 @@ import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
 import EntityActionProcessor from '../managers/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
-import * as io from 'socket.io-client';
+import * as defaultIO from 'socket.io-client';
 
-const PORT = process.env.PORT || 3000;
-console.log('Alkito Port', PORT);
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -43,7 +47,7 @@ export default class WorldScene extends Phaser.Scene {
     this._createAnims();
 
     // Connect to Server World
-    this.server = io(`http://localhost:${PORT}`);
+    this.server = window.io ? window.io() : defaultIO('http://localhost:3000');
 
     // Create player
     this.server.on('playerCreated', (player: any) => {
@@ -69,7 +73,6 @@ export default class WorldScene extends Phaser.Scene {
 
         const player = new Player(this, otherPlayer.x, otherPlayer.y, this.navMesh);
         this.otherPlayers[otherPlayer.id] = player;
-
       }
     });
 
@@ -78,6 +81,14 @@ export default class WorldScene extends Phaser.Scene {
         const player = new Player(this, newPlayer.x, newPlayer.y, this.navMesh);
         this.otherPlayers[newPlayer.id] = player;
     });
+
+    // Player disconnected
+    this.server.on('playerDisconnected', (disconnectedPlayer: any) => {
+      const player = this.otherPlayers[disconnectedPlayer.id];
+      player.destroy(true);
+
+      delete this.otherPlayers[disconnectedPlayer.id];
+  });
 
     // Other player moved
     this.server.on('playerMoved', (player: any) => {
