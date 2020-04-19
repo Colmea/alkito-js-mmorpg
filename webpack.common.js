@@ -1,5 +1,6 @@
 
 const path = require("path");
+const webpack = require('webpack');
 const pathToPhaser = path.join(__dirname, "/node_modules/phaser/");
 const phaser = path.join(pathToPhaser, "dist/phaser.js");
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -25,6 +26,11 @@ module.exports = {
   },
   plugins: [
     // new CleanWebpackPlugin(['dist/*']) for < v2 versions of CleanWebpackPlugin
+    new webpack.DefinePlugin({
+      'process.env': {
+        'PORT': JSON.stringify(process.env.PORT)
+      }
+    }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
         title: 'Alkito - Web 2D MMORPG',
