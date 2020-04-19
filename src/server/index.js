@@ -4,10 +4,11 @@ const app = express();
 const server  = require('http').Server(app);
 const io = require('socket.io').listen(server);
 
+const PORT = process.env.PORT || 3000;
 const players = {};
 
-server.listen(3000, () => {
-    console.log(`Alkito server started on port 3000...`);
+server.listen(PORT, () => {
+    console.log(`Alkito server started on port ${PORT}...`);
 });
 
 const distPath = path.join(__dirname, '../../dist');
