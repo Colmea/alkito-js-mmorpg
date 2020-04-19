@@ -38,8 +38,8 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', () => {
-        console.log('user disconnected: ', socket.id);
-
+        socket.broadcast.emit('playerDisconnected', players[socket.id]);
+        
         delete players[socket.id];
     });
 });

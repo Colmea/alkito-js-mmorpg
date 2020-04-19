@@ -299,4 +299,11 @@ export default class Entity extends Phaser.GameObjects.Container {
           this.unitSprite.anims.stop();
       }
     }
+
+    destroy(fromScene?: boolean) {
+        // Remove update loop before destroying object
+        this.scene.events.off('update', this.update, this);
+
+        super.destroy(fromScene);
+    }
 }
