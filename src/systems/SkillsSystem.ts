@@ -12,7 +12,7 @@ export enum SkillType {
 }
 
 export default class SkillsSystem {
-    skills: { [key: string]: Skill };
+    skills: { [key: string]: Skill } = {};
 
     constructor(skills: Skill[]) {
         skills.forEach((skill: Skill) => {

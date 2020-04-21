@@ -14,6 +14,7 @@ import EntityActionManager from '../managers/EntityActionManager';
 import EntityActionProcessor from '../managers/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
 import * as defaultIO from 'socket.io-client';
+import SkillsManager from '../managers/SkillsManager';
 
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
@@ -23,7 +24,7 @@ export default class WorldScene extends Phaser.Scene {
   TILE_SIZE: number = 32;
 
   server: any;
-  emitter: EventDispatcher = EventDispatcher.getInstance();;
+  emitter: EventDispatcher = EventDispatcher.getInstance();
   entityActions: EntityActionManager;
 
   navMeshPlugin: any;
@@ -33,7 +34,7 @@ export default class WorldScene extends Phaser.Scene {
   mapLayers: { [key: string]: MapLayer } = {};
 
   player: Player;
-  otherPlayers: { [key: string]: Player } = {};
+  otherPlayers: { [key: string]: OtherPlayer } = {};
   currentSelection: Entity | null;
 
   constructor() {
@@ -206,6 +207,10 @@ export default class WorldScene extends Phaser.Scene {
     // Process entity related actions
     const entityActionProcessor = new EntityActionProcessor();
     entityActionProcessor.listen();
+
+    // Skills Manager
+    const skillsManager = new SkillsManager();
+    skillsManager.listen();
 
     // On map click
     this.input.on('pointerdown', this.onMapClick);

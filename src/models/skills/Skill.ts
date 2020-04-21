@@ -1,9 +1,9 @@
 import { SkillType } from "../../systems/SkillsSystem";
 
-export default class Skill {
+export default abstract class Skill {
     XP_LEVEL_FACTOR: number = 0.1;
 
-    type: SkillType = SkillType.GENERIC_SKILL;
+    type: SkillType;
     name: string = 'Profession';
     description: string = 'A default Profession';
     image: string;

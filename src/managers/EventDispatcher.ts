@@ -1,6 +1,11 @@
 let instance: EventDispatcher;
 
 export default class EventDispatcher extends Phaser.Events.EventEmitter {
+    static EXCLUDE_FOR_DEBUG: string[] = [
+        'action.progress',
+    ];
+
+
     constructor() {
         super();
     }
@@ -11,11 +16,13 @@ export default class EventDispatcher extends Phaser.Events.EventEmitter {
         return instance;
     }
 
-    emit(event: string | symbol, ...args: any[]): boolean {
+    emit(event: string, ...args: any[]): boolean {
         // Log any event in console
-        console.groupCollapsed('[Action]', event);
-        console.log(...args);
-        console.groupEnd();
+        if (!EventDispatcher.EXCLUDE_FOR_DEBUG.includes(event)) {
+            console.groupCollapsed('[Action]', event);
+            console.log(...args);
+            console.groupEnd();
+        }
 
         return super.emit(event, ...args);
     }

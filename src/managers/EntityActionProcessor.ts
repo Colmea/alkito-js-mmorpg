@@ -1,11 +1,12 @@
 import EventDispatcher from './EventDispatcher';
+import EventListener from './EventListenerInterface';
 import Entity from '../models/Entity';
 import { HasInventory } from '../systems/InventorySystem';
 import InventoryItem from '../models/InventoryItem';
 import ResourceEntity from '../models/ResourceEntity';
 
 
-export default class EntityActionProcessor {
+export default class EntityActionProcessor implements EventListener {
     emitter = EventDispatcher.getInstance();
 
     listen() {
@@ -24,6 +25,11 @@ export default class EntityActionProcessor {
 
           // Hide object
           object.setVisible(false);
+
+          // Increase harvesting skill
+          if (object.harvestingSkill) {
+            this.emitter.emit('skill.increase', unit, object.harvestingSkill, object.harvestingSkillXp)
+          }
         }
       });
 
