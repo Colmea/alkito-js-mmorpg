@@ -1,8 +1,10 @@
+import { ActionType } from "../types/Actions";
+
 let instance: EventDispatcher;
 
 export default class EventDispatcher extends Phaser.Events.EventEmitter {
     static EXCLUDE_FOR_DEBUG: string[] = [
-        'action.progress',
+        ActionType.ACTION_PROGRESS,
     ];
 
 

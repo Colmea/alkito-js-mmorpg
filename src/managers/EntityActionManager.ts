@@ -81,7 +81,7 @@ export default class EntityActionManager {
             if (nextAction.status === ActionStatus.RUNNING) {
                 if (nextAction.progress && typeof nextAction.progress === 'function') {
                     const progress = nextAction.progress(nextAction, this.entities[entityId]);
-                    this.emitter.emit('action.progress', this.entities[entityId], progress, ...nextAction.args);
+                    this.emitter.emit(ActionType.ACTION_PROGRESS, this.entities[entityId], progress, ...nextAction.args);
                 }
 
                 if (nextAction.isCompleted(nextAction, this.entities[entityId])) {
@@ -101,7 +101,7 @@ export default class EntityActionManager {
     private _processAction(entity: Entity, action: EntityAction) {
         action.status = ActionStatus.RUNNING;
         action.startedDate = Date.now();
-        this.emitter.emit('action.' + action.type, entity, ...action.args);
+        this.emitter.emit(action.type, entity, ...action.args);
     }
 
     private _createAction(action: PendingEntityAction): EntityAction {

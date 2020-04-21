@@ -15,6 +15,7 @@ import EntityActionProcessor from '../managers/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
 import * as defaultIO from 'socket.io-client';
 import SkillsManager from '../managers/SkillsManager';
+import { ActionType } from '../types/Actions';
 
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
@@ -98,7 +99,7 @@ export default class WorldScene extends Phaser.Scene {
 
       const otherPlayer = this.otherPlayers[player.id];
       const tile = this.map.getTileAt(player.x, player.y, false, this.mapLayers['grass']);
-      this.entityActions.processNow(otherPlayer, { type: 'go-to', args: [tile] });
+      this.entityActions.processNow(otherPlayer, { type: ActionType.ENTITY_MOVE, args: [tile] });
     });
   }
 
@@ -215,7 +216,7 @@ export default class WorldScene extends Phaser.Scene {
     // On map click
     this.input.on('pointerdown', this.onMapClick);
    
-    this.emitter.on('unit.select', (unit: Entity | null, flag: boolean = true) => {
+    this.emitter.on(ActionType.ENTITY_SELECT, (unit: Entity | null, flag: boolean = true) => {
       if (this.currentSelection) {
         this.currentSelection.select(false);
       }
@@ -247,7 +248,7 @@ export default class WorldScene extends Phaser.Scene {
       
     // Move Player to this position
     // Player will automatically find its path to the point and update its position accordingly
-    this.entityActions.processNow(entity, { type: 'go-to', args: [tile] });
+    this.entityActions.processNow(entity, { type: ActionType.ENTITY_MOVE, args: [tile] });
 
     return tile;
   }

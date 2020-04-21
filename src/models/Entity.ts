@@ -103,7 +103,7 @@ export default class Entity extends Phaser.GameObjects.Container {
             // stop propagation (void detect click on map)
             e.stopPropagation();
  
-            this.emitter.emit('unit.select', this);
+            this.emitter.emit(ActionType.ENTITY_SELECT, this);
         });
 
         // Register "follower" behavior
@@ -112,7 +112,7 @@ export default class Entity extends Phaser.GameObjects.Container {
 
     private _createUI() {
         this.ui = {
-            actionIcon: new UIActions(this.scene, 0, -50, ActionType.TAKE),
+            actionIcon: new UIActions(this.scene, 0, -50, ActionType.RESOURCE_COLLECT),
             progressBar: new ProgressBar(this.scene, 0, -40),
         };
 
@@ -124,10 +124,10 @@ export default class Entity extends Phaser.GameObjects.Container {
 
             // Find tile next to object and move player
             const tileNextToObject = this.getNearestFreeTile(playerPos);
-            this.emitter.emit('unit.select', this, false);
+            this.emitter.emit(ActionType.ENTITY_SELECT, this, false);
 
             this.actions.enqueue(this.scene.player, {
-                type: 'go-to',
+                type: ActionType.ENTITY_MOVE,
                 args: [tileNextToObject],
                 isCompleted: (action: EntityAction, player: Entity) => {
                     const playerTile = player.getTile();
@@ -139,7 +139,8 @@ export default class Entity extends Phaser.GameObjects.Container {
 
             const timeToCollect = 3000;
             this.actions.enqueue(this.scene.player, {
-                type: 'collect', args: [this],
+                type: ActionType.RESOURCE_COLLECT_BEGIN,
+                args: [this],
                 progress: (action: EntityAction) => {
                     const elapsedTime = Date.now() - action.startedDate;
 
@@ -151,7 +152,8 @@ export default class Entity extends Phaser.GameObjects.Container {
                 },
             });
             this.actions.enqueue(this.scene.player, {
-                type: 'take', args: [this],
+                type: ActionType.RESOURCE_COLLECT,
+                args: [this],
             });
         });
     }
