@@ -4,7 +4,7 @@
     "name": "Plante",
     "price": 2,
     "texture": "items/plants",
-    "frame": 0
+    "frame": 4
   },
   "barrel": {
     "id": "barrel",
