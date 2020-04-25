@@ -6,6 +6,7 @@ import { POINTER_CURSOR } from '../utils/cursorUtils';
 import { SkillType } from '../systems/SkillsSystem';
 import { ActionType } from '../types/Actions';
 import * as CONFIG from '../gameConfig';
+import SquareButton from '../models/ui/SquareButton';
 
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
 
@@ -14,7 +15,6 @@ export default class UIScene extends Phaser.Scene {
   NB_INVENTORY_SLOT: number = 7;
 
   emitter: EventDispatcher = EventDispatcher.getInstance();
-
   player: Player;
   hud: Phaser.GameObjects.Image;
   mapLayer: MapLayer;
@@ -23,7 +23,9 @@ export default class UIScene extends Phaser.Scene {
     y: number,
     bg: Phaser.GameObjects.Image,
     minimap: Phaser.GameObjects.Image,
+    cursor: Phaser.GameObjects.Text,
   };
+  menu: Phaser.GameObjects.Container;
   skillsText: { [key: string]: Phaser.GameObjects.Text } = {};
   inventorySlots: Phaser.GameObjects.Image[] = [];
   inventorySlotsQuantity: Phaser.GameObjects.Text[] = [];
@@ -65,6 +67,8 @@ export default class UIScene extends Phaser.Scene {
     this._createHUD();
     // Create Minimap
     this._createMinimap();
+    // Create Menu
+    this._createMenu();
     // Create Inventory
     this._createInventory();
   }
@@ -97,9 +101,12 @@ export default class UIScene extends Phaser.Scene {
       y: mapY,
       minimap: this.add.image(mapX, mapY, 'ui.minimap'),
       bg: this.add.image(mapX, mapY, 'ui.map'),
+      cursor: this.add.text(mapX - 4, mapY - 7, 'ʘ', {
+        color: 'white'
+      }),
     };
 
-    this.map.minimap.setScale(0.25);
+    this.map.minimap.setScale(0.2);
     const minimapPos = this.getMinimapPosition();
     this.map.minimap.setPosition(minimapPos.x, minimapPos.y);
 
@@ -111,8 +118,34 @@ export default class UIScene extends Phaser.Scene {
         add: false
     });
     this.map.minimap.mask = new Phaser.Display.Masks.BitmapMask(this, mapMask);
+  }
 
-    this.map.bg.setInteractive({ cursor: POINTER_CURSOR });
+  private _createMenu() {
+    this.data.set('currentPanel', null);
+
+    // Create menu
+    this.menu = this.add.container(this.map.x + 42, this.map.y + 96);
+    
+    const button1 = new SquareButton(this, 0, 0);
+    const button2 = new SquareButton(this, 0, 50);
+
+    button1.onClick(() => {
+      this.data.set('currentPanel', 'player');
+    });
+    button2.onClick(() => {
+      this.data.set('currentPanel', 'skills');
+    });
+
+    this.data.events.on('changedata', () => {
+      const currentPanel = this.data.get('currentPanel');
+
+      button1.setFocus(currentPanel === 'player');
+      button2.setFocus(currentPanel === 'skills');
+    });
+  
+    this.menu.add(this.add.image(0, 0, 'ui.menu'));
+    this.menu.add(button1);
+    this.menu.add(button2);
   }
 
   private _createInventory() {
