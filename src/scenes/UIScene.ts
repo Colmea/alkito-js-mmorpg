@@ -5,6 +5,10 @@ import InventoryItem from '../models/InventoryItem';
 import { POINTER_CURSOR } from '../utils/cursorUtils';
 import { SkillType } from '../systems/SkillsSystem';
 import { ActionType } from '../types/Actions';
+import * as CONFIG from '../gameConfig';
+
+type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
+
 
 export default class UIScene extends Phaser.Scene {
   NB_INVENTORY_SLOT: number = 7;
@@ -13,7 +17,13 @@ export default class UIScene extends Phaser.Scene {
 
   player: Player;
   hud: Phaser.GameObjects.Image;
-  map: Phaser.GameObjects.Image;
+  mapLayer: MapLayer;
+  map: {
+    x: number,
+    y: number,
+    bg: Phaser.GameObjects.Image,
+    minimap: Phaser.GameObjects.Image,
+  };
   skillsText: { [key: string]: Phaser.GameObjects.Text } = {};
   inventorySlots: Phaser.GameObjects.Image[] = [];
   inventorySlotsQuantity: Phaser.GameObjects.Text[] = [];
@@ -23,8 +33,9 @@ export default class UIScene extends Phaser.Scene {
     super('UIScene');
   }
 
-  init(data: { player: Player }) {
+  init(data: { player: Player, mapLayer: MapLayer }) {
     this.player = data.player;
+    this.mapLayer = data.mapLayer;
 
     // Update Skills HUD
     this.emitter.on(ActionType.SKILL_INCREASE, () => {
@@ -35,16 +46,32 @@ export default class UIScene extends Phaser.Scene {
     });
   }
 
+  getMinimapPosition() {
+    const minimapScalingFactor = (this.mapLayer.width * CONFIG.TILE_SIZE) / (this.map.minimap.width * this.map.minimap.scaleX);
+    const playerXOffsetFromCenter = (this.player.x / CONFIG.TILE_SIZE) - (this.mapLayer.width / 2);
+    const playerYOffsetFromCenter = (this.player.y / CONFIG.TILE_SIZE) - (this.mapLayer.height / 2);
+
+    const playerOffsetXMap = (playerXOffsetFromCenter * CONFIG.TILE_SIZE) / minimapScalingFactor;
+    const playerOffsetYMap = (playerYOffsetFromCenter * CONFIG.TILE_SIZE) / minimapScalingFactor;
+
+    return {
+      x: this.map.x - playerOffsetXMap,
+      y: this.map.y - playerOffsetYMap,
+    };
+  }
+
   create() {
     // Create HUD
     this._createHUD();
-
-    // Create mini Map
-    this.map = this.add.image(this.scale.width - 75, 80, 'ui.map');
-    this.map.setInteractive({ cursor: POINTER_CURSOR });
-
+    // Create Minimap
+    this._createMinimap();
     // Create Inventory
     this._createInventory();
+  }
+
+  update() {
+    const minimapPos = this.getMinimapPosition();
+    this.map.minimap.setPosition(minimapPos.x, minimapPos.y);
   }
 
   private _createHUD() {
@@ -58,6 +85,34 @@ export default class UIScene extends Phaser.Scene {
     this.skillsText[SkillType.FARMING] = this.add.text(20, this.scale.height - 100, label, {
       fontSize: 13,
     });
+  }
+
+  private _createMinimap() {
+    const mapX = this.scale.width - 75;
+    const mapY = 80;
+  
+    // Create mini Map
+    this.map = {
+      x: mapX,
+      y: mapY,
+      minimap: this.add.image(mapX, mapY, 'ui.minimap'),
+      bg: this.add.image(mapX, mapY, 'ui.map'),
+    };
+
+    this.map.minimap.setScale(0.25);
+    const minimapPos = this.getMinimapPosition();
+    this.map.minimap.setPosition(minimapPos.x, minimapPos.y);
+
+    // Set minimap mask
+    const mapMask = this.make.image({
+        x: this.map.x,
+        y: this.map.y,
+        key: 'ui.map-mask',
+        add: false
+    });
+    this.map.minimap.mask = new Phaser.Display.Masks.BitmapMask(this, mapMask);
+
+    this.map.bg.setInteractive({ cursor: POINTER_CURSOR });
   }
 
   private _createInventory() {

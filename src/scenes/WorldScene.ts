@@ -64,7 +64,7 @@ export default class WorldScene extends Phaser.Scene {
 
       this._createEvents();
 
-      this.scene.launch('UIScene', { player: this.player });
+      this.scene.launch('UIScene', { player: this.player, mapLayer: this.map });
     });
 
     // Create other players
