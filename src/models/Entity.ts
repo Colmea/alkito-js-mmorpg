@@ -1,6 +1,6 @@
 import 'phaser';
 import { v4 as uuid } from 'uuid';
-import CONFIG from '../gameConfig';
+import * as CONFIG from '../gameConfig';
 import { getTilePosition } from '../utils/tileUtils';
 import Mover from '../systems/Mover';
 import WorldScene from '../scenes/WorldScene';

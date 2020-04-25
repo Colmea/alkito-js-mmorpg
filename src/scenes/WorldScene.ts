@@ -18,7 +18,7 @@ export default class WorldScene extends Phaser.Scene {
   TILE_SIZE: number = 32;
 
   server: any;
-  emitter: EventDispatcher = EventDispatcher.getInstance();;
+  emitter: EventDispatcher = EventDispatcher.getInstance();
   entityActions: EntityActionManager;
 
   navMeshPlugin: any;
@@ -93,12 +93,13 @@ export default class WorldScene extends Phaser.Scene {
     this.map = this.make.tilemap({ key: 'map' });
 
     const tiles = this.map.addTilesetImage('tileset', 'tiles');
+    const tiles2 = this.map.addTilesetImage('tileset2', 'tiles2', 32, 32, 1, 2);
 
-    this.mapLayers['grass'] = this.map.createStaticLayer('Grass', tiles, 0, 0);
-    this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', tiles, 0, 0);
-    this.mapLayers['objects'] = this.map.createStaticLayer('Objects', tiles, 0, 0);
+    this.mapLayers['grass'] = this.map.createStaticLayer('Grass', [tiles, tiles2], 0, 0);
+    this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', [tiles, tiles2], 0, 0);
+    this.mapLayers['objects'] = this.map.createStaticLayer('Objects', [tiles, tiles2], 0, 0);
     // this.mapLayers['objects'].setCollisionByExclusion([-1]);
-    this.mapLayers['ui'] = this.map.createBlankDynamicLayer('UI', tiles);
+    this.mapLayers['ui'] = this.map.createBlankDynamicLayer('UI', [tiles, tiles2]);
 
     // Resources from Map
     const resources = this.map.getObjectLayer("Items");

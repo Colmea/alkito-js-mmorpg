@@ -1,8 +1,10 @@
+'use strict'
 const path = require('path');
 const express = require('express');
 const app = express();
 const server  = require('http').Server(app);
 const io = require('socket.io').listen(server);
+const CONFIG = require('../gameConfig');
 
 const PORT = process.env.PORT || 3000;
 const players = {};
@@ -20,8 +22,8 @@ io.on('connection', function (socket) {
 
     players[socket.id] = {
         id: socket.id,
-        x: 75,
-        y: 61,
+        x: CONFIG.PLAYER_SPAWN_POINT.x,
+        y: CONFIG.PLAYER_SPAWN_POINT.y,
     };
 
     socket.emit('playerCreated', players[socket.id]);

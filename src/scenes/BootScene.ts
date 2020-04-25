@@ -8,11 +8,13 @@ export default class BootScene extends Phaser.Scene {
   preload() {
     // map tiles
     this.load.image('tiles', 'assets/map/tileset.png');
+    this.load.image('tiles2', 'assets/map/tileset2_extruded.png');
     this.load.spritesheet('plants', 'assets/items/plants.png', { frameWidth: 32, frameHeight: 64 });
     // map in json format
     this.load.tilemapTiledJSON('map', 'assets/map/world.json');
     // player
     this.load.spritesheet('tileset', 'assets/map/tileset.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('ground_tiles', 'assets/map/ground_tiles.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('player', 'assets/player-sprite.png', { frameWidth: 32, frameHeight: 32 });
     // ui
     this.load.image('ui.hud', 'assets/ui/hud.png');
