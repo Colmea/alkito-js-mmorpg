@@ -1,15 +1,22 @@
+declare global {
+  interface Window {
+    io: any;
+  }
+}
+
 import 'phaser';
 import Player from '../models/Player';
+import OtherPlayer from '../models/OtherPlayer';
 import ResourceEntity from '../models/ResourceEntity';
 import Entity from '../models/Entity';
 import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
 import EntityActionProcessor from '../managers/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
-import * as io from 'socket.io-client';
+import * as defaultIO from 'socket.io-client';
+import SkillsManager from '../managers/SkillsManager';
+import { ActionType } from '../types/Actions';
 
-const PORT = process.env.PORT || 3000;
-console.log('Alkito Port', PORT);
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
@@ -28,7 +35,7 @@ export default class WorldScene extends Phaser.Scene {
   mapLayers: { [key: string]: MapLayer } = {};
 
   player: Player;
-  otherPlayers: { [key: string]: Player } = {};
+  otherPlayers: { [key: string]: OtherPlayer } = {};
   currentSelection: Entity | null;
 
   constructor() {
@@ -43,7 +50,7 @@ export default class WorldScene extends Phaser.Scene {
     this._createAnims();
 
     // Connect to Server World
-    this.server = io(`http://localhost:${PORT}`);
+    this.server = window.io ? window.io() : defaultIO('http://localhost:3000');
 
     // Create player
     this.server.on('playerCreated', (player: any) => {
@@ -67,17 +74,24 @@ export default class WorldScene extends Phaser.Scene {
 
         if (otherPlayer.id === this.player.id) continue;
 
-        const player = new Player(this, otherPlayer.x, otherPlayer.y, this.navMesh);
+        const player = new OtherPlayer(this, otherPlayer.x, otherPlayer.y, this.navMesh);
         this.otherPlayers[otherPlayer.id] = player;
-
       }
     });
 
     // New player connected
     this.server.on('newPlayer', (newPlayer: any) => {
-        const player = new Player(this, newPlayer.x, newPlayer.y, this.navMesh);
+        const player = new OtherPlayer(this, newPlayer.x, newPlayer.y, this.navMesh);
         this.otherPlayers[newPlayer.id] = player;
     });
+
+    // Player disconnected
+    this.server.on('playerDisconnected', (disconnectedPlayer: any) => {
+      const player = this.otherPlayers[disconnectedPlayer.id];
+      player.destroy(true);
+
+      delete this.otherPlayers[disconnectedPlayer.id];
+  });
 
     // Other player moved
     this.server.on('playerMoved', (player: any) => {
@@ -85,7 +99,7 @@ export default class WorldScene extends Phaser.Scene {
 
       const otherPlayer = this.otherPlayers[player.id];
       const tile = this.map.getTileAt(player.x, player.y, false, this.mapLayers['grass']);
-      this.entityActions.processNow(otherPlayer, { type: 'go-to', args: [tile] });
+      this.entityActions.processNow(otherPlayer, { type: ActionType.ENTITY_MOVE, args: [tile] });
     });
   }
 
@@ -140,26 +154,52 @@ export default class WorldScene extends Phaser.Scene {
     // Player animation (used mainly in the Player class when moving)
     // Need refactoring
     this.anims.create({
-      key: 'left',
+      key: 'player-left',
       frames: this.anims.generateFrameNumbers('player', { frames: [4, 3, 4, 5] }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: 'right',
+      key: 'player-right',
       frames: this.anims.generateFrameNumbers('player', { frames: [7, 6, 7, 8] }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: 'up',
+      key: 'player-up',
       frames: this.anims.generateFrameNumbers('player', { frames: [10, 9, 10, 11] }),
       frameRate: 10,
       repeat: -1
     });
     this.anims.create({
-      key: 'down',
+      key: 'player-down',
       frames: this.anims.generateFrameNumbers('player', { frames: [1, 0, 1, 2] }),
+      frameRate: 10,
+      repeat: -1
+    });
+
+    // Other Players animation
+    this.anims.create({
+      key: 'other-player-left',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [4, 3, 4, 5] }),
+      frameRate: 10,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'other-player-right',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [7, 6, 7, 8] }),
+      frameRate: 10,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'other-player-up',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [10, 9, 10, 11] }),
+      frameRate: 10,
+      repeat: -1
+    });
+    this.anims.create({
+      key: 'other-player-down',
+      frames: this.anims.generateFrameNumbers('other-player', { frames: [1, 0, 1, 2] }),
       frameRate: 10,
       repeat: -1
     });
@@ -170,10 +210,14 @@ export default class WorldScene extends Phaser.Scene {
     const entityActionProcessor = new EntityActionProcessor();
     entityActionProcessor.listen();
 
+    // Skills Manager
+    const skillsManager = new SkillsManager();
+    skillsManager.listen();
+
     // On map click
     this.input.on('pointerdown', this.onMapClick);
    
-    this.emitter.on('unit.select', (unit: Entity | null, flag: boolean = true) => {
+    this.emitter.on(ActionType.ENTITY_SELECT, (unit: Entity | null, flag: boolean = true) => {
       if (this.currentSelection) {
         this.currentSelection.select(false);
       }
@@ -205,7 +249,7 @@ export default class WorldScene extends Phaser.Scene {
       
     // Move Player to this position
     // Player will automatically find its path to the point and update its position accordingly
-    this.entityActions.processNow(entity, { type: 'go-to', args: [tile] });
+    this.entityActions.processNow(entity, { type: ActionType.ENTITY_MOVE, args: [tile] });
 
     return tile;
   }

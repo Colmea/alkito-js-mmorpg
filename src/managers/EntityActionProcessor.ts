@@ -1,19 +1,21 @@
 import EventDispatcher from './EventDispatcher';
+import EventListener from './EventListenerInterface';
 import Entity from '../models/Entity';
 import { HasInventory } from '../systems/InventorySystem';
 import InventoryItem from '../models/InventoryItem';
 import ResourceEntity from '../models/ResourceEntity';
+import { ActionType } from '../types/Actions';
 
 
-export default class EntityActionProcessor {
+export default class EntityActionProcessor implements EventListener {
     emitter = EventDispatcher.getInstance();
 
     listen() {
-      this.emitter.on('action.go-to', (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
+      this.emitter.on(ActionType.ENTITY_MOVE, (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
         unit.goTo(tile);
       });
 
-      this.emitter.on('action.take', (unit: Entity & HasInventory, object: ResourceEntity) => {
+      this.emitter.on(ActionType.RESOURCE_COLLECT, (unit: Entity & HasInventory, object: ResourceEntity) => {
         // Look at object
         unit.lookAt(object);
 
@@ -24,10 +26,15 @@ export default class EntityActionProcessor {
 
           // Hide object
           object.setVisible(false);
+
+          // Increase harvesting skill
+          if (object.harvestingSkill) {
+            this.emitter.emit(ActionType.SKILL_INCREASE, unit, object.harvestingSkill, object.harvestingSkillXp)
+          }
         }
       });
 
-      this.emitter.on('action.progress', (owner: Entity, progress: number, target: Entity) => {
+      this.emitter.on(ActionType.ACTION_PROGRESS, (owner: Entity, progress: number, target: Entity) => {
         target.displayProgress(progress);
       });
     }

@@ -3,6 +3,8 @@ import EventDispatcher from '../managers/EventDispatcher';
 import Player from '../models/Player';
 import InventoryItem from '../models/InventoryItem';
 import { POINTER_CURSOR } from '../utils/cursorUtils';
+import { SkillType } from '../systems/SkillsSystem';
+import { ActionType } from '../types/Actions';
 
 export default class UIScene extends Phaser.Scene {
   NB_INVENTORY_SLOT: number = 7;
@@ -12,6 +14,7 @@ export default class UIScene extends Phaser.Scene {
   player: Player;
   hud: Phaser.GameObjects.Image;
   map: Phaser.GameObjects.Image;
+  skillsText: { [key: string]: Phaser.GameObjects.Text } = {};
   inventorySlots: Phaser.GameObjects.Image[] = [];
   inventorySlotsQuantity: Phaser.GameObjects.Text[] = [];
   inventoryItems: Phaser.GameObjects.Sprite[] = [];
@@ -22,12 +25,19 @@ export default class UIScene extends Phaser.Scene {
 
   init(data: { player: Player }) {
     this.player = data.player;
+
+    // Update Skills HUD
+    this.emitter.on(ActionType.SKILL_INCREASE, () => {
+      const farmingSkill = this.player.skills.get(SkillType.FARMING);
+      const newLabel = `Farming (lvl ${farmingSkill.level}): ${farmingSkill.xp} / ${farmingSkill.xpLevel} xp.`
+      
+      this.skillsText[SkillType.FARMING].setText(newLabel);
+    });
   }
 
   create() {
     // Create HUD
-    this.hud = this.add.image(110, this.scale.height - 40, 'ui.hud');
-    this.hud.setInteractive({ cursor: POINTER_CURSOR });
+    this._createHUD();
 
     // Create mini Map
     this.map = this.add.image(this.scale.width - 75, 80, 'ui.map');
@@ -35,6 +45,19 @@ export default class UIScene extends Phaser.Scene {
 
     // Create Inventory
     this._createInventory();
+  }
+
+  private _createHUD() {
+    this.hud = this.add.image(110, this.scale.height - 40, 'ui.hud');
+    this.hud.setInteractive({ cursor: POINTER_CURSOR });
+
+    // Skills
+    // Farming
+    const farmingSkill = this.player.skills.get(SkillType.FARMING);
+    const label = `Farming (lvl ${farmingSkill.level}): ${farmingSkill.xp} / ${farmingSkill.xpLevel} xp.`
+    this.skillsText[SkillType.FARMING] = this.add.text(20, this.scale.height - 100, label, {
+      fontSize: 13,
+    });
   }
 
   private _createInventory() {

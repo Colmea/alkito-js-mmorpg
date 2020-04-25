@@ -16,6 +16,7 @@ export default class BootScene extends Phaser.Scene {
     this.load.spritesheet('tileset', 'assets/map/tileset.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('ground_tiles', 'assets/map/ground_tiles.png', { frameWidth: 32, frameHeight: 32 });
     this.load.spritesheet('player', 'assets/player-sprite.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.spritesheet('other-player', 'assets/other-player-sprite.png', { frameWidth: 32, frameHeight: 32 });
     // ui
     this.load.image('ui.hud', 'assets/ui/hud.png');
     this.load.image('ui.map', 'assets/ui/map.png');
