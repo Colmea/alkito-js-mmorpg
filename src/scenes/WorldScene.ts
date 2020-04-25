@@ -13,7 +13,7 @@ import EventDispatcher from '../managers/EventDispatcher';
 import EntityActionManager from '../managers/EntityActionManager';
 import EntityActionProcessor from '../managers/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
-import * as defaultIO from 'socket.io-client';
+import defaultIO from 'socket.io-client';
 import SkillsManager from '../managers/SkillsManager';
 import { ActionType } from '../types/Actions';
 
@@ -65,6 +65,7 @@ export default class WorldScene extends Phaser.Scene {
       this._createEvents();
 
       this.scene.launch('UIScene', { player: this.player, mapLayer: this.map });
+      this.scene.launch('ReactScene', { player: this.player });
     });
 
     // Create other players

@@ -14,12 +14,12 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.ts$/, loader: "ts-loader", exclude: "/node_modules/" },
+      { test: /\.tsx?$/, loader: "ts-loader", exclude: "/node_modules/" },
       { test: /phaser\.js$/, loader: "expose-loader?Phaser" }
     ]
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".tsx", ".jsx"],
     alias: {
       phaser: phaser
     }

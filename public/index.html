@@ -9,9 +9,39 @@
             padding: 0;
             height: 100%;
         }
+
+        #ui-container {
+          width: 300px;
+          height: 200px;
+          position: absolute;
+          background-color: #ffffff2e;
+          margin-top: 200px;
+          left: calc(50% - 150px);
+          /* pointer-events: none; */
+        }
+
+        .button {
+          display: inline-block;
+          background-color: #d27d2c;
+          color: white;
+          cursor: pointer;
+          border: 1px solid black;
+          height: 22px;
+          padding-left: 20px;
+          padding-right: 20px;
+        }
+        .button:before {
+          position: absolute; 
+          content: url(assets/ui/btn-left.png);
+          left: 0;
+          /* margin-left: -12px;
+          margin-top: -2px; */
+        }
+
     </style>
     <script src="/socket.io/socket.io.js"></script>
   </head>
   <body>
+    <div id="ui-container"></div>
   </body>
 </html>

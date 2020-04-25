@@ -1,6 +1,7 @@
 import 'phaser';
-import * as PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
-
+import PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
+import phaserReact from "phaser3-react";
+console.log('navmesh plugin', PhaserNavMeshPlugin);
 export default {
   type: Phaser.Scale.ENVELOP,
   backgroundColor: '#33A5E7',
@@ -16,6 +17,16 @@ export default {
     }
   },
   plugins: {
+    global: [
+      {
+        key: 'phaser-react',
+        plugin: phaserReact,
+        start: true,
+        data: {
+          parent: 'ui-container'
+        }
+      }
+    ],
     scene: [
       {
         key: "PhaserNavMeshPlugin", // Key to store the plugin class under in cache
