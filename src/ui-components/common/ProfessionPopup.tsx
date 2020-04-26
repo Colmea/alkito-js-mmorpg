@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Progress, Card, Icon, Image, Statistic, Label } from 'semantic-ui-react'
+import { Progress, Card, Icon, Image, Statistic, Label, List, Grid } from 'semantic-ui-react'
 import Popup from './Popup';
 import Button from './Button';
 import Skill from '../../models/skills/Skill';
@@ -22,32 +22,27 @@ export default class ProfessionPopup extends PureComponent<Props, {}> {
     const render = [];
 
     this.props.skills.forEach((skill: Skill) => {
-      const percentXp = (skill.xp / skill.xpLevel) * 100;
-
       render.push(
-        <Card style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
-          <Image
-            src={skill.image}
-            wrapped
-            ui={false}
-            label={{
-              as: 'a',
-              color: 'orange',
-              content: 'lvl ' + skill.level,
-              ribbon: "right",
-            }}
-          />
-          <Card.Content style={{ backgroundColor: 'rgba(255, 255, 255, 0.9)' }}>
-            <Card.Header>{skill.name}</Card.Header>
-            <Card.Meta>{skill.description}</Card.Meta>
-          </Card.Content>
-          
-          {/* <Card.Content extra style={{ backgroundColor: '#ff9800', textAlign: 'center' }}>
-            0 / 100 xp
-          </Card.Content> */}
-          <Progress percent={percentXp} progress active color='green'  size="small" />
-
-        </Card>
+        <List.Item style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+          <List.Content
+            floated='right'
+            verticalAlign='middle'
+            style={{ width: 200, paddingTop: 24 }}
+          >
+            <Grid columns='equal'>
+              <Grid.Column width={12}>
+                <Progress inverted value={skill.xp} total={skill.xpLevel} active color='orange' size='tiny' />
+              </Grid.Column>
+              <Grid.Column>
+                Lvl. <strong>{skill.level}</strong>
+              </Grid.Column>
+            </Grid>
+          </List.Content>
+          <Image src={skill.image} rounded style={{ width: 50, backgroundColor: '#ffffff21', padding: 4 }} />
+          <List.Content>
+            {skill.name}
+          </List.Content>
+        </List.Item>
       );
     });
 
@@ -63,15 +58,12 @@ export default class ProfessionPopup extends PureComponent<Props, {}> {
         isVisible={isVisible}
         onClose={this.props.onClose}
         footerContent={
-          <Fragment>
-            <Button onClick={this.props.onClose}>Close</Button>
-          </Fragment>
+          <Button onClick={this.props.onClose}>Close</Button>
         }
       >
-        <br />
-          <Card.Group itemsPerRow={2}>
-            {this.renderSkills()}
-          </Card.Group>
+        <List divided verticalAlign='middle' style={{ marginTop: 10 }}>
+          {this.renderSkills()}
+        </List>
       </Popup>
     );
   }
