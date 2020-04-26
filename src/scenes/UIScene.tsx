@@ -89,23 +89,16 @@ export default class UIScene extends Phaser.Scene {
         
     this.popup = this.add.reactDom((props) => (
       <ProfessionPopup
+        skills={this.player.skills.getAll()}
         isVisible={false}
-        level={farmingSkill.level}
-        xp={farmingSkill.xp}
-        xpLevel={farmingSkill.xpLevel}
         onClose={this.handleClosePopup}
         {...props}
       />
     ));
 
     this.emitter.on(ActionType.SKILL_INCREASE, () => {
-      const farmingSkill = this.player.skills.get(SkillType.FARMING);
-      console.log('increase skill');
       this.popup.setState({
-      
-        level: farmingSkill.level,
-        xp: farmingSkill.xp,
-        xplevel: farmingSkill.xpLevel,
+        skills: this.player.skills.getAll(),
       });
     });
   }

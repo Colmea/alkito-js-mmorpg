@@ -5,4 +5,5 @@ export default class MiningSkill extends Skill {
     type: SkillType = SkillType.MINING;
     name: string = 'Mining';
     description: string = 'Mining Skill. Mine ore to increase this skill.';
+    image = 'assets/items/mining.png';
 }

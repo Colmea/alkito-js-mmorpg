@@ -1,8 +1,8 @@
 import React, { PureComponent, ReactNode } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
-import Button from './Button';
 
 interface Props {
+  title?: string;
   isVisible: boolean;
   width: number;
   height: number;
@@ -22,10 +22,8 @@ const styleContainer = {
   borderRadius: 7,
   border: '3px groove #d27d2c',
   boxShadow: '3px 3px 5px 0px rgba(0,0,0,0.3)',
-  textAlign: 'center' as 'center',
   color: 'white',
-  fontSize: '0.9em',
-  padding: 10,
+  padding: '10px 30px',
 
 };
 
@@ -37,6 +35,9 @@ const styleHeader = {
   width: 272,
   height: 27,
   backgroundImage: 'url(assets/ui/modal-topbar.png)',
+  paddingTop: 12,
+  fontSize: '1.3em',
+  paddingLeft: 7,
 }
 
 const styleContent = {
@@ -56,8 +57,10 @@ export default class Popup extends PureComponent<Props, {}> {
   render() {
     return (this.props.isVisible &&
       <div style={{ ...styleContainer, width: this.props.width, height: this.props.height }}>
-        <div onClick={this.props.onClose} style={styleHeader}></div>
-        <Scrollbars style={{ width: this.props.width, height: this.props.height - 40 }}>
+        <div onClick={this.props.onClose} style={styleHeader}>
+          {this.props.title}
+        </div>
+        <Scrollbars style={{ width: this.props.width - 60, height: this.props.height - 40 }}>
           {this.props.children}
         </Scrollbars>
 

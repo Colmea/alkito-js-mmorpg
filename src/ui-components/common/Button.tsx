@@ -12,8 +12,8 @@ export default class Button extends PureComponent<Props, {}> {
 
   render() {
     return (
-      <div onClick={this.props.onClick} className="button-container">
-        <div className="button">
+      <div onClick={this.props.onClick} className="alkito-button-container">
+        <div className="alkito-button">
           {this.props.children}
         </div>
       </div>
