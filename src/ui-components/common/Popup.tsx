@@ -1,7 +1,12 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, ReactNode } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
+import Button from './Button';
 
 interface Props {
   isVisible: boolean;
+  width: number;
+  height: number;
+  footerContent?: ReactNode;
   onClose: () => void;
 }
 
@@ -9,8 +14,10 @@ const styleContainer = {
   position: 'absolute' as 'absolute',
   top: '20%',
   left: '10%',
-  width: 250,
-  height: 200,
+  minWidth: 350,
+  height: 490,
+  backgroundImage: 'url(assets/ui/ui-background.png)',
+  backgroundSize: 'cover',
   backgroundColor: '#595652',
   borderRadius: 7,
   border: '3px groove #d27d2c',
@@ -19,6 +26,7 @@ const styleContainer = {
   color: 'white',
   fontSize: '0.9em',
   padding: 10,
+
 };
 
 const styleHeader = {
@@ -26,24 +34,36 @@ const styleHeader = {
   cursor: 'pointer',
   left: -2,
   top: -30,
-  width: 'calc(100% + 2px)',
+  width: 272,
   height: 27,
   backgroundImage: 'url(assets/ui/modal-topbar.png)',
 }
 
-export default class Button extends PureComponent<Props, {}> {
+const styleContent = {
+  height: '100%',
+  overflowY: 'auto' as 'auto',
+};
+
+export default class Popup extends PureComponent<Props, {}> {
 
   static defaultProps = {
     isVisible: false,
+    width: 500,
+    height: 400,
     onClose: () => { },
   }
 
   render() {
-    console.log('popup rener', this.props.isVisible);
     return (this.props.isVisible &&
-      <div style={styleContainer}>
+      <div style={{ ...styleContainer, width: this.props.width, height: this.props.height }}>
         <div onClick={this.props.onClose} style={styleHeader}></div>
-        {this.props.children}
+        <Scrollbars style={{ width: this.props.width, height: this.props.height - 40 }}>
+          {this.props.children}
+        </Scrollbars>
+
+        <div style={{ height: 40, paddingTop: 12 }}>
+          {this.props.footerContent}
+        </div>
       </div>
     );
   }

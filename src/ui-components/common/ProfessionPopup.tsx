@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import Popup from './Popup';
 import Button from './Button';
 
@@ -28,15 +28,40 @@ export default class ProfessionPopup extends PureComponent<Props, {}> {
       <Popup
         isVisible={isVisible}
         onClose={this.props.onClose}
+        footerContent={
+          <Fragment>
+            <Button>Cancel</Button>
+            <Button>Attack</Button>
+          </Fragment>
+        }
       >
-        <h1>🪓 Professions</h1>
-        <p>
-          <br />
-          <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.
-          <br /><br />
-        </p>
-        <Button>Cancel</Button>
-        <Button>Attack</Button>
+          <h1>🪓 Professions</h1>
+          <p>
+            <br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <strong>FARMING</strong> (lvl {level}): {xp} / {xpLevel} xp.<br /><br />
+            <br /><br />
+          </p>
       </Popup>
     );
   }
