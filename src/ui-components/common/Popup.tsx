@@ -23,7 +23,6 @@ const styleContainer = {
   border: '3px groove #d27d2c',
   boxShadow: '3px 3px 5px 0px rgba(0,0,0,0.3)',
   color: 'white',
-  padding: '10px 30px',
 
 };
 
@@ -60,11 +59,24 @@ export default class Popup extends PureComponent<Props, {}> {
         <div onClick={this.props.onClose} style={styleHeader}>
           {this.props.title}
         </div>
-        <Scrollbars style={{ width: this.props.width - 60, height: this.props.height - 40 }}>
-          {this.props.children}
+        <Scrollbars
+          renderThumbVertical={({ style, ...props }) =>
+            <div
+              {...props}
+              style={{
+                ...style,
+                borderRadius: 'inherit',
+                backgroundColor: 'rgba(210, 125, 44, 0.85)'
+              }}
+            />
+          }
+        >
+          <div style={{ padding: '0 20px' }}>
+            {this.props.children}
+          </div>
         </Scrollbars>
 
-        <div style={{ height: 40, paddingTop: 12 }}>
+        <div style={{ textAlign: 'center' }}>
           {this.props.footerContent}
         </div>
       </div>
