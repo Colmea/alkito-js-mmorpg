@@ -24,6 +24,10 @@ export default class SkillsSystem {
         return this.skills[skill];
     }
 
+    getAll(): Skill[] {
+        return Object.values(this.skills);
+    }
+
     has(skill: SkillType): boolean {
         if (this.get(skill))
             return true;

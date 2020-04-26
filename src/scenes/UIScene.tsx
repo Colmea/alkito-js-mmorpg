@@ -1,4 +1,5 @@
 import 'phaser';
+import React from 'react';
 import EventDispatcher from '../managers/EventDispatcher';
 import Player from '../models/Player';
 import InventoryItem from '../models/InventoryItem';
@@ -7,6 +8,7 @@ import { SkillType } from '../systems/SkillsSystem';
 import { ActionType } from '../types/Actions';
 import * as CONFIG from '../gameConfig';
 import SquareButton from '../models/ui/SquareButton';
+import ProfessionPopup from '../ui-components/common/ProfessionPopup';
 
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
 
@@ -30,6 +32,7 @@ export default class UIScene extends Phaser.Scene {
   inventorySlots: Phaser.GameObjects.Image[] = [];
   inventorySlotsQuantity: Phaser.GameObjects.Text[] = [];
   inventoryItems: Phaser.GameObjects.Sprite[] = [];
+  popup: any;
 
   constructor() {
     super('UIScene');
@@ -38,14 +41,6 @@ export default class UIScene extends Phaser.Scene {
   init(data: { player: Player, mapLayer: MapLayer }) {
     this.player = data.player;
     this.mapLayer = data.mapLayer;
-
-    // Update Skills HUD
-    this.emitter.on(ActionType.SKILL_INCREASE, () => {
-      const farmingSkill = this.player.skills.get(SkillType.FARMING);
-      const newLabel = `Farming (lvl ${farmingSkill.level}): ${farmingSkill.xp} / ${farmingSkill.xpLevel} xp.`
-      
-      this.skillsText[SkillType.FARMING].setText(newLabel);
-    });
   }
 
   getMinimapPosition() {
@@ -69,6 +64,8 @@ export default class UIScene extends Phaser.Scene {
     this._createMinimap();
     // Create Menu
     this._createMenu();
+    // Create Popup
+    this._createPopup();
     // Create Inventory
     this._createInventory();
   }
@@ -81,13 +78,28 @@ export default class UIScene extends Phaser.Scene {
   private _createHUD() {
     this.hud = this.add.image(110, this.scale.height - 40, 'ui.hud');
     this.hud.setInteractive({ cursor: POINTER_CURSOR });
+  }
 
-    // Skills
-    // Farming
+  handleClosePopup = () => {
+    this.data.set('currentPanel', null);
+  }
+
+  private _createPopup() {
     const farmingSkill = this.player.skills.get(SkillType.FARMING);
-    const label = `Farming (lvl ${farmingSkill.level}): ${farmingSkill.xp} / ${farmingSkill.xpLevel} xp.`
-    this.skillsText[SkillType.FARMING] = this.add.text(20, this.scale.height - 100, label, {
-      fontSize: 13,
+        
+    this.popup = this.add.reactDom((props) => (
+      <ProfessionPopup
+        skills={this.player.skills.getAll()}
+        isVisible={false}
+        onClose={this.handleClosePopup}
+        {...props}
+      />
+    ));
+
+    this.emitter.on(ActionType.SKILL_INCREASE, () => {
+      this.popup.setState({
+        skills: this.player.skills.getAll(),
+      });
     });
   }
 
@@ -126,21 +138,38 @@ export default class UIScene extends Phaser.Scene {
     // Create menu
     this.menu = this.add.container(this.map.x + 42, this.map.y + 96);
     
-    const button1 = new SquareButton(this, 0, 0);
+    const button1 = new SquareButton(this, 0, 0, 'ui.icon-skills');
     const button2 = new SquareButton(this, 0, 50);
 
     button1.onClick(() => {
-      this.data.set('currentPanel', 'player');
+      this.data.set('currentPanel', 'skills');
     });
     button2.onClick(() => {
-      this.data.set('currentPanel', 'skills');
+      this.data.set('currentPanel', 'player');
     });
 
     this.data.events.on('changedata', () => {
       const currentPanel = this.data.get('currentPanel');
 
-      button1.setFocus(currentPanel === 'player');
-      button2.setFocus(currentPanel === 'skills');
+      switch(currentPanel) {
+        case 'skills': {
+          button1.setFocus(true);
+          button2.setFocus(false);
+          this.popup.setState({ isVisible: true });
+          break;
+        }
+        case 'player': {
+          button1.setFocus(false);
+          button2.setFocus(true);
+          this.popup.setState({ isVisible: false });
+          break;
+        }
+        default: {
+          button1.setFocus(false);
+          button2.setFocus(false);
+          this.popup.setState({ isVisible: false });
+        }
+      }
     });
   
     this.menu.add(this.add.image(0, 0, 'ui.menu'));
