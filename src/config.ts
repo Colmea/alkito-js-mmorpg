@@ -6,7 +6,7 @@ export default {
   type: Phaser.Scale.ENVELOP,
   backgroundColor: '#33A5E7',
   width: window.innerWidth,
-  height: window.innerHeight,
+  height: window.innerHeight - 4,
   zoom: 1,
   // pixelArt: true,
   physics: {
@@ -22,9 +22,7 @@ export default {
         key: 'phaser-react',
         plugin: phaserReact,
         start: true,
-        data: {
-          parent: 'ui-container'
-        }
+      
       }
     ],
     scene: [

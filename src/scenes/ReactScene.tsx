@@ -2,12 +2,20 @@ import 'phaser';
 import React from 'react';
 import EventDispatcher from '../managers/EventDispatcher';
 import Player from '../models/Player';
+import Button from '../ui-components/common/Button';
+import Popup from '../ui-components/common/Popup';
+import { SkillType } from '../systems/SkillsSystem';
+import { ActionType } from '../types/Actions';
+import ProfessionPopup from '../ui-components/common/ProfessionPopup';
 
-const btnStyle = {
-  margin: 20,
+const divStyle = {
+  marginTop: 75,
+  textAlign: 'center',
 };
 
 export default class ReactScene extends Phaser.Scene {
+  emitter: EventDispatcher = EventDispatcher.getInstance();
+
   player: Player;
   ui: any;
 
@@ -19,16 +27,32 @@ export default class ReactScene extends Phaser.Scene {
     this.player = data.player;
   }
 
+  handleClosePopup = () => {
+    this.ui.setState({ isVisible: false });
+  }
+
   create() {
+    const farmingSkill = this.player.skills.get(SkillType.FARMING);
+    
     this.ui = this.add.reactDom((props) => (
-      <div style={{ marginTop: 75, textAlign: 'center' }} {...props}>
-        This is a <strong>super</strong> text.<br />
-        Next line<br /><br />
-        <div onClick={(() => alert('CLICK'))} className="button" style={btnStyle}>
-          ACCEPT
-        </div>
-      </div>
-    ), { score: 0 });
+      <ProfessionPopup
+        level={farmingSkill.level}
+        xp={farmingSkill.xp}
+        xpLevel={farmingSkill.xpLevel}
+        onClose={this.handleClosePopup}
+        {...props}
+      />
+    ));
+
+    this.emitter.on(ActionType.SKILL_INCREASE, () => {
+      const farmingSkill = this.player.skills.get(SkillType.FARMING);
+      
+      this.ui.setState({
+        level: farmingSkill.level,
+        xp: farmingSkill.xp,
+        xplevel: farmingSkill.xpLevel,
+      });
+    });
   }
 
   update() {

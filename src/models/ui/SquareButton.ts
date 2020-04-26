@@ -8,7 +8,7 @@ export default class SquareButton extends Phaser.GameObjects.Container {
   icon: Phaser.GameObjects.Image;
   clickCallback: ClickCallback = () => {};
 
-  constructor(scene: Phaser.Scene, x: number, y: number, clickCallback: ClickCallback = () => {}) {
+  constructor(scene: Phaser.Scene, x: number, y: number, iconTexture: string = null, clickCallback: ClickCallback = () => {}) {
     super(scene, x, y);
   
     this.clickCallback = clickCallback;
@@ -19,7 +19,11 @@ export default class SquareButton extends Phaser.GameObjects.Container {
     this.add(this.background);
 
     // Create icon
-    // ...
+    if (iconTexture) {
+      this.icon = new Phaser.GameObjects.Image(this.scene, 0, 0, iconTexture);
+      this.scene.add.existing(this.icon);
+      this.add(this.icon);
+    }
     
     // on Hover
     this.background.on('pointerover', this.handleHover.bind(null, true));

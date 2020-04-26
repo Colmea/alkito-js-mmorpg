@@ -23,7 +23,7 @@
     "lodash": "^4.17.15",
     "phaser": "^3.22.0",
     "phaser-navmesh": "2.0.5",
-    "phaser3-react": "^1.2.0",
+    "phaser3-react": "^1.2.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "socket.io": "^2.3.0",
