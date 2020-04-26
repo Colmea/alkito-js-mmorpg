@@ -8,12 +8,13 @@
         html, body {
             margin: 0;
             padding: 0;
-          
-            font-family: 'Josefin Sans', sans-serif;
+            font-family: 'Josefin Sans', sans-serif !important;
+            font-size: 12px !important;;
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            line-height: 1em !important;
         }
 
         #ui-container {
@@ -27,7 +28,7 @@
 
         }
 
-        .button-container {
+        .alkito-button-container {
           position: relative;
           display: inline-block;
           background-color: #d27d2c;
@@ -37,27 +38,27 @@
           border-bottom: 1px solid #00000087;;
           border-color: #00000087;
           box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);
-          height: 22px;
+          height: 24px;
           padding-left: 15px;
           padding-right: 15px;
           margin-right: 15px;
           margin-left: 15px;
         }
-        .button-container:hover {
+        .alkito-button-container:hover {
           background-color: #8f563b;
         }
-        .button {
-          font-size: 0.8em;
+        .alkito-button {
+          font-size: 1.2em;
           padding-top: 5px;
         }
-        .button:before {
+        .alkito-button:before {
           position: absolute; 
           content: url(assets/ui/btn-left.png);
           left: 0;
           margin-left: -11px;
           margin-top: -7px;
         }
-        .button:after {
+        .alkito-button:after {
           position: absolute; 
           content: url(assets/ui/btn-right.png);
           right: 0;

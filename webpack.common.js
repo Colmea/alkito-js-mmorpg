@@ -14,6 +14,9 @@ module.exports = {
   },
   module: {
     rules: [
+      { test: /\.(png|jpe?g|gif|ttf|woff2?|eot)$/i, use: ['file-loader'] },
+      { test: /\.svg$/,  loader: 'svg-inline-loader' },
+      { test: /\.css$/i, use: ['style-loader', 'css-loader'] },
       { test: /\.tsx?$/, loader: "ts-loader", exclude: "/node_modules/" },
       { test: /phaser\.js$/, loader: "expose-loader?Phaser" }
     ]

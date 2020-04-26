@@ -4,6 +4,7 @@ import BootScene from './scenes/BootScene';
 import WorldScene from './scenes/WorldScene';
 import UIScene from './scenes/UIScene';
 import ReactScene from './scenes/ReactScene';
+import 'semantic-ui-css/semantic.min.css';
 
 console.log('Starting Alkito World...');
 
