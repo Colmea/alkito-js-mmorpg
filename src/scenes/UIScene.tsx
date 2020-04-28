@@ -9,6 +9,7 @@ import { ActionType } from '../types/Actions';
 import * as CONFIG from '../gameConfig';
 import SquareButton from '../models/ui/SquareButton';
 import ProfessionPopup from '../ui-components/common/ProfessionPopup';
+import ChatPopup from '../ui-components/common/ChatPopup';
 
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
 
@@ -32,7 +33,10 @@ export default class UIScene extends Phaser.Scene {
   inventorySlots: Phaser.GameObjects.Image[] = [];
   inventorySlotsQuantity: Phaser.GameObjects.Text[] = [];
   inventoryItems: Phaser.GameObjects.Sprite[] = [];
+
+  // ui components
   popup: any;
+  popupChat: any;
 
   constructor() {
     super('UIScene');
@@ -101,6 +105,13 @@ export default class UIScene extends Phaser.Scene {
         skills: this.player.skills.getAll(),
       });
     });
+
+    // Chat Popup
+    this.popupChat = this.add.reactDom((props) => (
+      <ChatPopup
+        {...props}
+      />
+    ));
   }
 
   private _createMinimap() {

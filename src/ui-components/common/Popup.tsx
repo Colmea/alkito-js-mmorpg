@@ -4,8 +4,11 @@ import { Scrollbars } from 'react-custom-scrollbars';
 interface Props {
   title?: string;
   isVisible: boolean;
-  width: number;
-  height: number;
+  hasHeader: boolean;
+  width: string | number;
+  height: string | number;
+  left: string | number;
+  top: string | number;
   footerContent?: ReactNode;
   onClose: () => void;
 }
@@ -14,7 +17,7 @@ const styleContainer = {
   position: 'absolute' as 'absolute',
   top: '20%',
   left: '10%',
-  minWidth: 350,
+  minWidth: 50,
   height: 490,
   backgroundImage: 'url(assets/ui/ui-background.png)',
   backgroundSize: 'cover',
@@ -42,24 +45,52 @@ const styleHeader = {
 const styleContent = {
   height: '100%',
   overflowY: 'auto' as 'auto',
+  color: 'white',
 };
 
 export default class Popup extends PureComponent<Props, {}> {
-
   static defaultProps = {
     isVisible: false,
+    hasHeader: true,
     width: 500,
     height: 400,
+    top: '20%',
+    left: '10%',
     onClose: () => { },
+  };
+
+  scrollbarRef: React.RefObject<Scrollbars>;
+
+  constructor(props) {
+    super(props);
+    this.scrollbarRef = React.createRef();
+  }
+
+  componentDidMount() {
+    setTimeout(() => {
+      if (this.scrollbarRef.current)
+        this.scrollbarRef.current.scrollToBottom();
+    }, 200);
   }
 
   render() {
     return (this.props.isVisible &&
-      <div style={{ ...styleContainer, width: this.props.width, height: this.props.height }}>
-        <div onClick={this.props.onClose} style={styleHeader}>
-          {this.props.title}
-        </div>
+      <div style={{
+        ...styleContainer,
+        width: this.props.width,
+        height: this.props.height,
+        top: this.props.top,
+        left: this.props.left,
+        }}
+      >
+        {this.props.hasHeader &&
+          <div onClick={this.props.onClose} style={styleHeader}>
+            {this.props.title}
+          </div>
+        }
         <Scrollbars
+          ref={this.scrollbarRef}
+          style={{ height: 'calc(100% - 40px)' }}
           renderThumbVertical={({ style, ...props }) =>
             <div
               {...props}
