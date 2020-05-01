@@ -23,16 +23,35 @@ export default class ChatPopup extends PureComponent<Props, State> {
     message: '',
   }
 
+  popupRef: React.RefObject<Popup> = React.createRef();
+  inputRef: React.RefObject<Input> = React.createRef();
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.messages.length < this.props.messages.length && this.popupRef.current) {
+      this.popupRef.current.scrollbarRef.current.scrollToBottom();
+    }
+  }
+
   handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ message: event.target.value});
+  }
+
+  handleInputKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      this.handleSendmessage();
+    }
   }
 
   handleSendmessage = () => {
     this.props.onSend(this.state.message);
 
     this.setState({ message: '' });
-  }
 
+    if (this.inputRef.current) {
+      this.inputRef.current.focus();
+    }
+  }
+  
   renderMessages() {
     const render = [];
 
@@ -54,6 +73,7 @@ export default class ChatPopup extends PureComponent<Props, State> {
   render() {
     return (
       <Popup
+        ref={this.popupRef}
         isVisible
         hasHeader={false}
         title="Chat"
@@ -64,8 +84,10 @@ export default class ChatPopup extends PureComponent<Props, State> {
         footerContent={
           <div style={{ width: '100%' }}>
             <Input
+              ref={this.inputRef}
               value={this.state.message}
               onChange={this.handleInputChange}
+              onKeyDown={this.handleInputKeyDown}
               fluid
               inverted
               size="small"

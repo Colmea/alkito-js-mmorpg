@@ -23,7 +23,7 @@ export default class ProfessionPopup extends PureComponent<Props, {}> {
 
     this.props.skills.forEach((skill: Skill) => {
       render.push(
-        <List.Item style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
+        <List.Item key={skill.name} style={{ backgroundColor: 'transparent', boxShadow: 'none' }}>
           <List.Content
             floated='right'
             verticalAlign='middle'
