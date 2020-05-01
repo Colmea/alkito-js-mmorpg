@@ -12,12 +12,6 @@ interface State {
   message: string;
 }
 
-const avatars = [
-  'https://react.semantic-ui.com/images/avatar/small/tom.jpg',
-  'https://react.semantic-ui.com/images/avatar/small/matt.jpg',
-  'https://react.semantic-ui.com/images/avatar/small/matthew.png',
-];
-
 export default class ChatPopup extends PureComponent<Props, State> {
 
   static defaultProps = {
@@ -44,7 +38,7 @@ export default class ChatPopup extends PureComponent<Props, State> {
 
     this.props.messages.forEach((message: ChatMessage) => {
       render.push(
-        <Comment style={{ marginBottom: 10 }}>
+        <Comment key={message.creationDate} style={{ marginBottom: 10 }}>
           <Comment.Avatar src={message.image} />
           <Comment.Content>
             <Comment.Author style={{ color: 'rgba(255,255,255,.4)' }}>{message.author}</Comment.Author>

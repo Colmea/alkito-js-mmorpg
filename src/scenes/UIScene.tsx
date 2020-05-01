@@ -5,7 +5,7 @@ import Player from '../models/Player';
 import InventoryItem from '../models/InventoryItem';
 import { POINTER_CURSOR } from '../utils/cursorUtils';
 import { SkillType } from '../systems/SkillsSystem';
-import { ActionType } from '../types/Actions';
+import { ActionType, ServerEvent } from '../types/Actions';
 import * as CONFIG from '../gameConfig';
 import SquareButton from '../models/ui/SquareButton';
 import ProfessionPopup from '../ui-components/common/ProfessionPopup';
@@ -90,6 +90,17 @@ export default class UIScene extends Phaser.Scene {
     this.data.set('currentPanel', null);
   }
 
+  handleSendChatMessage = (message: string) => {
+    const newMessage: ChatMessage = {
+      author: this.player.unitName,
+      message: message,
+      creationDate: Date.now(),
+      image: this.player.avatar,
+    };
+
+    this.emitter.emit(ActionType.CHAT_SEND_MESSAGE, newMessage);
+  }
+
   private _createPopup() {
     const farmingSkill = this.player.skills.get(SkillType.FARMING);
         
@@ -111,10 +122,19 @@ export default class UIScene extends Phaser.Scene {
     // Chat Popup
     this.popupChat = this.add.reactDom((props) => (
       <ChatPopup
-        onSend={(newMessage: string) => this.emitter.emit(ActionType.CHAT_SEND_MESSAGE, newMessage)}
+        messages={this.chatMessages}
+        onSend={this.handleSendChatMessage}
         {...props}
       />
     ));
+
+    this.emitter.on(ServerEvent.CHAT_NEW_MESSAGE, (newMessage: ChatMessage) => {
+      this.chatMessages = [...this.chatMessages, newMessage];
+
+      this.popupChat.setState({
+        messages: this.chatMessages,
+      });
+    });
   }
 
   private _createMinimap() {

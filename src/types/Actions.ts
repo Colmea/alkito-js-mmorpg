@@ -7,3 +7,7 @@ export enum ActionType {
     SKILL_INCREASE = 'action.skill.increase',
     CHAT_SEND_MESSAGE = 'chat.message.send',
 };
+
+export enum ServerEvent {
+    CHAT_NEW_MESSAGE = 'server.chat.new-message',
+}

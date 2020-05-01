@@ -11,6 +11,7 @@ export default class Player extends Entity implements HasInventory, HasSkills {
     unitType = EntityType.PLAYER;
     name = 'Player';
     animationKey = 'player';
+    avatar: string;
 
     // behaviors
     inventory: Inventory = new Inventory();

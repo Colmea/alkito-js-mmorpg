@@ -16,6 +16,8 @@ import { getTilePosition } from '../utils/tileUtils';
 import defaultIO from 'socket.io-client';
 import SkillsManager from '../services/SkillsManager';
 import { ActionType } from '../types/Actions';
+import ServerConnectorService from '../services/ServerConnectorService';
+import GameState from '../services/GameState';
 
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
@@ -27,6 +29,7 @@ export default class WorldScene extends Phaser.Scene {
   server: any;
   emitter: EventDispatcher = EventDispatcher.getInstance();
   entityActions: EntityActionManager;
+  gameState: GameState = new GameState(this, this.emitter);
 
   navMeshPlugin: any;
   navMesh: any;
@@ -56,6 +59,8 @@ export default class WorldScene extends Phaser.Scene {
     this.server.on('playerCreated', (player: any) => {
       this.player = new Player(this, player.x, player.y, this.navMesh);
       this.player.id = player.id;
+      this.player.name = player.name;
+      this.player.avatar = player.avatar;
 
       // Camera follow player
       this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
@@ -75,14 +80,16 @@ export default class WorldScene extends Phaser.Scene {
 
         if (otherPlayer.id === this.player.id) continue;
 
-        const player = new OtherPlayer(this, otherPlayer.x, otherPlayer.y, this.navMesh);
-        this.otherPlayers[otherPlayer.id] = player;
+        const newPlayer = new OtherPlayer(this, otherPlayer.x, otherPlayer.y, this.navMesh);
+        newPlayer.name = otherPlayer.name;
+        this.otherPlayers[otherPlayer.id] = newPlayer;
       }
     });
 
     // New player connected
     this.server.on('newPlayer', (newPlayer: any) => {
         const player = new OtherPlayer(this, newPlayer.x, newPlayer.y, this.navMesh);
+        player.name = newPlayer.name;
         this.otherPlayers[newPlayer.id] = player;
     });
 
@@ -207,7 +214,10 @@ export default class WorldScene extends Phaser.Scene {
   }
 
   private _createEvents() {
-    // Process entity related actions
+    // Server Connector Listener
+    const serverConnectorService = new ServerConnectorService(this.server, this.gameState, this.emitter);
+    serverConnectorService.listen();
+    // Entity Action Listener
     const entityActionProcessor = new EntityActionProcessor();
     entityActionProcessor.listen();
 
