@@ -10,6 +10,7 @@ import * as CONFIG from '../gameConfig';
 import SquareButton from '../models/ui/SquareButton';
 import ProfessionPopup from '../ui-components/common/ProfessionPopup';
 import ChatPopup from '../ui-components/common/ChatPopup';
+import { ChatMessage } from '../types/Chat';
 
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
 
@@ -33,6 +34,7 @@ export default class UIScene extends Phaser.Scene {
   inventorySlots: Phaser.GameObjects.Image[] = [];
   inventorySlotsQuantity: Phaser.GameObjects.Text[] = [];
   inventoryItems: Phaser.GameObjects.Sprite[] = [];
+  chatMessages: ChatMessage[] = [];
 
   // ui components
   popup: any;
@@ -109,6 +111,7 @@ export default class UIScene extends Phaser.Scene {
     // Chat Popup
     this.popupChat = this.add.reactDom((props) => (
       <ChatPopup
+        onSend={(newMessage: string) => this.emitter.emit(ActionType.CHAT_SEND_MESSAGE, newMessage)}
         {...props}
       />
     ));

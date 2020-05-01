@@ -1,12 +1,15 @@
 import React, { PureComponent } from 'react';
-import { Comment, Input } from 'semantic-ui-react'
+import { Comment, Input, Icon } from 'semantic-ui-react'
 import Popup from './Popup';
+import { ChatMessage } from '../../types/Chat';
 
-type ChatMessage = {
-  author: string;
-  image?: string;
+interface Props {
+  messages: ChatMessage[];
+  onSend: (newMessage: string) => void;
+}
+
+interface State {
   message: string;
-  creationDate?: number;
 }
 
 const avatars = [
@@ -15,30 +18,31 @@ const avatars = [
   'https://react.semantic-ui.com/images/avatar/small/matthew.png',
 ];
 
-const messages: ChatMessage[] = [
-  { author: 'Colmea', message: "Ceci est un message de chat. Commencez ça va vous ?", image: avatars[0] },
-  { author: 'Saini347', message: "Ok cool ça marrrrrche lol", image: avatars[1] },
-  { author: 'Colmea', message: "Super, ça a l'air de bien marchr !", image: avatars[0] },
-  { author: 'Colmea', message: "Salut le monde", image: avatars[0] },
-  { author: 'Saini347', message: "Hello", image: avatars[1] },
-  { author: 'Colmea', message: "Ceci est un message de chat. Commencez ça va vous ?", image: avatars[0] },
-  { author: 'Saini347', message: "Ok cool ça marrrrrche lol", image: avatars[1] },
-  { author: 'Colmea', message: "Super, ça a l'air de bien marche !", image: avatars[0] },
-  { author: 'Colmea', message: "Salut le monde", image: avatars[0] },
-  { author: 'Saini347', message: "Hello", image: avatars[1] },
-  { author: 'Colmea', message: "Ceci est un message de chat. Commencez ça va vous ?", image: avatars[0] },
-  { author: 'Saini347', message: "Ok cool ça marrrrrche lol", image: avatars[1] },
-  { author: 'Colmea', message: "Super, ça a l'air de bien marche !", image: avatars[2] },
-  { author: 'Colmea', message: "Salut le monde", image: avatars[0] },
-  { author: 'Saini347', message: "Hello", image: avatars[1] },
-];
+export default class ChatPopup extends PureComponent<Props, State> {
 
-export default class ChatPopup extends PureComponent<{}, {}> {
+  static defaultProps = {
+    messages: [],
+    onSend: () => {},
+  }
+
+  state = {
+    message: '',
+  }
+
+  handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ message: event.target.value});
+  }
+
+  handleSendmessage = () => {
+    this.props.onSend(this.state.message);
+
+    this.setState({ message: '' });
+  }
 
   renderMessages() {
     const render = [];
 
-    messages.forEach((message: ChatMessage) => {
+    this.props.messages.forEach((message: ChatMessage) => {
       render.push(
         <Comment style={{ marginBottom: 10 }}>
           <Comment.Avatar src={message.image} />
@@ -66,18 +70,19 @@ export default class ChatPopup extends PureComponent<{}, {}> {
         footerContent={
           <div style={{ width: '100%' }}>
             <Input
+              value={this.state.message}
+              onChange={this.handleInputChange}
               fluid
               inverted
-              action
               size="small"
-              icon={{ name: 'send', inverted: true, circular: false, link: true }}
+              icon={<Icon inverted link name='send' onClick={this.handleSendmessage} />}
               style={{ margin: 7, backgroundColor: 'red !important' }}
               className="alkito-chat-input"
             />
           </div>
         }
       >
-        <Comment.Group inverted minimal style={{ marginTop: 10 }}>
+        <Comment.Group minimal style={{ marginTop: 10 }}>
           {this.renderMessages()}
         </Comment.Group>
       </Popup>

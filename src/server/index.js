@@ -7,7 +7,9 @@ const io = require('socket.io').listen(server);
 const CONFIG = require('../gameConfig');
 
 const PORT = process.env.PORT || 3000;
+// Game state
 const players = {};
+const chatMessages = [];
 
 server.listen(PORT, () => {
     console.log(`Alkito server started on port ${PORT}...`);
@@ -44,4 +46,11 @@ io.on('connection', function (socket) {
         
         delete players[socket.id];
     });
+
+    socket.on('chat.newMessage', (newMessage) => {
+        socket.broadcast.emit('chat.newMessage', newMessage);
+
+        chatMessages.push(newMessage);
+    });
+    
 });
