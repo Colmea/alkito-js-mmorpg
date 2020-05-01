@@ -1,6 +1,6 @@
 import 'phaser';
 import React from 'react';
-import EventDispatcher from '../managers/EventDispatcher';
+import EventDispatcher from '../services/EventDispatcher';
 import Player from '../models/Player';
 import InventoryItem from '../models/InventoryItem';
 import { POINTER_CURSOR } from '../utils/cursorUtils';

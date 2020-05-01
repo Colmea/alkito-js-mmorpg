@@ -9,12 +9,12 @@ import Player from '../models/Player';
 import OtherPlayer from '../models/OtherPlayer';
 import ResourceEntity from '../models/ResourceEntity';
 import Entity from '../models/Entity';
-import EventDispatcher from '../managers/EventDispatcher';
-import EntityActionManager from '../managers/EntityActionManager';
-import EntityActionProcessor from '../managers/EntityActionProcessor';
+import EventDispatcher from '../services/EventDispatcher';
+import EntityActionManager from '../services/EntityActionManager';
+import EntityActionProcessor from '../services/EntityActionProcessor';
 import { getTilePosition } from '../utils/tileUtils';
 import defaultIO from 'socket.io-client';
-import SkillsManager from '../managers/SkillsManager';
+import SkillsManager from '../services/SkillsManager';
 import { ActionType } from '../types/Actions';
 
 

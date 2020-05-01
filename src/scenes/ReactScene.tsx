@@ -1,6 +1,6 @@
 import 'phaser';
 import React from 'react';
-import EventDispatcher from '../managers/EventDispatcher';
+import EventDispatcher from '../services/EventDispatcher';
 import Player from '../models/Player';
 import Button from '../ui-components/common/Button';
 import Popup from '../ui-components/common/Popup';
