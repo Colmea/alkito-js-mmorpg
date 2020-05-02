@@ -128,8 +128,8 @@ export default class UIScene extends Phaser.Scene {
       />
     ));
 
-    this.emitter.on(ServerEvent.CHAT_NEW_MESSAGE, (newMessage: ChatMessage) => {
-      this.chatMessages = [...this.chatMessages, newMessage];
+    this.emitter.on(ServerEvent.CHAT_NEW_MESSAGE, (newMessages: ChatMessage[]) => {
+      this.chatMessages = [...this.chatMessages, ...newMessages];
 
       this.popupChat.setState({
         messages: this.chatMessages,

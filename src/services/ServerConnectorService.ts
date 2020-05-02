@@ -27,8 +27,8 @@ export default class ServerConnectorService implements EventListener {
     }
 
     listenServerEvents() {
-        this.server.on('chat.newMessage', (newMessage: ChatMessage) => {
-            this.emitter.emit(ServerEvent.CHAT_NEW_MESSAGE, newMessage);
+        this.server.on('chat.newMessage', (newMessages: ChatMessage[]) => {
+            this.emitter.emit(ServerEvent.CHAT_NEW_MESSAGE, newMessages);
         });
     }
 

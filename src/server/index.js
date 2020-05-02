@@ -7,6 +7,7 @@ const io = require('socket.io').listen(server);
 const CONFIG = require('../gameConfig');
 
 const PORT = process.env.PORT || 3000;
+const MAX_CHAT_HISTORY = 100;
 
 const avatars = [
     'https://react.semantic-ui.com/images/avatar/small/tom.jpg',
@@ -20,7 +21,7 @@ const avatars = [
 
 // Game state
 const players = {};
-const chatMessages = [];
+let chatMessages = [];
 
 server.listen(PORT, () => {
     console.log(`Alkito server started on port ${PORT}...`);
@@ -43,10 +44,15 @@ io.on('connection', function (socket) {
 
     console.log('User connected: ', newPlayer.name, newPlayer.id);
 
+    // Emit player newly created and current players to user
     socket.emit('playerCreated', players[socket.id]);
     socket.emit('currentPlayers', players);
+    // Send chat history after 1 second
+    setTimeout(() => {
+        socket.emit('chat.newMessage', chatMessages);
+    }, 1000);
+    // Broadcast the new player to other players
     socket.broadcast.emit('newPlayer', players[socket.id]);
-
 
     socket.on('playerMove', (x, y) => {
         players[socket.id].x = x;
@@ -64,9 +70,15 @@ io.on('connection', function (socket) {
 
     socket.on('chat.sendNewMessage', (newMessage) => {
         console.log(`> [${newMessage.author}] ${newMessage.message}`)
-        io.emit('chat.newMessage', newMessage);
+        io.emit('chat.newMessage', [newMessage]);
 
         chatMessages.push(newMessage);
+
+        // Keep only MAX_CHAT_HISTORY messages
+        if (chatMessages.length > MAX_CHAT_HISTORY) {
+            const indexToCut = chatMessages.length - MAX_CHAT_HISTORY;
+            chatMessages = chatMessages.slice(indexToCut);
+        }
     });
     
 });
