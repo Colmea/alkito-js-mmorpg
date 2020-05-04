@@ -106,8 +106,9 @@ export default class WorldScene extends Phaser.Scene {
 
     const tiles = this.map.addTilesetImage('tileset', 'tiles');
     const tiles2 = this.map.addTilesetImage('tileset2', 'tiles2', 32, 32, 1, 2);
+    const tilesetGrass = this.map.addTilesetImage('Grass', 'tileset_grass', 32, 32, 1, 2);
 
-    this.mapLayers['grass'] = this.map.createStaticLayer('Grass', [tiles, tiles2], 0, 0);
+    this.mapLayers['grass'] = this.map.createStaticLayer('Grass', [tiles, tiles2, tilesetGrass], 0, 0);
     this.mapLayers['decorations'] = this.map.createStaticLayer('Decorations', [tiles, tiles2], 0, 0);
     this.mapLayers['objects'] = this.map.createStaticLayer('Objects', [tiles, tiles2], 0, 0);
     // this.mapLayers['objects'].setCollisionByExclusion([-1]);

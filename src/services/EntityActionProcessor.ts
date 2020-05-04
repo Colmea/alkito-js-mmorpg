@@ -11,6 +11,12 @@ export default class EntityActionProcessor implements EventListener {
     emitter = EventDispatcher.getInstance();
 
     listen() {
+      // Player move
+      this.emitter.on(ActionType.ENTITY_GO_TO, (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
+        unit.goTo(tile);
+      });
+
+      // Move other players
       this.emitter.on(ServerEvent.ENTITY_MOVED, (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
         unit.goTo(tile);
       });
