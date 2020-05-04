@@ -58,8 +58,7 @@ io.on('connection', function (socket) {
         players[socket.id].x = x;
         players[socket.id].y = y;
 
-        console.log('Player move', players[socket.id]);
-        socket.broadcast.emit('playerMoved', players[socket.id]);
+        io.emit('playerMoved', players[socket.id]);
     });
 
     socket.on('disconnect', () => {

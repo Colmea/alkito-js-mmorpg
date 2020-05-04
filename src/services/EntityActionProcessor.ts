@@ -4,14 +4,14 @@ import Entity from '../models/Entity';
 import { HasInventory } from '../systems/InventorySystem';
 import InventoryItem from '../models/InventoryItem';
 import ResourceEntity from '../models/ResourceEntity';
-import { ActionType } from '../types/Actions';
+import { ActionType, ServerEvent } from '../types/Actions';
 
 
 export default class EntityActionProcessor implements EventListener {
     emitter = EventDispatcher.getInstance();
 
     listen() {
-      this.emitter.on(ActionType.ENTITY_MOVE, (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
+      this.emitter.on(ServerEvent.ENTITY_MOVED, (unit: Entity, tile: Phaser.Tilemaps.Tile) => {
         unit.goTo(tile);
       });
 

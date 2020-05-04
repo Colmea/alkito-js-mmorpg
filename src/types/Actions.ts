@@ -1,5 +1,5 @@
 export enum ActionType {
-    ENTITY_MOVE = 'action.entity.go-to',
+    ENTITY_GO_TO = 'action.entity.go-to',
     ENTITY_SELECT = 'action.entity.select',
     RESOURCE_COLLECT_BEGIN = 'action.resource.collect-begin',
     RESOURCE_COLLECT = 'action.resource.collect',
@@ -10,4 +10,5 @@ export enum ActionType {
 
 export enum ServerEvent {
     CHAT_NEW_MESSAGE = 'server.chat.new-message',
+    ENTITY_MOVED = 'server.entity.move',
 }

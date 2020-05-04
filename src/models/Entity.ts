@@ -127,7 +127,7 @@ export default class Entity extends Phaser.GameObjects.Container {
             this.emitter.emit(ActionType.ENTITY_SELECT, this, false);
 
             this.actions.enqueue(this.scene.player, {
-                type: ActionType.ENTITY_MOVE,
+                type: ActionType.ENTITY_GO_TO,
                 args: [tileNextToObject],
                 isCompleted: (action: EntityAction, player: Entity) => {
                     const playerTile = player.getTile();

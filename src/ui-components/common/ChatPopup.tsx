@@ -77,8 +77,8 @@ export default class ChatPopup extends PureComponent<Props, State> {
         isVisible
         hasHeader={false}
         title="Chat"
-        left="78%"
-        top="61%"
+        left="calc(100% - 310px)"
+        top="calc(100% - 310px)"
         width={300}
         height={300}
         footerContent={

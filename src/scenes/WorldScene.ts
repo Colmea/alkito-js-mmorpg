@@ -12,10 +12,9 @@ import Entity from '../models/Entity';
 import EventDispatcher from '../services/EventDispatcher';
 import EntityActionManager from '../services/EntityActionManager';
 import EntityActionProcessor from '../services/EntityActionProcessor';
-import { getTilePosition } from '../utils/tileUtils';
 import defaultIO from 'socket.io-client';
 import SkillsManager from '../services/SkillsManager';
-import { ActionType } from '../types/Actions';
+import { ActionType, ServerEvent } from '../types/Actions';
 import ServerConnectorService from '../services/ServerConnectorService';
 import GameState from '../services/GameState';
 
@@ -99,15 +98,6 @@ export default class WorldScene extends Phaser.Scene {
       player.destroy(true);
 
       delete this.otherPlayers[disconnectedPlayer.id];
-  });
-
-    // Other player moved
-    this.server.on('playerMoved', (player: any) => {
-      if (player.id === this.player.id) return;
-
-      const otherPlayer = this.otherPlayers[player.id];
-      const tile = this.map.getTileAt(player.x, player.y, false, this.mapLayers['grass']);
-      this.entityActions.processNow(otherPlayer, { type: ActionType.ENTITY_MOVE, args: [tile] });
     });
   }
 
@@ -215,7 +205,7 @@ export default class WorldScene extends Phaser.Scene {
 
   private _createEvents() {
     // Server Connector Listener
-    const serverConnectorService = new ServerConnectorService(this.server, this.gameState, this.emitter);
+    const serverConnectorService = new ServerConnectorService(this.server, this, this.emitter);
     serverConnectorService.listen();
     // Entity Action Listener
     const entityActionProcessor = new EntityActionProcessor();
@@ -250,9 +240,7 @@ export default class WorldScene extends Phaser.Scene {
       return;
     }
 
-    const tileTarget = this._moveEntity(this.player, pointer.worldX, pointer.worldY);
-
-    this.server.emit('playerMove', tileTarget.x, tileTarget.y);
+    this._moveEntity(this.player, pointer.worldX, pointer.worldY);
   }
 
   private _moveEntity(entity: Entity, x: number, y: number): Phaser.Tilemaps.Tile {
@@ -260,7 +248,7 @@ export default class WorldScene extends Phaser.Scene {
       
     // Move Player to this position
     // Player will automatically find its path to the point and update its position accordingly
-    this.entityActions.processNow(entity, { type: ActionType.ENTITY_MOVE, args: [tile] });
+    this.entityActions.processNow(entity, { type: ActionType.ENTITY_GO_TO, args: [tile] });
 
     return tile;
   }

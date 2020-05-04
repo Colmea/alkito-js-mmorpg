@@ -3,10 +3,11 @@ import PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
 import phaserReact from "phaser3-react";
 console.log('navmesh plugin', PhaserNavMeshPlugin);
 export default {
-  type: Phaser.Scale.ENVELOP,
-  backgroundColor: '#33A5E7',
   width: window.innerWidth,
-  height: window.innerHeight - 4,
+  height: window.innerHeight,
+  scale: {
+    mode: Phaser.Scale.RESIZE,
+  },
   zoom: 1,
   // pixelArt: true,
   physics: {
