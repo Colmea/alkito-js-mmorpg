@@ -5,9 +5,11 @@ const app = express();
 const server  = require('http').Server(app);
 const io = require('socket.io').listen(server);
 const CONFIG = require('../gameConfig');
-
+const worldData = require('../../public/assets/map/world.json');
+const resourcesData = require('../data/resources.json');
 const PORT = process.env.PORT || 3000;
 const MAX_CHAT_HISTORY = 100;
+const RESOURCE_MAX_LEVEL = 4;
 
 const avatars = [
     'https://react.semantic-ui.com/images/avatar/small/tom.jpg',
@@ -20,11 +22,24 @@ const avatars = [
 ];
 
 // Game state
-const players = {};
-let chatMessages = [];
+const state = {
+    players: {},
+    chatMessages: [],
+    resources: worldData.layers[4].objects.reduce((resources, resourceData) => ({
+        ...resources,
+        [resourceData.id]: {
+            ...resourceData,
+            level: 1,
+            lastTimeGrown: Date.now(),
+        },
+    }), {}),
+};
+
+console.log('Alkito Server - Starting...');
+console.log('Resources populated: ', state.resources.length);
 
 server.listen(PORT, () => {
-    console.log(`Alkito server started on port ${PORT}...`);
+    console.log(`Alkito Server - Ready (port ${PORT})`);
 });
 
 const distPath = path.join(__dirname, '../../dist');
@@ -40,44 +55,82 @@ io.on('connection', function (socket) {
         y: CONFIG.PLAYER_SPAWN_POINT.y,
     };
 
-    players[socket.id] = newPlayer;
+    state.players[socket.id] = newPlayer;
 
     console.log('User connected: ', newPlayer.name, newPlayer.id);
 
-    // Emit player newly created and current players to user
-    socket.emit('playerCreated', players[socket.id]);
-    socket.emit('currentPlayers', players);
+    // Emit player newly created and current game state
+    socket.emit('playerCreated', state.players[socket.id]);
+    socket.emit('currentPlayers', state.players);
+    socket.emit('currentResources', state.resources);
+
     // Send chat history after 1 second
     setTimeout(() => {
-        socket.emit('chat.newMessage', chatMessages);
+        socket.emit('chat.newMessage', state.chatMessages);
     }, 1000);
     // Broadcast the new player to other players
-    socket.broadcast.emit('newPlayer', players[socket.id]);
+    socket.broadcast.emit('newPlayer', state.players[socket.id]);
 
     socket.on('playerMove', (x, y) => {
-        players[socket.id].x = x;
-        players[socket.id].y = y;
+        state.players[socket.id].x = x;
+        state.players[socket.id].y = y;
 
-        socket.broadcast.emit('playerMoved', players[socket.id]);
+        socket.broadcast.emit('playerMoved', state.players[socket.id]);
+    });
+
+    socket.on('resource.collect', (id) => {
+        console.log('Resource', id, 'collected');
+        const newResource = {
+            ...state.resources[id],
+            level: 0,
+            lastTimeGrown: Date.now(),
+        };
+
+        state.resources[id] = newResource;
+
+        io.emit('resource.grown', newResource.id, newResource.level);
     });
 
     socket.on('disconnect', () => {
-        socket.broadcast.emit('playerDisconnected', players[socket.id]);
+        socket.broadcast.emit('playerDisconnected', state.players[socket.id]);
         
-        delete players[socket.id];
+        delete state.players[socket.id];
     });
 
     socket.on('chat.sendNewMessage', (newMessage) => {
         console.log(`> [${newMessage.author}] ${newMessage.message}`)
         io.emit('chat.newMessage', [newMessage]);
 
-        chatMessages.push(newMessage);
+        state.chatMessages.push(newMessage);
 
         // Keep only MAX_CHAT_HISTORY messages
-        if (chatMessages.length > MAX_CHAT_HISTORY) {
-            const indexToCut = chatMessages.length - MAX_CHAT_HISTORY;
-            chatMessages = chatMessages.slice(indexToCut);
+        if (state.chatMessages.length > MAX_CHAT_HISTORY) {
+            const indexToCut = state.chatMessages.length - MAX_CHAT_HISTORY;
+            state.chatMessages = state.chatMessages.slice(indexToCut);
         }
     });
     
 });
+
+// Resources lifecycle
+setInterval(() => {
+    const now = Date.now();
+
+    Object.values(state.resources).forEach(resource => {
+        const resourceRef = resourcesData[resource.type];
+
+        if (!resourceRef || resource.level >= RESOURCE_MAX_LEVEL) return;
+
+        if (now - resource.lastTimeGrown >= resourcesData[resource.type].timeToGrowLevel) {
+            const newResource = {
+                ...resource,
+                level: resource.level + 1,
+                lastTimeGrown: now,
+            };
+            
+            state.resources[resource.id] = newResource;
+
+            io.emit('resource.grown', newResource.id, newResource.level);
+        }
+    });
+}, 1000);

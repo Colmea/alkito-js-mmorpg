@@ -30,9 +30,6 @@ export default class EntityActionProcessor implements EventListener {
           const itemInventory = new InventoryItem(object.item, object.itemQuantity);
           unit.inventory.add(itemInventory);
 
-          // Hide object
-          object.setVisible(false);
-
           // Increase harvesting skill
           if (object.harvestingSkill) {
             this.emitter.emit(ActionType.SKILL_INCREASE, unit, object.harvestingSkill, object.harvestingSkillXp)

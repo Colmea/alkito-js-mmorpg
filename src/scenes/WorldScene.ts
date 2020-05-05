@@ -35,10 +35,12 @@ export default class WorldScene extends Phaser.Scene {
   marker: Phaser.GameObjects.Graphics;
   map: Phaser.Tilemaps.Tilemap;
   mapLayers: { [key: string]: MapLayer } = {};
+  currentSelection: Entity | null;
 
+  // Entities
   player: Player;
   otherPlayers: { [key: string]: OtherPlayer } = {};
-  currentSelection: Entity | null;
+  resources: { [key: string]: ResourceEntity } = {};
 
   constructor() {
     super('WorldScene');
@@ -71,34 +73,6 @@ export default class WorldScene extends Phaser.Scene {
       this.scene.launch('UIScene', { player: this.player, mapLayer: this.map });
       this.scene.launch('ReactScene', { player: this.player });
     });
-
-    // Create other players
-    this.server.on('currentPlayers', (players: any) => {
-      for (const playerId in players) {
-        const otherPlayer = players[playerId];
-
-        if (otherPlayer.id === this.player.id) continue;
-
-        const newPlayer = new OtherPlayer(this, otherPlayer.x, otherPlayer.y, this.navMesh);
-        newPlayer.name = otherPlayer.name;
-        this.otherPlayers[otherPlayer.id] = newPlayer;
-      }
-    });
-
-    // New player connected
-    this.server.on('newPlayer', (newPlayer: any) => {
-        const player = new OtherPlayer(this, newPlayer.x, newPlayer.y, this.navMesh);
-        player.name = newPlayer.name;
-        this.otherPlayers[newPlayer.id] = player;
-    });
-
-    // Player disconnected
-    this.server.on('playerDisconnected', (disconnectedPlayer: any) => {
-      const player = this.otherPlayers[disconnectedPlayer.id];
-      player.destroy(true);
-
-      delete this.otherPlayers[disconnectedPlayer.id];
-    });
   }
 
   private _createMap() {
@@ -113,14 +87,6 @@ export default class WorldScene extends Phaser.Scene {
     this.mapLayers['objects'] = this.map.createStaticLayer('Objects', [tiles, tiles2], 0, 0);
     // this.mapLayers['objects'].setCollisionByExclusion([-1]);
     this.mapLayers['ui'] = this.map.createBlankDynamicLayer('UI', [tiles, tiles2]);
-
-    // Resources from Map
-    const resources = this.map.getObjectLayer("Items");
-    // Create Resources from data map
-    resources.objects.forEach((object: any) => {
-        const tile =  this.map.getTileAtWorldXY(object.x, object.y, false, this.cameras.main, this.mapLayers['grass']);
-        new ResourceEntity(this, tile.x, tile.y, object.type);
-    });
 
     const obstaclesLayer = this.map.getObjectLayer("Obstacles");
     this.navMesh = this.navMeshPlugin.buildMeshFromTiled(

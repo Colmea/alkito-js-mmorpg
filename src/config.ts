@@ -1,7 +1,7 @@
 import 'phaser';
 import PhaserNavMeshPlugin from "phaser-navmesh/dist/phaser-navmesh";
 import phaserReact from "phaser3-react";
-console.log('navmesh plugin', PhaserNavMeshPlugin);
+
 export default {
   width: window.innerWidth,
   height: window.innerHeight,

@@ -3,7 +3,13 @@
       "id": "plant",
       "name": "Plante",
       "texture": "plants",
-      "frame": 31,
+      "frameLevels": {
+        "1": 4,
+        "2": 13,
+        "3": 40,
+        "4": 31
+      },
+      "timeToGrowLevel": 20000,
       "item": "plant",
       "itemQuantity": 1
     }

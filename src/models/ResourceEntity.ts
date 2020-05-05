@@ -8,19 +8,30 @@ import { SkillType } from '../systems/SkillsSystem';
 
 export default class ResourceEntity extends Entity {
     unitType = EntityType.OBJECT;
+    resourceData: any;
+    resourceId: string | number;
     // Item droped by this resource
     item: Item;
     itemQuantity: number;
     harvestingSkill?: SkillType = SkillType.FARMING;
     harvestingSkillXp?: number = 15;
-    
-    constructor(scene: WorldScene, x: number, y: number, type: ObjectType) {
-        super(scene, x, y, scene.navMesh, ResourcesData[type].texture, ResourcesData[type].frame);
+    frameLevels: number[];
+    level: number = 1;
 
-        const resourceData = ResourcesData[type];
+    constructor(scene: WorldScene, x: number, y: number, type: ObjectType) {
+        super(scene, x, y, scene.navMesh, ResourcesData[type].texture, ResourcesData[type].frameLevels[1]);
+
+        this.resourceData = ResourcesData[type];
         this.name = ResourcesData[type].name;
 
-        this.item = new Item(resourceData.item);
-        this.itemQuantity = resourceData.itemQuantity || 1;
+        this.item = new Item(this.resourceData.item);
+        this.itemQuantity = this.resourceData.itemQuantity || 1;
+        this.frameLevels = this.resourceData.frameLevels;
+    }
+
+    grow(newLevel?: number) {
+        this.level = newLevel || this.level + 1;
+
+        this.unitSprite.setFrame(this.frameLevels[this.level]);
     }
 }
