@@ -1,16 +1,30 @@
 {
-    "plant": {
-      "id": "plant",
-      "name": "Plante",
-      "texture": "plants",
-      "frameLevels": {
-        "1": 4,
-        "2": 13,
-        "3": 40,
-        "4": 31
-      },
-      "timeToGrowLevel": 20000,
-      "item": "plant",
-      "itemQuantity": 1
-    }
+  "plant": {
+    "id": "plant",
+    "name": "Plant",
+    "texture": "plants",
+    "frameLevels": {
+      "1": 4,
+      "2": 13,
+      "3": 40,
+      "4": 31
+    },
+    "timeToGrowLevel": 40000,
+    "item": "plant",
+    "itemQuantity": 1
+  },
+  "tomato": {
+    "id": "tomato",
+    "name": "Tomato",
+    "texture": "plants",
+    "frameLevels": {
+      "1": 0,
+      "2": 9,
+      "3": 36,
+      "4": 27
+    },
+    "timeToGrowLevel": 40000,
+    "item": "tomato",
+    "itemQuantity": 2
   }
+}

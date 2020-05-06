@@ -6,6 +6,13 @@
     "texture": "items/plants",
     "frame": 4
   },
+  "tomato": {
+    "id": "tomato",
+    "name": "Tomato",
+    "price": 3,
+    "texture": "items/plants",
+    "frame": 0
+  },
   "barrel": {
     "id": "barrel",
     "name": "Barrel",
