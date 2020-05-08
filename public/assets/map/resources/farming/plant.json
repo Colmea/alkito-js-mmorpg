@@ -1,0 +1,18 @@
+{ "object":
+    {
+     "gid":68,
+     "height":32,
+     "id":180,
+     "name":"Plante",
+     "rotation":0,
+     "type":"plant",
+     "visible":true,
+     "width":32
+    },
+ "tileset":
+    {
+     "firstgid":1,
+     "source":"..\/tileset\/plants.json"
+    },
+ "type":"template"
+}

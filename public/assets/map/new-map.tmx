@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="150" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="170">
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="150" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="269">
  <editorsettings>
   <export target="world.json" format="json"/>
  </editorsettings>
@@ -18,9 +18,7 @@
   <tile id="89" terrain=",,0,0"/>
   <tile id="90" terrain=",0,0,0"/>
  </tileset>
- <tileset firstgid="361" name="plants" tilewidth="32" tileheight="32" tilecount="108" columns="9">
-  <image source="../items/plants.png" width="288" height="384"/>
- </tileset>
+ <tileset firstgid="361" source="tileset/plants.json"/>
  <tileset firstgid="469" name="tileset2" tilewidth="32" tileheight="32" tilecount="1064" columns="8">
   <image source="tileset/tileset2.png" width="256" height="4256"/>
  </tileset>
@@ -162,143 +160,42 @@
   <object id="147" x="2816" y="0" width="32" height="1888"/>
  </objectgroup>
  <objectgroup id="6" name="Items">
-  <object id="85" type="plant" x="2256.2" y="2645.4">
-   <point/>
-  </object>
-  <object id="87" type="plant" x="2288.92" y="2646.85">
-   <point/>
-  </object>
-  <object id="88" type="plant" x="2320.14" y="2645.97">
-   <point/>
-  </object>
-  <object id="89" type="plant" x="3094.19" y="2645.79">
-   <point/>
-  </object>
-  <object id="90" type="plant" x="2895.18" y="2035.72">
-   <point/>
-  </object>
-  <object id="97" type="plant" x="1868.24" y="1879.41">
-   <point/>
-  </object>
-  <object id="98" type="plant" x="2159.62" y="2259.51">
-   <point/>
-  </object>
-  <object id="102" type="plant" x="2961.66" y="2551.07">
-   <point/>
-  </object>
-  <object id="103" type="plant" x="3053.51" y="1975.34">
-   <point/>
-  </object>
-  <object id="104" type="plant" x="2417.81" y="2098.18">
-   <point/>
-  </object>
-  <object id="105" type="plant" x="2163.21" y="1973.64">
-   <point/>
-  </object>
-  <object id="106" type="plant" x="2103.68" y="2517.91">
-   <point/>
-  </object>
-  <object id="107" type="plant" x="2448.58" y="1945.64">
-   <point/>
-  </object>
-  <object id="118" type="plant" x="2513.03" y="2514.4">
-   <point/>
-  </object>
-  <object id="119" type="plant" x="2447.7" y="2511.9">
-   <point/>
-  </object>
-  <object id="120" type="plant" x="2481.2" y="2513.9">
-   <point/>
-  </object>
-  <object id="121" type="plant" x="2383.03" y="2579.9">
-   <point/>
-  </object>
-  <object id="122" type="plant" x="2416.53" y="2580.4">
-   <point/>
-  </object>
-  <object id="123" type="plant" x="2355.53" y="2578.9">
-   <point/>
-  </object>
-  <object id="124" type="plant" x="2349.53" y="2518.9">
-   <point/>
-  </object>
-  <object id="125" type="plant" x="2416.53" y="2519.4">
-   <point/>
-  </object>
-  <object id="126" type="plant" x="2384.53" y="2519.4">
-   <point/>
-  </object>
-  <object id="127" type="plant" x="2453.53" y="2577.4">
-   <point/>
-  </object>
-  <object id="128" type="plant" x="2484.03" y="2577.9">
-   <point/>
-  </object>
-  <object id="129" type="plant" x="2512.03" y="2578.4">
-   <point/>
-  </object>
-  <object id="148" type="plant" x="2255.2" y="2705.4">
-   <point/>
-  </object>
-  <object id="149" type="plant" x="2287.92" y="2706.85">
-   <point/>
-  </object>
-  <object id="150" type="plant" x="2319.14" y="2705.97">
-   <point/>
-  </object>
-  <object id="151" type="plant" x="2577.2" y="2677.4">
-   <point/>
-  </object>
-  <object id="152" type="plant" x="2609.92" y="2678.85">
-   <point/>
-  </object>
-  <object id="153" type="plant" x="2641.14" y="2677.97">
-   <point/>
-  </object>
-  <object id="154" type="plant" x="2575.2" y="2736.4">
-   <point/>
-  </object>
-  <object id="155" type="plant" x="2607.92" y="2737.85">
-   <point/>
-  </object>
-  <object id="156" type="plant" x="2639.14" y="2736.97">
-   <point/>
-  </object>
-  <object id="157" type="plant" x="2348.53" y="2359.4">
-   <point/>
-  </object>
-  <object id="158" type="plant" x="2320.53" y="2358.9">
-   <point/>
-  </object>
-  <object id="159" type="plant" x="2293.53" y="2358.9">
-   <point/>
-  </object>
-  <object id="160" type="plant" x="2292.53" y="2417.9">
-   <point/>
-  </object>
-  <object id="161" type="plant" x="2321.53" y="2419.4">
-   <point/>
-  </object>
-  <object id="162" type="plant" x="2353.53" y="2418.4">
-   <point/>
-  </object>
-  <object id="163" type="tomato" x="2576.88" y="2480.99">
-   <point/>
-  </object>
-  <object id="165" type="tomato" x="2639.7" y="2478.78">
-   <point/>
-  </object>
-  <object id="166" type="tomato" x="2607.7" y="2478.78">
-   <point/>
-  </object>
-  <object id="167" type="tomato" x="2575.7" y="2542.78">
-   <point/>
-  </object>
-  <object id="168" type="tomato" x="2607.7" y="2542.78">
-   <point/>
-  </object>
-  <object id="169" type="tomato" x="2639.7" y="2542.78">
-   <point/>
-  </object>
+  <object id="225" template="resources/plant.json" type="plant" x="32" y="64"/>
+  <object id="228" template="resources/plant.json" type="plant" x="2272" y="2400"/>
+  <object id="229" template="resources/plant.json" type="plant" x="2304" y="2400"/>
+  <object id="230" template="resources/plant.json" type="plant" x="2336" y="2400"/>
+  <object id="231" template="resources/plant.json" type="plant" x="2272" y="2464"/>
+  <object id="232" template="resources/plant.json" type="plant" x="2304" y="2464"/>
+  <object id="233" template="resources/plant.json" type="plant" x="2336" y="2464"/>
+  <object id="234" template="resources/plant.json" type="plant" x="2336" y="2560"/>
+  <object id="235" template="resources/plant.json" type="plant" x="2368" y="2560"/>
+  <object id="236" template="resources/plant.json" type="plant" x="2400" y="2560"/>
+  <object id="237" template="resources/plant.json" type="plant" x="2432" y="2560"/>
+  <object id="238" template="resources/plant.json" type="plant" x="2464" y="2560"/>
+  <object id="239" template="resources/plant.json" type="plant" x="2496" y="2560"/>
+  <object id="240" template="resources/plant.json" type="plant" x="2336" y="2624"/>
+  <object id="241" template="resources/plant.json" type="plant" x="2368" y="2624"/>
+  <object id="242" template="resources/plant.json" type="plant" x="2400" y="2624"/>
+  <object id="243" template="resources/plant.json" type="plant" x="2432" y="2624"/>
+  <object id="244" template="resources/plant.json" type="plant" x="2464" y="2624"/>
+  <object id="245" template="resources/plant.json" type="plant" x="2496" y="2624"/>
+  <object id="246" template="resources/plant.json" type="plant" x="2240" y="2688"/>
+  <object id="247" template="resources/plant.json" type="plant" x="2272" y="2688"/>
+  <object id="248" template="resources/plant.json" type="plant" x="2304" y="2688"/>
+  <object id="249" template="resources/plant.json" type="plant" x="2240" y="2752"/>
+  <object id="250" template="resources/plant.json" type="plant" x="2272" y="2752"/>
+  <object id="251" template="resources/plant.json" type="plant" x="2304" y="2752"/>
+  <object id="252" template="resources/plant.json" type="plant" x="2560" y="2720"/>
+  <object id="253" template="resources/plant.json" type="plant" x="2592" y="2720"/>
+  <object id="254" template="resources/plant.json" type="plant" x="2624" y="2720"/>
+  <object id="255" template="resources/plant.json" type="plant" x="2560" y="2784"/>
+  <object id="256" template="resources/plant.json" type="plant" x="2592" y="2784"/>
+  <object id="257" template="resources/plant.json" type="plant" x="2624" y="2784"/>
+  <object id="258" template="resources/farming/tomato.json" type="tomato" x="2560" y="2528"/>
+  <object id="264" template="resources/farming/tomato.json" type="tomato" x="2592" y="2528"/>
+  <object id="265" template="resources/farming/tomato.json" type="tomato" x="2624" y="2528"/>
+  <object id="266" template="resources/farming/tomato.json" type="tomato" x="2560" y="2592"/>
+  <object id="267" template="resources/farming/tomato.json" type="tomato" x="2592" y="2592"/>
+  <object id="268" template="resources/farming/tomato.json" type="tomato" x="2624" y="2592"/>
  </objectgroup>
 </map>

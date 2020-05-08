@@ -31,6 +31,8 @@ const state = {
             ...resourceData,
             level: 1,
             lastTimeGrown: Date.now(),
+            x: resourceData.x,
+            y: resourceData.y - CONFIG.TILE_SIZE,
         },
     }), {}),
 };

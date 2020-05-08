@@ -82,6 +82,7 @@ export default class Entity extends Phaser.GameObjects.Container {
 
     private _createUnitSprite(navMesh: any, texture: string, frame: number) {
         this.unitSprite = new Phaser.GameObjects.Sprite(this.scene, 0, 0, texture, frame);
+        this.unitSprite.setOrigin(0.5, 1);
         this.unitSprite.setInteractive({ cursor: POINTER_CURSOR });
 
         this.scene.add.existing(this.unitSprite);

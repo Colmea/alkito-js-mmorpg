@@ -1,0 +1,24 @@
+{ "object":
+    {
+     "gid":64,
+     "height":32,
+     "id":258,
+     "name":"Tomato",
+     "properties":[
+            {
+             "name":"color",
+             "type":"color",
+             "value":"#ffff007f"
+            }],
+     "rotation":0,
+     "type":"tomato",
+     "visible":true,
+     "width":32
+    },
+ "tileset":
+    {
+     "firstgid":1,
+     "source":"..\/..\/tileset\/plants.json"
+    },
+ "type":"template"
+}
