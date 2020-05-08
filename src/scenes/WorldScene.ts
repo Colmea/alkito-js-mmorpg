@@ -186,6 +186,7 @@ export default class WorldScene extends Phaser.Scene {
     this.input.on('pointerdown', this.onMapClick);
    
     this.emitter.on(ActionType.ENTITY_SELECT, (unit: Entity | null, flag: boolean = true) => {
+      console.log('select', unit, flag);
       if (this.currentSelection) {
         this.currentSelection.select(false);
       }
@@ -203,7 +204,8 @@ export default class WorldScene extends Phaser.Scene {
   onMapClick = (pointer: Phaser.Input.Pointer) => {
     // If something is selected, unselected
     if (this.currentSelection) {
-      this.emitter.emit('unit.select', null);
+      console.log('unselect');
+      this.emitter.emit(ActionType.ENTITY_SELECT, null);
       return;
     }
 
