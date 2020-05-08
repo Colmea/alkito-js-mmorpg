@@ -1,0 +1,18 @@
+{ "object":
+    {
+     "gid":1,
+     "height":64,
+     "id":269,
+     "name":"Beech Tree",
+     "rotation":0,
+     "type":"tree-beech",
+     "visible":true,
+     "width":96
+    },
+ "tileset":
+    {
+     "firstgid":1,
+     "source":"..\/..\/tileset\/resources_woodcutting.json"
+    },
+ "type":"template"
+}

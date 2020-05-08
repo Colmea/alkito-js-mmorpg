@@ -31,7 +31,7 @@ const state = {
             ...resourceData,
             level: 1,
             lastTimeGrown: Date.now(),
-            x: resourceData.x,
+            x: resourceData.x + ((resourceData.width || CONFIG.TILE_SIZE) / 2),
             y: resourceData.y - CONFIG.TILE_SIZE,
         },
     }), {}),
@@ -84,7 +84,7 @@ io.on('connection', function (socket) {
         console.log('Resource', id, 'collected');
         const newResource = {
             ...state.resources[id],
-            level: 0,
+            level: 1,
             lastTimeGrown: Date.now(),
         };
 

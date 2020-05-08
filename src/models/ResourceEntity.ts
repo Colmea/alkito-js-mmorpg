@@ -5,6 +5,7 @@ import { ObjectType } from '../types/Objects';
 import * as ResourcesData from '../data/resources.json';
 import Item from './Item';
 import { SkillType } from '../systems/SkillsSystem';
+import CONFIG from '../gameConfig';
 
 export default class ResourceEntity extends Entity {
     unitType = EntityType.OBJECT;
@@ -27,6 +28,11 @@ export default class ResourceEntity extends Entity {
         this.item = new Item(this.resourceData.item);
         this.itemQuantity = this.resourceData.itemQuantity || 1;
         this.frameLevels = this.resourceData.frameLevels;
+
+        const resourceWidth = this.resourceData.tileWidth || 1;
+        const resourceHeight = this.resourceData.tileHeight || 1;
+
+        this.setSize(resourceWidth * CONFIG.TILE_SIZE, resourceHeight * CONFIG.TILE_SIZE);
     }
 
     grow(newLevel?: number) {
