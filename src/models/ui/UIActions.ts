@@ -9,12 +9,14 @@ export default class UIActions extends Phaser.GameObjects.Container {
   background: Phaser.GameObjects.Image;
   onClickCallback: ClickCallback = () => {};
 
-  constructor(scene: Phaser.Scene, x: number, y: number, action: ActionType) {
+  constructor(scene: Phaser.Scene, x: number, y: number, iconFrame: number = 5, onClick = () => {}) {
     super(scene, x, y);
+
+    this.onClickCallback = onClick;
     
     this.background = new Phaser.GameObjects.Image(this.scene, 0, 0, 'ui.slot-round');
     this.background.setScale(1.5);
-    this.icon = new Phaser.GameObjects.Sprite(this.scene, -6, 0, 'icons', 5);
+    this.icon = new Phaser.GameObjects.Sprite(this.scene, -6, 0, 'icons', iconFrame);
     this.icon.setScale(.5);
     this.icon.setInteractive({ cursor: POINTER_CURSOR });
 

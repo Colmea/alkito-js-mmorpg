@@ -29,6 +29,7 @@ export default class Entity extends Phaser.GameObjects.Container {
     damage: number = 10;
     isMoving: boolean = true;
     animationKey: string;
+    customActions: any[];
 
     // States
     isSelected: boolean = false;
@@ -44,8 +45,8 @@ export default class Entity extends Phaser.GameObjects.Container {
     nameText: Phaser.GameObjects.Text;
 
     ui: {
-        actionIcon: UIActions;
-        progressBar: ProgressBar;
+        actionIcon?: UIActions;
+        progressBar?: ProgressBar;
     };
     
     constructor(
@@ -68,7 +69,6 @@ export default class Entity extends Phaser.GameObjects.Container {
         // Create name info
         this._createName();
         this._createUI();
-
         // Register update loop
         scene.events.on('update', this.update, this);
     }
@@ -113,50 +113,20 @@ export default class Entity extends Phaser.GameObjects.Container {
 
     private _createUI() {
         this.ui = {
-            actionIcon: new UIActions(this.scene, 0, -50, ActionType.RESOURCE_COLLECT),
             progressBar: new ProgressBar(this.scene, 0, -40),
         };
 
-        this.add(this.ui.actionIcon);
         this.add(this.ui.progressBar);
-    
-        this.ui.actionIcon.onClick(() => {
-            const playerPos = new Phaser.Geom.Point(this.scene.player.body.x, this.scene.player.body.y);
+    }
 
-            // Find tile next to object and move player
-            const tileNextToObject = this.getNearestFreeTile(playerPos);
-            this.emitter.emit(ActionType.ENTITY_SELECT, this, false);
+    public enableCustomActions() {
+        if (this.customActions.length > 0) {
+            const action = this.customActions[0];
+            const customActions = new UIActions(this.scene, 0, -50, action.iconFrame, action.onClick);
 
-            this.actions.enqueue(this.scene.player, {
-                type: ActionType.ENTITY_GO_TO,
-                args: [tileNextToObject],
-                isCompleted: (action: EntityAction, player: Entity) => {
-                    const playerTile = player.getTile();
-
-                    // Move is completed when player's tile = tile next to object
-                    return (player.getTile() === tileNextToObject);
-                }
-            });
-
-            const timeToCollect = 3000;
-            this.actions.enqueue(this.scene.player, {
-                type: ActionType.RESOURCE_COLLECT_BEGIN,
-                args: [this],
-                progress: (action: EntityAction) => {
-                    const elapsedTime = Date.now() - action.startedDate;
-
-                    return Math.floor(elapsedTime / timeToCollect * 100)
-                },
-                isCompleted: (action: EntityAction) => {
-                    const elapsedTime = Date.now() - action.startedDate;
-                    return elapsedTime >= timeToCollect;
-                },
-            });
-            this.actions.enqueue(this.scene.player, {
-                type: ActionType.RESOURCE_COLLECT,
-                args: [this],
-            });
-        });
+            this.ui.actionIcon = customActions;
+            this.add(this.ui.actionIcon);
+        }
     }
 
     private _createName() {
@@ -186,7 +156,9 @@ export default class Entity extends Phaser.GameObjects.Container {
 
     public select(isSelected: boolean) {
         this.isSelected = isSelected;
-        this.ui.actionIcon.setVisible(isSelected);
+
+        if (this.ui.actionIcon)
+            this.ui.actionIcon.setVisible(isSelected);
 
         if (isSelected) {
             this.unitSprite.setTint(0x999999);

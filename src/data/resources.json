@@ -3,6 +3,7 @@
     "id": "plant",
     "name": "Plant",
     "skill": "FARMING",
+    "skillRequiredLevel": 1,
     "skillXp": 10,
     "texture": "plants",
     "tileHeight": 2,
@@ -12,7 +13,7 @@
       "3": 40,
       "4": 31
     },
-    "timeToGrowLevel": 3000,
+    "timeToGrowLevel": 40000,
     "item": "plant",
     "itemQuantity": 1
   },
@@ -20,6 +21,7 @@
     "id": "tomato",
     "name": "Tomato",
     "skill": "FARMING",
+    "skillRequiredLevel": 2,
     "skillXp": 15,
     "texture": "plants",
     "tileHeight": 2,
@@ -29,7 +31,7 @@
       "3": 36,
       "4": 27
     },
-    "timeToGrowLevel": 3000,
+    "timeToGrowLevel": 40000,
     "item": "tomato",
     "itemQuantity": 2
   },
@@ -37,6 +39,7 @@
     "id": "tree-beech",
     "name": "Beech Tree",
     "skill": "WOODCUTTING",
+    "skillRequiredLevel": 1,
     "skillXp": 10,
     "texture": "resources.woodcutting",
     "tileWidth": 3,
@@ -47,7 +50,7 @@
       "3": 3,
       "4": 0
     },
-    "timeToGrowLevel": 3000,
+    "timeToGrowLevel": 60000,
     "item": "log_beech",
     "itemQuantity": 3
   },
@@ -55,6 +58,7 @@
     "id": "tree-maple",
     "name": "Maple Tree",
     "skill": "WOODCUTTING",
+    "skillRequiredLevel": 2,
     "skillXp": 25,
     "texture": "resources.woodcutting",
     "tileWidth": 3,
@@ -65,8 +69,8 @@
       "3": 5,
       "4": 2
     },
-    "timeToGrowLevel": 3000,
-    "item": "log_maple",
+    "timeToGrowLevel": 100000,
+    "item": "log_beech",
     "itemQuantity": 3
   }
 
