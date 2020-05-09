@@ -33,11 +33,15 @@ export default class ResourceEntity extends Entity {
                 const player = this.scene.player;
                 const skill = player.skills.get(this.harvestingSkill);
 
-                if (skill.level < this.harvestingRequiredSkillLevel) {
+                if (this.level < CONFIG.RESOURCE_MAX_LEVEL)
+                    return;
+
+                if (this.harvestingRequiredSkillLevel < skill.level) {
                     alert(`You cannot collect this resource. You must be level ${this.harvestingRequiredSkillLevel} in ${this.harvestingSkill} !`);
-                } else {
-                    this.collectResource(player);
-                }   
+                    return;
+                }
+                
+                this.collectResource(player);
             }
         },
     ];
