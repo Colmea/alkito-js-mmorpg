@@ -1,0 +1,18 @@
+{ "object":
+    {
+     "gid":3,
+     "height":64,
+     "id":305,
+     "name":"Maple Tree",
+     "rotation":0,
+     "type":"tree-maple",
+     "visible":true,
+     "width":96
+    },
+ "tileset":
+    {
+     "firstgid":1,
+     "source":"..\/..\/tileset\/resources_woodcutting.json"
+    },
+ "type":"template"
+}

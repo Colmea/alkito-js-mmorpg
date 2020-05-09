@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="150" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="305">
+<map version="1.2" tiledversion="1.3.3" orientation="orthogonal" renderorder="left-up" width="150" height="150" tilewidth="32" tileheight="32" infinite="0" nextlayerid="7" nextobjectid="309">
  <editorsettings>
   <export target="world.json" format="json"/>
  </editorsettings>
@@ -229,5 +229,9 @@
   <object id="302" template="resources/woodcutting/tree_beech.json" name="Beech Tree" type="tree-beech" x="2240" y="2144" width="96" height="64"/>
   <object id="303" template="resources/plant.json" type="plant" x="2208" y="2144"/>
   <object id="304" template="resources/farming/tomato.json" type="tomato" x="2176" y="2144"/>
+  <object id="305" template="resources/woodcutting/tree_maple.json" name="Maple Tree" type="tree-maple" x="1056" y="2240"/>
+  <object id="306" template="resources/woodcutting/tree_maple.json" name="Maple Tree" type="tree-maple" x="1216" y="3008"/>
+  <object id="307" template="resources/woodcutting/tree_maple.json" name="Maple Tree" type="tree-maple" x="1632" y="2560"/>
+  <object id="308" template="resources/woodcutting/tree_maple.json" name="Maple Tree" type="tree-maple" x="2336" y="2144"/>
  </objectgroup>
 </map>

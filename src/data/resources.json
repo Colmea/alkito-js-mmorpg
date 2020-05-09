@@ -12,7 +12,7 @@
       "3": 40,
       "4": 31
     },
-    "timeToGrowLevel": 40000,
+    "timeToGrowLevel": 3000,
     "item": "plant",
     "itemQuantity": 1
   },
@@ -29,12 +29,12 @@
       "3": 36,
       "4": 27
     },
-    "timeToGrowLevel": 40000,
+    "timeToGrowLevel": 3000,
     "item": "tomato",
     "itemQuantity": 2
   },
   "tree-beech": {
-    "id": "tree_bech",
+    "id": "tree-beech",
     "name": "Beech Tree",
     "skill": "WOODCUTTING",
     "skillXp": 10,
@@ -47,8 +47,26 @@
       "3": 3,
       "4": 0
     },
-    "timeToGrowLevel": 60000,
+    "timeToGrowLevel": 3000,
     "item": "log_beech",
+    "itemQuantity": 3
+  },
+  "tree-maple": {
+    "id": "tree-maple",
+    "name": "Maple Tree",
+    "skill": "WOODCUTTING",
+    "skillXp": 25,
+    "texture": "resources.woodcutting",
+    "tileWidth": 3,
+    "tileHeight": 2,
+    "frameLevels": {
+      "1": 5,
+      "2": 5,
+      "3": 5,
+      "4": 2
+    },
+    "timeToGrowLevel": 3000,
+    "item": "log_maple",
     "itemQuantity": 3
   }
 

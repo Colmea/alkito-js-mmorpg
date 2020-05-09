@@ -925,6 +925,38 @@
                  "type":"tomato",
                  "x":2176,
                  "y":2144
+                }, 
+                {
+                 "id":305,
+                 "name":"Maple Tree",
+                 "template":"resources\/woodcutting\/tree_maple.json",
+                 "type":"tree-maple",
+                 "x":1056,
+                 "y":2240
+                }, 
+                {
+                 "id":306,
+                 "name":"Maple Tree",
+                 "template":"resources\/woodcutting\/tree_maple.json",
+                 "type":"tree-maple",
+                 "x":1216,
+                 "y":3008
+                }, 
+                {
+                 "id":307,
+                 "name":"Maple Tree",
+                 "template":"resources\/woodcutting\/tree_maple.json",
+                 "type":"tree-maple",
+                 "x":1632,
+                 "y":2560
+                }, 
+                {
+                 "id":308,
+                 "name":"Maple Tree",
+                 "template":"resources\/woodcutting\/tree_maple.json",
+                 "type":"tree-maple",
+                 "x":2336,
+                 "y":2144
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -933,7 +965,7 @@
          "y":0
         }],
  "nextlayerid":7,
- "nextobjectid":305,
+ "nextobjectid":309,
  "orientation":"orthogonal",
  "renderorder":"left-up",
  "tiledversion":"1.3.3",

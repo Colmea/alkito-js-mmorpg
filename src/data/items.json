@@ -19,5 +19,12 @@
     "price": 5,
     "texture": "items/log_beech",
     "frame": 0
+  },
+  "log_maple": {
+    "id": "log_maple",
+    "name": "Maple log",
+    "price": 15,
+    "texture": "items/log_maple",
+    "frame": 0
   }
 }
