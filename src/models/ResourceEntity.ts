@@ -14,8 +14,8 @@ export default class ResourceEntity extends Entity {
     // Item droped by this resource
     item: Item;
     itemQuantity: number;
-    harvestingSkill?: SkillType = SkillType.FARMING;
-    harvestingSkillXp?: number = 15;
+    harvestingSkill?: SkillType;
+    harvestingSkillXp?: number;
     frameLevels: number[];
     level: number = 1;
 
@@ -29,9 +29,12 @@ export default class ResourceEntity extends Entity {
         this.itemQuantity = this.resourceData.itemQuantity || 1;
         this.frameLevels = this.resourceData.frameLevels;
 
+        this.harvestingSkill = this.resourceData.skill || SkillType.FARMING;
+        this.harvestingSkillXp = this.resourceData.skillXp || 10;
+
+        // Set container size following resource size
         const resourceWidth = this.resourceData.tileWidth || 1;
         const resourceHeight = this.resourceData.tileHeight || 1;
-
         this.setSize(resourceWidth * CONFIG.TILE_SIZE, resourceHeight * CONFIG.TILE_SIZE);
     }
 

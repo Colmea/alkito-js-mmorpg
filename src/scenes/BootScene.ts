@@ -35,6 +35,7 @@ export default class BootScene extends Phaser.Scene {
 
     // Items
     this.load.spritesheet('items/plants', 'assets/items/plants_items.png', { frameWidth: 32, frameHeight: 32 });
+    this.load.image('items/log_beech', 'assets/items/log_beech_item.png');
 
     // Resources
     this.load.spritesheet('plants', 'assets/items/plants.png', { frameWidth: 32, frameHeight: 64 });

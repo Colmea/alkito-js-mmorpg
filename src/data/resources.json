@@ -2,7 +2,8 @@
   "plant": {
     "id": "plant",
     "name": "Plant",
-    "skill": "farming",
+    "skill": "FARMING",
+    "skillXp": 10,
     "texture": "plants",
     "tileHeight": 2,
     "frameLevels": {
@@ -18,7 +19,8 @@
   "tomato": {
     "id": "tomato",
     "name": "Tomato",
-    "skill": "farming",
+    "skill": "FARMING",
+    "skillXp": 15,
     "texture": "plants",
     "tileHeight": 2,
     "frameLevels": {
@@ -34,7 +36,8 @@
   "tree-beech": {
     "id": "tree_bech",
     "name": "Beech Tree",
-    "skill": "woodcutting",
+    "skill": "WOODCUTTING",
+    "skillXp": 10,
     "texture": "resources.woodcutting",
     "tileWidth": 3,
     "tileHeight": 2,
@@ -45,8 +48,8 @@
       "4": 0
     },
     "timeToGrowLevel": 60000,
-    "item": "tomato",
-    "itemQuantity": 1
+    "item": "log_beech",
+    "itemQuantity": 3
   }
 
 }

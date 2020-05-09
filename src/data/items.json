@@ -13,11 +13,11 @@
     "texture": "items/plants",
     "frame": 0
   },
-  "barrel": {
-    "id": "barrel",
-    "name": "Barrel",
-    "price": 2,
-    "texture": "tileset",
-    "frame": 12
+  "log_beech": {
+    "id": "log_beech",
+    "name": "Beech log",
+    "price": 5,
+    "texture": "items/log_beech",
+    "frame": 0
   }
 }
