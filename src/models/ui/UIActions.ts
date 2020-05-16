@@ -2,44 +2,63 @@ import { ActionType } from '../../types/Actions';
 import { POINTER_CURSOR } from '../../utils/cursorUtils';
 
 type ClickCallback = (pointer?: Phaser.Input.Pointer, x?: number, y?: number, e?: MouseEvent) => void;
+export type Action = {
+  id: string,
+  name: string,
+  iconFrame: number | string,
+  onClick: ClickCallback,
+};
 
 export default class UIActions extends Phaser.GameObjects.Container {
   visible: boolean = false;
+
   icon: Phaser.GameObjects.Sprite;
   background: Phaser.GameObjects.Image;
   onClickCallback: ClickCallback = () => {};
+  actions: {
+    background: Phaser.GameObjects.Image,
+    icon: Phaser.GameObjects.Sprite,
+    onClickCallback: ClickCallback,
+  }[] = [];
 
-  constructor(scene: Phaser.Scene, x: number, y: number, iconFrame: number = 5, onClick = () => {}) {
+  constructor(scene: Phaser.Scene, x: number, y: number, actions: Action[]) {
     super(scene, x, y);
 
-    this.onClickCallback = onClick;
-    
-    this.background = new Phaser.GameObjects.Image(this.scene, 0, 0, 'ui.slot-round');
-    this.background.setScale(1.5);
-    this.icon = new Phaser.GameObjects.Sprite(this.scene, -6, 0, 'icons', iconFrame);
-    this.icon.setScale(.5);
-    this.icon.setInteractive({ cursor: POINTER_CURSOR });
+    actions.forEach((action: Action, index: number) => {
+      const left = index * 30;
+      const background = new Phaser.GameObjects.Image(this.scene, left, 0, 'ui.slot-round');
+      background.setScale(.1);
+      const icon = new Phaser.GameObjects.Sprite(this.scene, left -6, 0, 'icons', action.iconFrame);
+      icon.setScale(.5);
+      icon.setInteractive({ cursor: POINTER_CURSOR });
 
-    this.scene.add.existing(this.background);
-    this.scene.add.existing(this.icon);
-    this.add(this.background);
-    this.add(this.icon);
+      const newAction = {
+        background,
+        icon,
+        onClickCallback: action.onClick,
+      };
 
-    this.setScale(.1);
+      this.actions.push(newAction);
+      this.scene.add.existing(background);
+      this.scene.add.existing(icon);
+      this.add(background);
+      this.add(icon);
 
-    this.icon.on('pointerover', () => {
-      this.setScale(1.1);
-    });
+      // Events
+      newAction.icon.on('pointerover', () => {
+        icon.setScale(.7);
+      });
 
-    this.icon.on('pointerout', () => {
-      this.setScale(1);
-    });
+      newAction.icon.on('pointerout', () => {
+        icon.setScale(.5);
+      });
 
-    this.icon.on('pointerdown', (pointer: Phaser.Input.Pointer, x: number, y: number, e: MouseEvent) => {
-      // stop propagation
-      e.stopPropagation();
+      newAction.icon.on('pointerdown', (pointer: Phaser.Input.Pointer, x: number, y: number, e: MouseEvent) => {
+        // stop propagation
+        e.stopPropagation();
 
-      this.onClickCallback(pointer, x, y, e);
+        newAction.onClickCallback(pointer, x, y, e);
+      });
     });
   }
 

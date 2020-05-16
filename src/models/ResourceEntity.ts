@@ -9,6 +9,7 @@ import CONFIG from '../gameConfig';
 import { ActionType } from '../types/Actions';
 import { EntityAction } from '../services/EntityActionManager';
 import Player from './Player';
+import { Action } from './ui/UIActions';
 
 export default class ResourceEntity extends Entity {
     unitType = EntityType.OBJECT;
@@ -24,7 +25,7 @@ export default class ResourceEntity extends Entity {
     frameLevels: number[];
     level: number = 1;
 
-    customActions = [
+    customActions: Action[] = [
         {
             id: 'collect',
             name: 'Collect',

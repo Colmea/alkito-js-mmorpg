@@ -121,8 +121,7 @@ export default class Entity extends Phaser.GameObjects.Container {
 
     public enableCustomActions() {
         if (this.customActions.length > 0) {
-            const action = this.customActions[0];
-            const customActions = new UIActions(this.scene, 0, -50, action.iconFrame, action.onClick);
+            const customActions = new UIActions(this.scene, 0, -100, this.customActions);
 
             this.ui.actionIcon = customActions;
             this.add(this.ui.actionIcon);
