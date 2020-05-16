@@ -5,6 +5,7 @@ export enum ActionType {
     RESOURCE_COLLECT = 'action.resource.collect',
     ACTION_PROGRESS = 'action.progress',
     SKILL_INCREASE = 'action.skill.increase',
+    SKILL_LEVEL_UP = 'action.skill.level-up',
     CHAT_SEND_MESSAGE = 'chat.message.send',
 };
 

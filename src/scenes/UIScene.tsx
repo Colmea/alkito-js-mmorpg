@@ -11,6 +11,8 @@ import SquareButton from '../models/ui/SquareButton';
 import ProfessionPopup from '../ui-components/common/ProfessionPopup';
 import ChatPopup from '../ui-components/common/ChatPopup';
 import { ChatMessage } from '../types/Chat';
+import NotificationManager from '../services/NotificationManager';
+import NotificationContainer from '../ui-components/NotificationsContainer';
 
 type MapLayer = Phaser.Tilemaps.StaticTilemapLayer | Phaser.Tilemaps.DynamicTilemapLayer;
 
@@ -36,9 +38,12 @@ export default class UIScene extends Phaser.Scene {
   inventoryItems: Phaser.GameObjects.Sprite[] = [];
   chatMessages: ChatMessage[] = [];
 
+  notificationManager: NotificationManager = new NotificationManager();
+
   // ui components
   popup: any;
   popupChat: any;
+  notificationsContainer: any;
 
   constructor() {
     super('UIScene');
@@ -72,6 +77,8 @@ export default class UIScene extends Phaser.Scene {
     this._createMenu();
     // Create Popup
     this._createPopup();
+    // Create Notifications container
+    this._createNotificationsContainer();
     // Create Inventory
     this._createInventory();
   }
@@ -99,6 +106,23 @@ export default class UIScene extends Phaser.Scene {
     };
 
     this.emitter.emit(ActionType.CHAT_SEND_MESSAGE, newMessage);
+  }
+
+  private _createNotificationsContainer() {
+    this.notificationsContainer = this.add.reactDom((props) => (
+      <NotificationContainer
+        notifs={this.notificationManager.notifs}
+        {...props}
+      />
+    ));
+
+    this.notificationManager.onUpdate(() => {
+      this.notificationsContainer.setState({
+        notifs: this.notificationManager.notifs,
+      });
+    });
+
+    this.notificationManager.listen();
   }
 
   private _createPopup() {
