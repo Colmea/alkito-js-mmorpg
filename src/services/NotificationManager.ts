@@ -21,7 +21,7 @@ export default class NotificationManager implements EventListener {
     notifs: Notif[] = [];
 
     listen() {
-        setInterval(this.update, 1000);
+        setInterval(this.update, 500);
 
         this.emitter.on(ActionType.RESOURCE_COLLECT, (unit: Entity, resource: ResourceEntity) => {
             this.addNotif(`New ressource collected: ${resource.itemQuantity} x ${resource.item.name}.`);
@@ -51,11 +51,15 @@ export default class NotificationManager implements EventListener {
     update = () => {
         const now = Date.now();
 
+        const newNotifs = [...this.notifs];
+
         this.notifs.forEach((notif: Notif, index: number) => {
             if (notif.creationDate + this.NOTIF_LIFETIME_MS <= now) {
-                this.notifs.splice(index, 1);
+                newNotifs.splice(index, 1);
             }
         });
+
+        this.notifs = newNotifs;
 
         this.notifyUpdate();
     }

@@ -9,7 +9,7 @@ export default abstract class Skill {
     image: string;
     level: number = 1;
     xp: number = 0;
-    xpLevel: number = 100;
+    xpLevel: number = 45;
 
     increase(xp: number) {
         this.xp += xp;

@@ -111,8 +111,8 @@ export default class UIScene extends Phaser.Scene {
   private _createNotificationsContainer() {
     this.notificationsContainer = this.add.reactDom((props) => (
       <NotificationContainer
-        notifs={this.notificationManager.notifs}
         {...props}
+        notifs={this.notificationManager.notifs}
       />
     ));
 
