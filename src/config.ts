@@ -5,6 +5,8 @@ import phaserReact from "phaser3-react";
 export default {
   width: window.innerWidth,
   height: window.innerHeight,
+  parent: 'container',
+  dom: { createContainer: true },
   scale: {
     mode: Phaser.Scale.RESIZE,
   },
