@@ -19,9 +19,9 @@
   },
   "homepage": "https://github.com/Colmea/alkito-js-mmorpg#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.1",
     "lodash": "^4.17.15",
-    "phaser": "^3.22.0",
+    "phaser": "^3.55.1",
     "phaser-navmesh": "2.0.5",
     "phaser3-react": "^1.2.5",
     "react": "^16.13.1",
@@ -43,18 +43,17 @@
     "expose-loader": "0.7.5",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.0.4",
-    "phaser": "^3.22.0",
     "serve": "^11.3.0",
     "style-loader": "^1.2.0",
     "svg-inline-loader": "^0.8.2",
-    "ts-loader": "6.0.4",
-    "typescript": "3.8.3",
+    "ts-loader": "^8.4.0",
+    "typescript": "^4.7.4",
     "webpack": "4.35.2",
     "webpack-cli": "3.3.5",
     "webpack-dev-server": "3.7.2",
     "webpack-merge": "^4.2.2"
   },
   "engines": {
-    "node": "12.x"
+    "node": "16.x"
   }
 }
