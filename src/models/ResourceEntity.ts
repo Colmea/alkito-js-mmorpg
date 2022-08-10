@@ -5,7 +5,7 @@ import { ObjectType } from '../types/Objects';
 import * as ResourcesData from '../data/resources.json';
 import Item from './Item';
 import { SkillType } from '../systems/SkillsSystem';
-import CONFIG from '../gameConfig';
+import CONFIG from '../gameConfig.json';
 import { ActionType } from '../types/Actions';
 import { EntityAction } from '../services/EntityActionManager';
 import Player from './Player';

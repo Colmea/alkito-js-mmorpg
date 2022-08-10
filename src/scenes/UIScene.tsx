@@ -6,7 +6,7 @@ import InventoryItem from "../models/InventoryItem";
 import { POINTER_CURSOR } from "../utils/cursorUtils";
 import { SkillType } from "../systems/SkillsSystem";
 import { ActionType, ServerEvent } from "../types/Actions";
-import * as CONFIG from "../gameConfig";
+import * as CONFIG from "../gameConfig.json";
 import SquareButton from "../models/ui/SquareButton";
 import ProfessionPopup from "../ui-components/common/ProfessionPopup";
 import ChatPopup from "../ui-components/common/ChatPopup";

@@ -12,7 +12,7 @@ import Entity from "../models/Entity";
 import EventDispatcher from "../services/EventDispatcher";
 import EntityActionManager from "../services/EntityActionManager";
 import EntityActionProcessor from "../services/EntityActionProcessor";
-import defaultIO from "socket.io-client";
+import io from "socket.io-client";
 import SkillsManager from "../services/SkillsManager";
 import { ActionType, ServerEvent } from "../types/Actions";
 import ServerConnectorService from "../services/ServerConnectorService";
@@ -53,8 +53,12 @@ export default class WorldScene extends Phaser.Scene {
     this._createAnims();
 
     // Connect to Server World
-    this.server = window.io ? window.io() : defaultIO("http://localhost:3000");
+    this.server = window.io
+      ? window.io("http://localhost:3000", { transports: ["websocket"] })
+      : io("http://localhost:3000", { transports: ["websocket"] });
 
+    // this.server.set("origins", "*");
+    console.log("server", this.server);
     // Create player
     this.server.on("playerCreated", (player: any) => {
       this.player = new Player(this, player.x, player.y, this.navMesh);

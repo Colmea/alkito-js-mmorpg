@@ -1,4 +1,4 @@
-import * as CONFIG from '../gameConfig';
+import * as CONFIG from '../gameConfig.json';
 
 export default class Mover {
     MAX_SPEED: number = 120;
