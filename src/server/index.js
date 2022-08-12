@@ -74,7 +74,14 @@ io.on("connection", function (socket) {
 
   // Send chat history after 1 second
   setTimeout(() => {
-    socket.emit("chat.newMessage", state.chatMessages);
+    const welcomeMessage = {
+      author: "Alkito",
+      message:
+        "Welcome to Alkito ! A web based MMORPG in Javascript and Node.js",
+      creationDate: new Date(),
+    };
+
+    socket.emit("chat.newMessage", [...state.chatMessages, welcomeMessage]);
   }, 1000);
   // Broadcast the new player to other players
   socket.broadcast.emit("newPlayer", state.players[socket.id]);
