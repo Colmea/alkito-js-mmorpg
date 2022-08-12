@@ -1,4 +1,4 @@
-import * as CONFIG from '../gameConfig';
+import * as CONFIG from '../gameConfig.json';
 
 export function getTilePosition(xIndex: number, yIndex: number) {
   return {

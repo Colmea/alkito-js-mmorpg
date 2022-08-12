@@ -1,14 +1,18 @@
-  
 {
   "compilerOptions": {
-    "target": "es5",
-    "moduleResolution": "node",
-    "lib": ["esnext", "dom"],
+    "target": "ESNext",
+    "module": "ESNext",
+    "lib": ["ESNext", "DOM", "scripthost"],
+    "moduleResolution": "Node",
+    "strict": true,
+    "sourceMap": true,
     "resolveJsonModule": true,
-    "jsx": "react",
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "noEmit": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true
   },
   "include": ["./src/**/*"],
-  "jsx": "react",
-  
+  "jsx": "react"
 }
