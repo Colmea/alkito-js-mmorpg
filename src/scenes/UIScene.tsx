@@ -8,11 +8,13 @@ import { SkillType } from "../systems/SkillsSystem";
 import { ActionType, ServerEvent } from "../types/Actions";
 import * as CONFIG from "../gameConfig.json";
 import SquareButton from "../models/ui/SquareButton";
-import ProfessionPopup from "../ui-components/common/ProfessionPopup";
+import ProfessionPopup from "../ui-components/ProfessionPopup";
 import ChatPopup from "../ui-components/common/ChatPopup";
 import { ChatMessage } from "../types/Chat";
 import NotificationManager from "../services/NotificationManager";
 import NotificationContainer from "../ui-components/NotificationsContainer";
+import BlogPopup from "../ui-components/BlogPopup";
+import { Icons } from "../types/Icons";
 
 type MapLayer = Phaser.Tilemaps.TilemapLayer;
 
@@ -42,6 +44,7 @@ export default class UIScene extends Phaser.Scene {
   // ui components
   popup: any;
   popupChat: any;
+  popupBlog: any;
   notificationsContainer: any;
 
   constructor() {
@@ -80,8 +83,8 @@ export default class UIScene extends Phaser.Scene {
     this._createMinimap();
     // Create Menu
     this._createMenu();
-    // Create Popup
-    this._createPopup();
+    // Create Popups
+    this._createPopups();
     // Create Notifications container
     this._createNotificationsContainer();
     // Create Inventory
@@ -130,7 +133,8 @@ export default class UIScene extends Phaser.Scene {
     this.notificationManager.listen();
   }
 
-  private _createPopup() {
+  private _createPopups() {
+    // Profession popup
     const farmingSkill = this.player.skills.get(SkillType.FARMING);
 
     this.popup = this.add.reactDom((props) => (
@@ -147,6 +151,16 @@ export default class UIScene extends Phaser.Scene {
         skills: this.player.skills.getAll(),
       });
     });
+
+    // Blog Popup
+    this.popupBlog = this.add.reactDom((props) => (
+      <BlogPopup
+        skills={this.player.skills.getAll()}
+        isVisible={false}
+        onClose={this.handleClosePopup}
+        {...props}
+      />
+    ));
 
     // Chat Popup
     this.popupChat = this.add.reactDom((props) => (
@@ -204,36 +218,34 @@ export default class UIScene extends Phaser.Scene {
     // Create menu
     this.menu = this.add.container(this.map.x + 42, this.map.y + 96);
 
-    const button1 = new SquareButton(this, 0, 0, "ui.icon-skills");
-    const button2 = new SquareButton(this, 0, 50);
+    const button1 = new SquareButton(this, 0, 0, Icons.AXE);
+    const button2 = new SquareButton(this, 0, 50, Icons.MAIL);
 
     button1.onClick(() => {
       this.data.set("currentPanel", "skills");
     });
     button2.onClick(() => {
-      this.data.set("currentPanel", "player");
+      this.data.set("currentPanel", "blog");
     });
 
     this.data.events.on("changedata", () => {
       const currentPanel = this.data.get("currentPanel");
 
+      button1.setFocus(false);
+      button2.setFocus(false);
+      this.popup.setState({ isVisible: false });
+      this.popupBlog.setState({ isVisible: false });
+
       switch (currentPanel) {
         case "skills": {
           button1.setFocus(true);
-          button2.setFocus(false);
           this.popup.setState({ isVisible: true });
           break;
         }
-        case "player": {
-          button1.setFocus(false);
+        case "blog": {
           button2.setFocus(true);
-          this.popup.setState({ isVisible: false });
+          this.popupBlog.setState({ isVisible: true });
           break;
-        }
-        default: {
-          button1.setFocus(false);
-          button2.setFocus(false);
-          this.popup.setState({ isVisible: false });
         }
       }
     });
