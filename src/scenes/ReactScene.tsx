@@ -6,7 +6,7 @@ import Button from '../ui-components/common/Button';
 import Popup from '../ui-components/common/Popup';
 import { SkillType } from '../systems/SkillsSystem';
 import { ActionType } from '../types/Actions';
-import ProfessionPopup from '../ui-components/common/ProfessionPopup';
+import ProfessionPopup from '../ui-components/ProfessionPopup';
 
 const divStyle = {
   marginTop: 75,
