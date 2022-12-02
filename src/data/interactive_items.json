@@ -1,0 +1,11 @@
+{
+  "panel": {
+    "id": "blog-panel",
+    "name": "My Blog",
+    "texture": "objects",
+    "tileHeight": 1,
+    "frame": 236
+  }
+
+
+}

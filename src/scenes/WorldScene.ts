@@ -17,6 +17,8 @@ import SkillsManager from "../services/SkillsManager";
 import { ActionType, ServerEvent } from "../types/Actions";
 import ServerConnectorService from "../services/ServerConnectorService";
 import GameState from "../services/GameState";
+import { ObjectType } from "../types/Objects";
+import ItemEntity from "../models/ItemEntity";
 
 type ArcadeSprite = Phaser.Physics.Arcade.Sprite;
 type MapLayer = Phaser.Tilemaps.TilemapLayer;
@@ -40,6 +42,7 @@ export default class WorldScene extends Phaser.Scene {
   player: Player;
   otherPlayers: { [key: string]: OtherPlayer } = {};
   resources: { [key: string]: ResourceEntity } = {};
+  interactiveObjects: ItemEntity[] = [];
 
   constructor() {
     super("WorldScene");
@@ -51,6 +54,7 @@ export default class WorldScene extends Phaser.Scene {
 
     this._createMap();
     this._createAnims();
+    this._createInteractiveObjects();
 
     // Connect to Server World
     this.server = window.io
@@ -253,6 +257,34 @@ export default class WorldScene extends Phaser.Scene {
         if (unit) unit.select(flag);
       }
     );
+  }
+
+  private _createInteractiveObjects() {
+    const data = [
+      {
+        x: 80,
+        y: 65,
+        properties: {
+          type: ObjectType.Panel,
+          name: "panel",
+        }
+      }
+    ]
+    // Create interactive objects
+    data.forEach((object) => {
+      const { x, y } = object;
+      const { type, name } = object.properties;
+    
+      const interactiveObject = new ItemEntity(
+        this,
+        x,
+        y,
+        type,
+      );
+      this.interactiveObjects.push(interactiveObject);
+    });
+
+    console.log('interactiveObjects', this.interactiveObjects);
   }
 
   onMapClick = (pointer: Phaser.Input.Pointer) => {

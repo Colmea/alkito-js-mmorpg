@@ -1,3 +1,3 @@
 export enum ObjectType {
-    Panel = 'panel',
+    Plant = 'plant',
 }

@@ -7,6 +7,8 @@ export enum ActionType {
     SKILL_INCREASE = 'action.skill.increase',
     SKILL_LEVEL_UP = 'action.skill.level-up',
     CHAT_SEND_MESSAGE = 'chat.message.send',
+    OPEN_MENU = 'menu.open',
+    CLOSE_MENU = 'menu.close',
 };
 
 export enum ServerEvent {

@@ -58,6 +58,8 @@ export default class UIActions extends Phaser.GameObjects.Container {
         e.stopPropagation();
 
         newAction.onClickCallback(pointer, x, y, e);
+
+        this.setVisible(false);
       });
     });
   }

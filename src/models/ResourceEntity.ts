@@ -1,7 +1,7 @@
 import "phaser";
 import Entity, { EntityType } from "./Entity";
 import WorldScene from "../scenes/WorldScene";
-import { ObjectType } from "../types/Objects";
+import { ResourceType } from "../types/Resources";
 import ResourcesData from "../data/resources.json";
 import Item from "./Item";
 import { SkillType } from "../systems/SkillsSystem";
@@ -48,7 +48,7 @@ export default class ResourceEntity extends Entity {
     },
   ];
 
-  constructor(scene: WorldScene, x: number, y: number, type: ObjectType) {
+  constructor(scene: WorldScene, x: number, y: number, type: ResourceType) {
     super(
       scene,
       x,

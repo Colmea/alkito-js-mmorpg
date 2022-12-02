@@ -15,6 +15,7 @@ import NotificationManager from "../services/NotificationManager";
 import NotificationContainer from "../ui-components/NotificationsContainer";
 import BlogPopup from "../ui-components/BlogPopup";
 import { Icons } from "../types/Icons";
+import { Menu } from "../types/Menus";
 
 type MapLayer = Phaser.Tilemaps.TilemapLayer;
 
@@ -89,6 +90,8 @@ export default class UIScene extends Phaser.Scene {
     this._createNotificationsContainer();
     // Create Inventory
     this._createInventory();
+    // Create Listeners
+    this._createListeners();
   }
 
   update() {
@@ -222,14 +225,14 @@ export default class UIScene extends Phaser.Scene {
     const button2 = new SquareButton(this, 0, 50, Icons.MAIL);
 
     button1.onClick(() => {
-      this.data.set("currentPanel", "skills");
+      this.data.set("currentPanel", Menu.SKILLS);
     });
     button2.onClick(() => {
-      this.data.set("currentPanel", "blog");
+      this.data.set("currentPanel", Menu.BLOG);
     });
 
     this.data.events.on("changedata", () => {
-      const currentPanel = this.data.get("currentPanel");
+      const currentPanel: Menu = this.data.get("currentPanel");
 
       button1.setFocus(false);
       button2.setFocus(false);
@@ -237,12 +240,12 @@ export default class UIScene extends Phaser.Scene {
       this.popupBlog.setState({ isVisible: false });
 
       switch (currentPanel) {
-        case "skills": {
+        case Menu.SKILLS: {
           button1.setFocus(true);
           this.popup.setState({ isVisible: true });
           break;
         }
-        case "blog": {
+        case Menu.BLOG: {
           button2.setFocus(true);
           this.popupBlog.setState({ isVisible: true });
           break;
@@ -292,6 +295,16 @@ export default class UIScene extends Phaser.Scene {
     // Listen for inventory update and update its render in UI
     this.player.inventory.onUpdate(() => {
       this.drawInventory();
+    });
+  }
+
+  private _createListeners() {
+    this.emitter.on(ActionType.OPEN_MENU, (target: any, menu: Menu) => {
+      this.data.set("currentPanel", menu);
+    });
+
+    this.emitter.on(ActionType.CLOSE_MENU, () => {
+      this.data.set("currentPanel", null);
     });
   }
 
